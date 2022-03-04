@@ -35,15 +35,17 @@ class _HomeState extends State<Home> {
             child: MediaQuery.removePadding(
               context: context,
               child: ListView(
-                shrinkWrap: true,
                 physics: const ClampingScrollPhysics(),
                 controller: controller,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 170.0, right: 170),
+                    padding: const EdgeInsets.only(left: 175.0, right: 175),
                     child: Container(
                       height: 4,
-                      color: Colors.grey,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(24),
+                        color: Colors.grey,
+                      ),
                     ),
                   ),
                 ],

@@ -36,6 +36,13 @@ class _AnimatedButtonState extends State<AnimatedButton>
     });
   }
 
+  @override
+  void dispose() {
+    animationController?.dispose();
+    animationController = null;
+    super.dispose();
+  }
+
   void onTapCancel() {
     animationController?.forward();
   }
