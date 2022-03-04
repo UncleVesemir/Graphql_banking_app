@@ -2,6 +2,7 @@ import 'package:banking/src/presentation/styles.dart';
 import 'package:banking/src/presentation/utils/clippers.dart';
 import 'package:banking/src/presentation/widgets/animated_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 
 class MoneyTransferScreen extends StatefulWidget {
   const MoneyTransferScreen({Key? key}) : super(key: key);
@@ -11,30 +12,6 @@ class MoneyTransferScreen extends StatefulWidget {
 }
 
 class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
-  Widget _increaseButton() {
-    return ClipPath(
-      clipper: AddButtonClipper(),
-      child: Container(
-        height: 130,
-        width: 80,
-        color: Colors.grey.withOpacity(0.2),
-        child: const Icon(Icons.add, size: 35),
-      ),
-    );
-  }
-
-  Widget _decreaseButton() {
-    return ClipPath(
-      clipper: DecreaseButtonClipper(),
-      child: Container(
-        height: 130,
-        width: 80,
-        color: Colors.grey.withOpacity(0.2),
-        child: const Icon(Icons.remove, size: 35),
-      ),
-    );
-  }
-
   AppBar _buildAppBar() {
     return AppBar(
       elevation: 0.0,
@@ -105,13 +82,14 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
                     child: Column(
                       // crossAxisAlignment: CrossAxisAlignment.stretch,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            _decreaseButton(),
+                            DecreaseButton(),
                             _buildText(),
-                            _increaseButton(),
+                            IncreaseButton(),
                           ],
                         ),
                         AnimatedButton(
@@ -141,40 +119,96 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
   }
 }
 
-class GetClipper extends CustomClipper<Path> {
+class IncreaseButton extends StatefulWidget {
+  const IncreaseButton({
+    Key? key,
+  }) : super(key: key);
+
   @override
-  Path getClip(Size size) {
-    double radius = 50;
-    double pi = 3.14;
+  State<IncreaseButton> createState() => _IncreaseButtonState();
+}
 
-    double extra = 20;
+class _IncreaseButtonState extends State<IncreaseButton> {
+  void _showOverlay() {
+    OverlayState overlayState = OverlayState();
+    OverlayEntry overlayEntry = OverlayEntry(builder: (context) {
+      return Positioned(
+        left: MediaQuery.of(context).size.width * 0.2,
+        top: MediaQuery.of(context).size.height * 0.3,
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.8,
+          child: Stack(
+            children: [
+              // Image(
+              //   colorBlendMode: BlendMode.multiply,
+              //   image: Svg('assets/images/card.svg'),
+              // ),
+            ],
+          ),
+        ),
+      );
+    });
 
-    Path path = Path()
-      ..lineTo(size.width - radius, extra)
-      ..arcTo(
-          Rect.fromPoints(Offset(size.width - radius, extra),
-              Offset(size.width, radius)), // Rect
-          1.5 * pi, // Start engle
-          0.5 * pi, // Sweep engle
-          true) // direction clockwise
-      ..lineTo(size.width, size.height - radius)
-      ..arcTo(
-          Rect.fromCircle(
-              center: Offset(size.width - radius, size.height - radius),
-              radius: radius),
-          0,
-          0.5 * pi,
-          false)
-      ..lineTo(radius, size.height)
-      ..arcTo(Rect.fromLTRB(0, size.height - radius, radius, size.height),
-          0.5 * pi, 0.5 * pi, false)
-      ..lineTo(0, radius)
-      ..arcTo(const Rect.fromLTWH(0, 0, 70, 100), 1 * pi, 0.5 * pi, false)
-      ..close();
+    overlayState.insert(overlayEntry);
 
-    return path;
+    // Awaiting for 3 seconds
+    Future.delayed(Duration(seconds: 1));
+
+    // Removing the OverlayEntry from the Overlay
+    overlayEntry.remove();
   }
 
   @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: _showOverlay,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Transform(
+            transform: Matrix4.skewY(0.1),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.grey.withOpacity(0.4),
+                borderRadius: BorderRadius.circular(24),
+              ),
+              height: 130,
+              width: 80,
+            ),
+          ),
+          const Icon(Icons.add, size: 35),
+        ],
+      ),
+    );
+  }
+}
+
+class DecreaseButton extends StatelessWidget {
+  const DecreaseButton({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Transform(
+          transform: Matrix4.skewY(-0.1),
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(
+                  color: Colors.grey.withOpacity(0.4),
+                  width: 3,
+                )),
+            height: 130,
+            width: 80,
+          ),
+        ),
+        const Icon(Icons.remove, size: 35),
+      ],
+    );
+  }
 }
