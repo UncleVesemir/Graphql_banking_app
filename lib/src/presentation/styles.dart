@@ -16,3 +16,47 @@ class AppColors {
     ),
   );
 }
+
+class AppTextStyles {
+  static const TextStyle boldMediumValue = TextStyle(
+    fontSize: 22,
+    fontFamily: 'Fredoka Bold',
+  );
+
+  static const TextStyle boldLowValue = TextStyle(
+    fontSize: 15,
+    fontFamily: 'Fredoka Bold',
+  );
+
+  static const TextStyle regularLowValueGrey = TextStyle(
+    fontSize: 15,
+    fontFamily: 'Fredoka',
+    color: Colors.grey,
+  );
+
+  static const TextStyle semiMediumValue = TextStyle(
+    fontSize: 24,
+    fontFamily: 'Fredoka SemiBold',
+    fontWeight: FontWeight.w100,
+  );
+
+  static const TextStyle boldLowValueWhite = TextStyle(
+    fontSize: 15,
+    fontWeight: FontWeight.w800,
+    // fontFamily: 'Fredoka Bold',
+    color: Colors.white,
+  );
+
+  static const TextStyle regularLowValueWhite = TextStyle(
+    fontSize: 15,
+    // fontFamily: 'Fredoka',
+    color: Colors.white,
+  );
+
+  static const TextStyle boldMediumValueWhite = TextStyle(
+    fontSize: 32,
+    fontWeight: FontWeight.w800,
+    // fontFamily: 'Fredoka Bold',
+    color: Colors.white,
+  );
+}

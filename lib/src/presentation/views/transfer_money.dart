@@ -129,39 +129,10 @@ class IncreaseButton extends StatefulWidget {
 }
 
 class _IncreaseButtonState extends State<IncreaseButton> {
-  void _showOverlay() {
-    OverlayState overlayState = OverlayState();
-    OverlayEntry overlayEntry = OverlayEntry(builder: (context) {
-      return Positioned(
-        left: MediaQuery.of(context).size.width * 0.2,
-        top: MediaQuery.of(context).size.height * 0.3,
-        child: Container(
-          width: MediaQuery.of(context).size.width * 0.8,
-          child: Stack(
-            children: [
-              // Image(
-              //   colorBlendMode: BlendMode.multiply,
-              //   image: Svg('assets/images/card.svg'),
-              // ),
-            ],
-          ),
-        ),
-      );
-    });
-
-    overlayState.insert(overlayEntry);
-
-    // Awaiting for 3 seconds
-    Future.delayed(Duration(seconds: 1));
-
-    // Removing the OverlayEntry from the Overlay
-    overlayEntry.remove();
-  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: _showOverlay,
+      onTap: () {},
       child: Stack(
         alignment: Alignment.center,
         children: [

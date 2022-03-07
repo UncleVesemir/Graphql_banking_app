@@ -16,6 +16,8 @@ dependencies:
   flutter_svg_provider: ^1.0.3
   hexcolor: ^2.0.6
 
+  graphql_flutter: ^5.0.1
+
 
 
   cupertino_icons: ^1.0.2
@@ -35,10 +37,18 @@ flutter:
   assets:
     - assets/images/
 
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
+  fonts:
+    - family: Fredoka
+      fonts:
+        - asset: assets/fonts/Fredoka-Regular.ttf
+    - family: Fredoka Bold
+      fonts:
+        - asset: assets/fonts/Fredoka-Bold.ttf
+    - family: Fredoka SemiBold
+      fonts:
+        - asset: assets/fonts/Fredoka-SemiBold.ttf
+    - family: Fredoka Light
+      fonts:
+        - asset: assets/fonts/Fredoka-Light.ttf
+
 
