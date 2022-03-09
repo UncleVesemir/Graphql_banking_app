@@ -1,0 +1,273 @@
+mutation CreateUser(
+  $email: String!, 
+  $password: String!, 
+  $name: String!
+  ) {
+  insert_user_one(
+    object: {
+      user_email: $email, 
+      user_password: $password, 
+      user_name: $name
+      }) {
+    user_id
+  }
+}
+
+query Login($email: String!, $password: String!) {
+  user(where: {
+    user_email: {_eq: $email}, 
+    user_password: {_eq: $password}
+    }) {
+    user_id
+  }
+}
+
+mutation AddCard($object: card_insert_input!) {
+  insert_card_one(object: $object) {
+    card_id
+  }
+}
+
+mutation DeleteCard($card_id: Int!) {
+  delete_card_by_pk(card_id: $card_id) {
+    card_id
+  }
+}
+
+mutation TransferMoney(
+  $value: String!, 
+  $card_id_from: Int!, 
+  $value_from: String!, 
+  $card_id_to: Int!, 
+  $value_to: String!, 
+  $time: timestamptz!
+  ) {
+  update_card_by_pk(
+    pk_columns: {card_id: $card_id_from}, 
+    _set: {card_value: $value_from}
+    ) {
+    card_value
+  }
+  update_card(
+    where: {card_id: {_eq: $card_id_to}}, 
+    _set: {card_value: $value_to}
+    ) {
+    returning {
+      card_value
+    }
+  }
+  insert_history(
+    objects: [
+      {
+        transaction_card_id_from: $card_id_from, 
+        transaction_card_id_to: $card_id_to, 
+        transaction_value: $value, 
+        transaction_time: $time, 
+        transaction_is_profit: false, 
+        transaction_card: $card_id_from
+      },
+      {
+        transaction_card_id_from: $card_id_from, 
+        transaction_card_id_to: $card_id_to, 
+        transaction_value: $value, 
+        transaction_time: $time, 
+        transaction_is_profit: true, 
+        transaction_card: $card_id_to
+        }
+      ]
+      ) {
+    returning {
+      transaction_id
+    }
+  }
+}
+
+query FetchCards($user_id: uuid!) {
+  user(where: {user_id: {_eq: $user_id}}) {
+    cards {
+      card_id
+      card_name
+      card_type
+      card_value
+      card_exp_date
+    }
+  }
+}
+
+query FetchCardOne($user_id: uuid!, $card_id: Int!) {
+  user(where: {user_id: {_eq: $user_id}}) {
+    cards(where: {card_id: {_eq: $card_id}}) {
+      card_exp_date
+      card_id
+      card_name
+      card_type
+      card_user_id
+      card_value
+    }
+  }
+}
+
+query FetchHistory($user_id: uuid!) {
+  user(where: {user_id: {_eq: $user_id}}) {
+    cards {
+      histories {
+        transaction_card
+        transaction_card_id_from
+        transaction_card_id_to
+        transaction_id
+        transaction_is_profit
+        transaction_time
+        transaction_value
+      }
+    }
+  }
+}
+
+query FetchHistoryOne($user_id: uuid!, $card_id: Int!) {
+  user(where: {user_id: {_eq: $user_id}}) {
+    cards(where: {card_id: {_eq: $card_id}}) {
+      histories {
+        transaction_card
+        transaction_card_id_from
+        transaction_card_id_to
+        transaction_id
+        transaction_is_profit
+        transaction_time
+        transaction_value
+      }
+    }
+  }
+}
+
+
+
+{
+  "value": "1000",
+  "card_id_from": 2,
+  "card_id_to": 10,
+  "value_from": "1000",
+  "value_to": "2000",
+  "time": "2022-07-23, 13:10:11"
+}
+
+
+##### OLD CODE
+
+# mutation FriendUpdateStatus($status: String!, $friend_id: Int!) {
+#   update_friends(where: {friend_id: {_eq: $friend_id}}, _set: {friend_status: $status}) {
+#     __typename
+#   }
+# }
+
+# mutation FriendRequest($user_name: String!, $friend_name: String!, $user_id: Int!, $friend_id: Int!, $friend_uuid: uuid!) {
+#   insert_friends(objects:[
+#     {
+#   		friend_name: $user_name,
+#       friend_uuid: $friend_uuid,
+#       friend_user_id: $friend_id,
+#       user_id: $user_id,
+#     },
+#     {
+#       friend_name: $friend_name,
+#       friend_uuid: $friend_uuid,
+#       friend_user_id: $user_id,
+#       user_id: $friend_id,
+#     }
+#   ]) {
+#     __typename
+#   }
+# }
+
+# {
+#   	"user_name": "Ilya",
+#     "friend_uuid": "4bb4227c-7401-4121-9919-f2d0bcb7661e",
+#     "friend_name": "Max",
+#     "user_id": 1,
+#     "friend_id": 3
+# }
+
+# query FetchRequests($user_uuid: uuid!) {
+#   user(where: {user_uuid: {_eq: $user_uuid}}) {
+#     friends(where: {friend_status: {_eq: "requested"}}) {
+#       friend_id
+#       friend_name
+#       friend_status
+#       friend_user_id
+#       friend_uuid
+#     }
+#   }
+# }
+
+# {
+#   	"user_uuid": "4bb4227c-7401-4121-9919-f2d0bcb7661e"
+# }
+######
+
+
+## REFACTORED FRIENDS AND DATABASE
+
+mutation FriendRequest($object: friends_insert_input!) {
+  insert_friends_one(object: $object) {
+    __typename
+  }
+}
+
+# !!!
+# [user_first_uuid] is always a subscriber
+# [user_second_uuid] is always a signer
+
+{
+  	"object": {
+      "user_first_uuid": "ec4f4ebe-b102-4dd3-b60d-b97c8e2da806",
+      "user_second_uuid": "4bb4227c-7401-4121-9919-f2d0bcb7661e"
+    }
+}
+
+query FetchSubscriptions($user_uuid: uuid!, $status: String!) {
+  friends(where: {user_first_uuid: {_eq: $user_uuid}, status: {_eq: $status}}) {
+    user_second_uuid
+    user_first_uuid
+    status
+  }
+}
+
+{
+      "user_uuid": "4bb4227c-7401-4121-9919-f2d0bcb7661e",
+      "status": "requested"
+}
+
+query FetchSubscribers($user_uuid: uuid!, $status: String!) {
+  friends(where: {user_second_uuid: {_eq: $user_uuid}, status: {_eq: $status}}) {
+    user_second_uuid
+    user_first_uuid
+    status
+  }
+}
+
+{
+      "user_uuid": "4bb4227c-7401-4121-9919-f2d0bcb7661e",
+      "status": "requested"
+}
+
+mutation AddFriend($friend_uuid: uuid!, $user_uuid: uuid!) {
+  update_friends(
+    where: {
+      user_first_uuid: {_eq: $user_uuid}, 
+      user_second_uuid: {_eq: $friend_uuid}, 
+      
+      _or: {user_first_uuid: {_eq: $friend_uuid}, 
+      user_second_uuid: {_eq: $user_uuid}
+      }}, 
+      _set: {status: "confirmed"}) {
+    returning {
+      status
+    }
+  }
+}
+
+{
+  "friend_uuid": "4bb4227c-7401-4121-9919-f2d0bcb7661e",
+  "user_uuid": "ec4f4ebe-b102-4dd3-b60d-b97c8e2da806"
+}
+
+######
