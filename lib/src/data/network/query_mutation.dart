@@ -1,18 +1,18 @@
 import 'package:banking/src/domain/entities/card.dart';
 
 class QueryMutation {
-  String createUser(String email, String password, String name) {
+  String createUser() {
     return """
       mutation CreateUser(
-        $email: String!, 
-        $password: String!, 
-        $name: String!
+        \$email: String!, 
+        \$password: String!, 
+        \$name: String!
         ) {
         insert_user_one(
           object: {
-            user_email: $email, 
-            user_password: $password, 
-            user_name: $name
+            user_email: \$email, 
+            user_password: \$password, 
+            user_name: \$name
           }) {
             user_id
           }
@@ -20,10 +20,12 @@ class QueryMutation {
       """;
   }
 
-  Map<String, String> loginVariables(String email, String password) {
+  Map<String, String> createUserVariables(
+      String email, String password, String name) {
     return {
       "email": email,
       "password": password,
+      "name": name,
     };
   }
 
@@ -44,6 +46,13 @@ class QueryMutation {
       """;
   }
 
+  Map<String, String> loginVariables(String email, String password) {
+    return {
+      "email": email,
+      "password": password,
+    };
+  }
+
   String addCard(Card object) {
     return """
       mutation AddCard($object: card_insert_input!) {
@@ -54,13 +63,19 @@ class QueryMutation {
       """;
   }
 
-  String deleteCard(int card_id) {
+  String deleteCard() {
     return """
-      mutation DeleteCard($card_id: Int!) {
-        delete_card_by_pk(card_id: $card_id) {
+      mutation DeleteCard(\$card_id: Int!) {
+        delete_card_by_pk(card_id: \$card_id) {
           card_id
         }
       }
       """;
   }
+
+  Map<String, String> deleteCardVariables(int cardId) {
+    return {"card_id": "$cardId"};
+  }
+
+  //
 }
