@@ -1,4 +1,5 @@
 import 'package:banking/src/presentation/views/home.dart';
+import 'package:banking/src/presentation/views/login/login.dart';
 import 'package:flutter/material.dart';
 
 class Application extends StatelessWidget {
@@ -9,7 +10,7 @@ class Application extends StatelessWidget {
     return const MaterialApp(
       title: 'Banking',
       debugShowCheckedModeBanner: false,
-      home: Home(),
+      home: const LoginPage(),
     );
   }
 }

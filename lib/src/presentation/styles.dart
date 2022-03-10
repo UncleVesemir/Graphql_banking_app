@@ -23,15 +23,36 @@ class AppTextStyles {
     fontFamily: 'Fredoka Bold',
   );
 
-  static const TextStyle boldLowValue = TextStyle(
-    fontSize: 15,
-    fontFamily: 'Fredoka Bold',
+  static const TextStyle boldLowValueBlack = TextStyle(
+    fontSize: 17,
+    color: Colors.black,
+    fontFamily: 'Fredoka SemiBold',
+  );
+
+  static const TextStyle boldLowValueWhiteMedium = TextStyle(
+    fontSize: 17,
+    fontFamily: 'Fredoka SemiBold',
+    color: Colors.white,
   );
 
   static const TextStyle regularLowValueGrey = TextStyle(
     fontSize: 15,
     fontFamily: 'Fredoka',
     color: Colors.grey,
+  );
+
+  static const TextStyle signInGrey = TextStyle(
+    fontSize: 26,
+    // fontFamily: 'Fredoka SemiBold',
+    fontWeight: FontWeight.w600,
+    color: Colors.grey,
+  );
+
+  static const TextStyle signInBlack = TextStyle(
+    fontSize: 36,
+    // fontFamily: 'Fredoka SemiBold',
+    fontWeight: FontWeight.w600,
+    color: Colors.black,
   );
 
   static const TextStyle semiMediumValue = TextStyle(
@@ -42,7 +63,6 @@ class AppTextStyles {
 
   static const TextStyle boldLowValueWhite = TextStyle(
     fontSize: 15,
-    fontWeight: FontWeight.w800,
     // fontFamily: 'Fredoka Bold',
     color: Colors.white,
   );

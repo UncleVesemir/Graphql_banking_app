@@ -13,7 +13,7 @@ class TransactionItem extends StatelessWidget {
         children: [
           Row(
             children: [
-              CircleAvatar(
+              const CircleAvatar(
                 radius: 28,
                 backgroundColor: Colors.deepOrange,
               ),
@@ -21,7 +21,7 @@ class TransactionItem extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Name', style: AppTextStyles.boldLowValue),
+                  Text('Name', style: AppTextStyles.boldLowValueBlack),
                   const SizedBox(height: 4),
                   Text('09, July, 2022',
                       style: AppTextStyles.regularLowValueGrey),

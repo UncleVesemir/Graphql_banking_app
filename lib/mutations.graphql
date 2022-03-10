@@ -151,60 +151,6 @@ query FetchHistoryOne($user_id: uuid!, $card_id: Int!) {
 }
 
 
-##### OLD CODE
-
-# mutation FriendUpdateStatus($status: String!, $friend_id: Int!) {
-#   update_friends(where: {friend_id: {_eq: $friend_id}}, _set: {friend_status: $status}) {
-#     __typename
-#   }
-# }
-
-# mutation FriendRequest($user_name: String!, $friend_name: String!, $user_id: Int!, $friend_id: Int!, $friend_uuid: uuid!) {
-#   insert_friends(objects:[
-#     {
-#   		friend_name: $user_name,
-#       friend_uuid: $friend_uuid,
-#       friend_user_id: $friend_id,
-#       user_id: $user_id,
-#     },
-#     {
-#       friend_name: $friend_name,
-#       friend_uuid: $friend_uuid,
-#       friend_user_id: $user_id,
-#       user_id: $friend_id,
-#     }
-#   ]) {
-#     __typename
-#   }
-# }
-
-# {
-#   	"user_name": "Ilya",
-#     "friend_uuid": "4bb4227c-7401-4121-9919-f2d0bcb7661e",
-#     "friend_name": "Max",
-#     "user_id": 1,
-#     "friend_id": 3
-# }
-
-# query FetchRequests($user_uuid: uuid!) {
-#   user(where: {user_uuid: {_eq: $user_uuid}}) {
-#     friends(where: {friend_status: {_eq: "requested"}}) {
-#       friend_id
-#       friend_name
-#       friend_status
-#       friend_user_id
-#       friend_uuid
-#     }
-#   }
-# }
-
-# {
-#   	"user_uuid": "4bb4227c-7401-4121-9919-f2d0bcb7661e"
-# }
-######
-
-
-## REFACTORED FRIENDS AND DATABASE
 
 mutation FriendRequest($object: friends_insert_input!) {
   insert_friends_one(object: $object) {
@@ -244,24 +190,33 @@ query FetchSubscribers($user_uuid: uuid!, $status: String!) {
   }
 }
 
+query FetchFriends($user_uuid: uuid!, $status: String!) {
+  friends(where: {user_second_uuid: {_eq: $user_uuid}, status: {_eq: $status}}) {
+    user_second_uuid
+    user_first_uuid
+    status
+  }
+}
+
 {
       "user_uuid": "4bb4227c-7401-4121-9919-f2d0bcb7661e",
       "status": "requested"
 }
 
-mutation AddFriend($friend_uuid: uuid!, $user_uuid: uuid!) {
-  update_friends(
-    where: {
-      user_first_uuid: {_eq: $user_uuid}, 
-      user_second_uuid: {_eq: $friend_uuid}, 
-      
-      _or: {user_first_uuid: {_eq: $friend_uuid}, 
-      user_second_uuid: {_eq: $user_uuid}
-      }}, 
-      _set: {status: "confirmed"}) {
-    returning {
-      status
-    }
+mutation ConfirmFriend($friend_uuid: uuid!, $user_uuid: uuid!) {
+  update_friends(where: 
+    {_and: {user_first_uuid: {_eq: $friend_uuid}, user_second_uuid: {_eq: $user_uuid}}}, 
+    _set: {status: "confirmed"}) {
+    __typename
+  }
+}
+
+mutation RemoveFriend($friend_uuid: uuid!, $user_uuid: uuid!) {
+  delete_friends(where: {_or: [
+    {_and: {user_first_uuid: {_eq: $friend_uuid}, user_second_uuid: {_eq: $user_uuid}}}, 
+    {_and: {user_first_uuid: {_eq: $user_uuid}, user_second_uuid: {_eq: $friend_uuid}}}
+  ]}) {
+    __typename
   }
 }
 
