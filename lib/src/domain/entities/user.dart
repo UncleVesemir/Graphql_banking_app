@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'card.dart';
 
 class User {

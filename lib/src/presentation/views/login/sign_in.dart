@@ -1,9 +1,16 @@
 import 'package:banking/main.dart';
+import 'package:banking/src/data/models/user.dart';
 import 'package:banking/src/data/network/query_mutation.dart';
 import 'package:banking/src/presentation/styles.dart';
+import 'package:banking/src/presentation/utils/clippers.dart';
+import 'package:banking/src/presentation/utils/helper_widgets.dart';
 import 'package:banking/src/presentation/views/home.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'dart:convert' as convert;
+
+import 'register.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -66,41 +73,78 @@ class _SignInPageState extends State<SignInPage> {
   Widget _signInButtons() {
     return Column(
       children: [
-        const Text('Don\'t have an account? Register'),
+        RichText(
+          textAlign: TextAlign.start,
+          text: TextSpan(
+            text: 'Don\'t have an account? ',
+            style: AppTextStyles.hyperLinkInactive,
+            children: <TextSpan>[
+              TextSpan(
+                text: 'Register',
+                style: AppTextStyles.hyperLinkActive,
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () => UtilsWidget.navigateToScreen(
+                      context, const RegisterPage()),
+              ),
+            ],
+          ),
+        ),
         const SizedBox(height: 15),
-        TextButton(
-          onPressed: () async {
-            if (_emailController.text.isNotEmpty &&
-                _passwordController.text.isNotEmpty) {
-              var email = _emailController.text.trim();
-              var password = _passwordController.text.trim();
-              GraphQLClient _client = graphQLConfiguration.clientToQuery();
-              QueryResult result = await _client.query(
-                QueryOptions(
-                  document: gql(addMutation.login()),
-                  variables: addMutation.loginVariables(email, password),
+        SizedBox(
+          width: double.infinity,
+          height: 70,
+          child: ElevatedButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(Colors.deepOrange),
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24),
                 ),
-              );
-              print(result.data);
-              if (result.hasException) {
-                print(result.exception);
-              } else {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext ctx) => const Home()));
+              ),
+            ),
+            onPressed: () async {
+              if (_emailController.text.isNotEmpty &&
+                  _passwordController.text.isNotEmpty) {
+                var email = _emailController.text.trim().toLowerCase();
+                var password = _passwordController.text.trim().toLowerCase();
+                GraphQLClient _client = graphQLConfiguration.clientToQuery();
+                QueryResult result = await _client.query(
+                  QueryOptions(
+                    document: gql(addMutation.login()),
+                    variables: addMutation.loginVariables(email, password),
+                  ),
+                );
+                if (result.hasException) {
+                  print(result.exception);
+                } else {
+                  if (result.data!['user'].toString().length > 10) {
+                    print(result.data!['user'].toString());
+                    var user = UserModel.fromJson(result.data!['user'][0]);
+                    UtilsWidget.showInfoSnackBar(
+                      context,
+                      'Logged as ${user.name}',
+                    );
+                    UtilsWidget.navigateToScreen(context, const Home());
+                  } else {
+                    UtilsWidget.showInfoSnackBar(
+                      context,
+                      'Incorrect email or password',
+                    );
+                  }
+                }
+
+                if (result.hasException) {
+                  print(result.exception);
+                } else {
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //         builder: (BuildContext ctx) => const Home()));
+                }
               }
-            }
-          },
-          child: Container(
-            height: 70,
-            decoration: BoxDecoration(
-              color: Colors.deepOrange,
-              borderRadius: BorderRadius.circular(18),
-            ),
-            child: const Center(
-              child: Text('Sign In', style: AppTextStyles.boldLowValueWhite),
-            ),
+            },
+            child:
+                const Text('Sign In', style: AppTextStyles.boldLowValueWhite),
           ),
         ),
       ],

@@ -1,4 +1,5 @@
 import 'package:banking/src/presentation/styles.dart';
+import 'package:banking/src/presentation/views/login/register.dart';
 import 'package:banking/src/presentation/views/login/sign_in.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +13,6 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   Widget _buildBody() {
     return Container(
-      // color: Colors.red,
       decoration: AppColors.appBackgroundGradient,
       child: SafeArea(
         child: Padding(
@@ -20,12 +20,23 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                width: 350,
-                height: 350,
-                color: Colors.white,
+              const SizedBox(height: 10),
+              Image.asset('assets/images/login.png'),
+              Column(
+                children: const [
+                  Text(
+                    'Daily operations on the go.',
+                    style: AppTextStyles.loginBlack,
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 15),
+                  Text(
+                    'Enjoy simpler banking on the go with the Banking App. Available for our customers.',
+                    style: AppTextStyles.loginGrey,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
-              Container(),
               Container(
                 width: double.infinity,
                 height: 70,
@@ -37,10 +48,23 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     Flexible(
                       flex: 2,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(24),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext ctx) =>
+                                      const RegisterPage()));
+                        },
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.white),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                          ),
                         ),
                         child: const Center(
                           child: Text(

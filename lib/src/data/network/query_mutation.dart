@@ -15,6 +15,9 @@ class QueryMutation {
             user_name: \$name
           }) {
             user_id
+            user_email
+            user_password
+            user_name
           }
       }
       """;

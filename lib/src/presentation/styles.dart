@@ -29,6 +29,30 @@ class AppTextStyles {
     fontFamily: 'Fredoka SemiBold',
   );
 
+  static const TextStyle hyperLinkInactive = TextStyle(
+    fontSize: 13,
+    color: Colors.black,
+    fontWeight: FontWeight.w400,
+  );
+
+  static const TextStyle hyperLinkActive = TextStyle(
+    fontSize: 13,
+    color: Colors.deepOrange,
+    fontWeight: FontWeight.w800,
+  );
+
+  static const TextStyle errorValueBlack = TextStyle(
+    fontSize: 15,
+    color: Colors.black,
+    fontWeight: FontWeight.w600,
+  );
+
+  static const TextStyle errorValueOrange = TextStyle(
+    fontSize: 13,
+    color: Colors.deepOrange,
+    fontWeight: FontWeight.w800,
+  );
+
   static const TextStyle boldLowValueWhiteMedium = TextStyle(
     fontSize: 17,
     fontFamily: 'Fredoka SemiBold',
@@ -52,6 +76,20 @@ class AppTextStyles {
     fontSize: 36,
     // fontFamily: 'Fredoka SemiBold',
     fontWeight: FontWeight.w600,
+    color: Colors.black,
+  );
+
+  static const TextStyle loginGrey = TextStyle(
+    fontSize: 20,
+    // fontFamily: 'Fredoka SemiBold',
+    fontWeight: FontWeight.w400,
+    color: Colors.grey,
+  );
+
+  static const TextStyle loginBlack = TextStyle(
+    fontSize: 36,
+    // fontFamily: 'Fredoka SemiBold',
+    fontWeight: FontWeight.w800,
     color: Colors.black,
   );
 
