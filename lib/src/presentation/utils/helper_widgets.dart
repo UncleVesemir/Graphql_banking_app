@@ -10,15 +10,22 @@ class UtilsWidget {
         content: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              error,
-              style: AppTextStyles.errorValueBlack,
+            Flexible(
+              flex: 3,
+              child: Text(
+                error,
+                overflow: TextOverflow.ellipsis,
+                style: AppTextStyles.errorValueBlack,
+              ),
             ),
-            ElevatedButton(
-              onPressed: scaffold.hideCurrentSnackBar,
-              child: const Text(
-                'Close',
-                style: AppTextStyles.errorValueOrange,
+            Flexible(
+              flex: 1,
+              child: ElevatedButton(
+                onPressed: scaffold.hideCurrentSnackBar,
+                child: const Text(
+                  'Close',
+                  style: AppTextStyles.errorValueOrange,
+                ),
               ),
             ),
           ],

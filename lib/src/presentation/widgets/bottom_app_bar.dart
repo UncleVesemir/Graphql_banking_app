@@ -66,12 +66,12 @@ class _CustomAppBarState extends State<CustomAppBar> {
         ClipPath(
           clipper: FabClipper(),
           child: Container(
-            width: 145,
-            height: 110,
+            width: 150,
+            height: 105,
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
-                  spreadRadius: 35,
+                  spreadRadius: 10,
                   color: Colors.grey[300]!,
                   offset: const Offset(0, 60),
                   blurRadius: 30,
@@ -126,35 +126,58 @@ class _CustomAppBarState extends State<CustomAppBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(18),
-      child: Stack(
-        alignment: Alignment.bottomCenter,
-        children: [
-          Container(
-            height: 90,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(32),
-              color: Colors.grey[200],
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _bottomAppBarItem('home.svg', 0),
-                  _bottomAppBarItem('cards.svg', 1),
-                  const Spacer(flex: 2),
-                  _bottomAppBarItem('stats.svg', 2),
-                  _bottomAppBarItem('security.svg', 3),
-                ],
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 18, right: 18, bottom: 10),
+          child: Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              Container(
+                height: 90,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey[600]!,
+                      offset: Offset(0.0, 1.0), //(x,y)
+                      blurRadius: 6.0,
+                    ),
+                  ],
+                  borderRadius: BorderRadius.circular(32),
+                  color: Colors.grey[200],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _bottomAppBarItem('home.svg', 0),
+                      _bottomAppBarItem('cards.svg', 1),
+                      const Spacer(flex: 2),
+                      _bottomAppBarItem('stats.svg', 2),
+                      _bottomAppBarItem('security.svg', 3),
+                    ],
+                  ),
+                ),
               ),
+              _buildFAB(),
+            ],
+          ),
+        ),
+        Container(
+          height: 0,
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(24),
+              topRight: Radius.circular(24),
             ),
           ),
-          _buildFAB(),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

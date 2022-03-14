@@ -35,6 +35,7 @@ class _HomeState extends State<Home> {
               },
             ),
           ),
+          const SizedBox(height: 50),
         ],
       ),
     );
@@ -82,26 +83,31 @@ class _HomeState extends State<Home> {
   }
 
   Widget _buildBody() {
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      children: [
-        Container(
-          width: double.infinity,
-          height: double.infinity,
-          decoration: AppColors.appBackgroundGradient,
-          child: Column(
-            children: [
-              const SizedBox(height: 90),
-              Expanded(flex: 2, child: CardWidget()),
-              const Spacer(flex: 2),
-            ],
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: AppColors.appBackgroundGradient,
+      child: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: AppColors.appBackgroundGradient,
+            child: Column(
+              children: [
+                const SizedBox(height: 90),
+                Expanded(flex: 2, child: CardWidget()),
+                const Spacer(flex: 2),
+              ],
+            ),
           ),
-        ),
-        _buildSheet(),
-        CustomAppBar(
-          onSelected: (index) {},
-        ),
-      ],
+          _buildSheet(),
+          CustomAppBar(
+            onSelected: (index) {},
+          ),
+        ],
+      ),
     );
   }
 

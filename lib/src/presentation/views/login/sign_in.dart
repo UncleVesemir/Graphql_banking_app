@@ -1,12 +1,15 @@
 import 'package:banking/main.dart';
 import 'package:banking/src/data/models/user.dart';
 import 'package:banking/src/data/network/query_mutation.dart';
+import 'package:banking/src/presentation/blocs/bloc/sign_in_register_bloc.dart';
 import 'package:banking/src/presentation/styles.dart';
 import 'package:banking/src/presentation/utils/clippers.dart';
 import 'package:banking/src/presentation/utils/helper_widgets.dart';
 import 'package:banking/src/presentation/views/home.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'dart:convert' as convert;
 
@@ -23,7 +26,26 @@ class _SignInPageState extends State<SignInPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  QueryMutation addMutation = QueryMutation();
+  bool _isActive = false;
+
+  void _checkFields() {
+    setState(() {
+      if (_emailController.text.isNotEmpty &&
+          _passwordController.text.isNotEmpty) {
+        _isActive = true;
+      } else {
+        _isActive = false;
+      }
+    });
+  }
+
+  void _login() async {
+    final SignInRegisterBloc userBloc =
+        BlocProvider.of<SignInRegisterBloc>(context);
+    var email = _emailController.text.trim().toLowerCase();
+    var password = _passwordController.text.trim().toLowerCase();
+    userBloc.add(SignInEvent(email: email, password: password));
+  }
 
   Widget _buildText() {
     return Column(
@@ -57,6 +79,7 @@ class _SignInPageState extends State<SignInPage> {
         child: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: TextFormField(
+            onChanged: (value) => _checkFields(),
             obscureText: hideText,
             obscuringCharacter: '*',
             controller: controller,
@@ -70,7 +93,7 @@ class _SignInPageState extends State<SignInPage> {
     );
   }
 
-  Widget _signInButtons() {
+  Widget _signInButtons(SignInRegisterState state) {
     return Column(
       children: [
         RichText(
@@ -95,56 +118,18 @@ class _SignInPageState extends State<SignInPage> {
           height: 70,
           child: ElevatedButton(
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.deepOrange),
+              backgroundColor: MaterialStateProperty.all(
+                  _isActive ? Colors.deepOrange : Colors.deepOrange[200]),
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(24),
                 ),
               ),
             ),
-            onPressed: () async {
-              if (_emailController.text.isNotEmpty &&
-                  _passwordController.text.isNotEmpty) {
-                var email = _emailController.text.trim().toLowerCase();
-                var password = _passwordController.text.trim().toLowerCase();
-                GraphQLClient _client = graphQLConfiguration.clientToQuery();
-                QueryResult result = await _client.query(
-                  QueryOptions(
-                    document: gql(addMutation.login()),
-                    variables: addMutation.loginVariables(email, password),
-                  ),
-                );
-                if (result.hasException) {
-                  print(result.exception);
-                } else {
-                  if (result.data!['user'].toString().length > 10) {
-                    print(result.data!['user'].toString());
-                    var user = UserModel.fromJson(result.data!['user'][0]);
-                    UtilsWidget.showInfoSnackBar(
-                      context,
-                      'Logged as ${user.name}',
-                    );
-                    UtilsWidget.navigateToScreen(context, const Home());
-                  } else {
-                    UtilsWidget.showInfoSnackBar(
-                      context,
-                      'Incorrect email or password',
-                    );
-                  }
-                }
-
-                if (result.hasException) {
-                  print(result.exception);
-                } else {
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (BuildContext ctx) => const Home()));
-                }
-              }
-            },
-            child:
-                const Text('Sign In', style: AppTextStyles.boldLowValueWhite),
+            onPressed: _isActive ? () async => _login() : null,
+            child: state is SignInRegisterLoadingState
+                ? const SpinKitWave(color: Colors.white, size: 25)
+                : const Text('Sign In', style: AppTextStyles.boldLowValueWhite),
           ),
         ),
       ],
@@ -161,7 +146,14 @@ class _SignInPageState extends State<SignInPage> {
     );
   }
 
-  Widget _buildBody() {
+  Widget _buildErrorMessage(SignInRegisterState state) {
+    if (state is SignInRegisterErrorState) {
+      return Text(state.error.toString());
+    }
+    return Container();
+  }
+
+  Widget _buildBody(SignInRegisterState state) {
     return Container(
       decoration: AppColors.appBackgroundGradient,
       child: SafeArea(
@@ -177,9 +169,11 @@ class _SignInPageState extends State<SignInPage> {
                   _buildText(),
                   const SizedBox(height: 65),
                   _buildTextInputs(),
+                  const SizedBox(height: 25),
+                  _buildErrorMessage(state),
                 ],
               ),
-              _signInButtons(),
+              _signInButtons(state),
             ],
           ),
         ),
@@ -189,8 +183,22 @@ class _SignInPageState extends State<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _buildBody(),
+    return BlocBuilder<SignInRegisterBloc, SignInRegisterState>(
+      builder: (context, state) {
+        return BlocListener<SignInRegisterBloc, SignInRegisterState>(
+          listener: (context, state) {
+            if (state is SignInRegisterDoneState) {
+              UtilsWidget.navigateToScreen(context, const Home());
+            }
+            if (state is SignInRegisterErrorState) {
+              UtilsWidget.showInfoSnackBar(context, state.error);
+            }
+          },
+          child: Scaffold(
+            body: _buildBody(state),
+          ),
+        );
+      },
     );
   }
 }

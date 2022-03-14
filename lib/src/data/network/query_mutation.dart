@@ -14,6 +14,7 @@ class QueryMutation {
             user_password: \$password, 
             user_name: \$name
           }) {
+            user_uuid
             user_id
             user_email
             user_password

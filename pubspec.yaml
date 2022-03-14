@@ -13,12 +13,20 @@ dependencies:
   flutter:
     sdk: flutter
 
+  #Utils
   flutter_svg_provider: ^1.0.3
   hexcolor: ^2.0.6
-
-  graphql_flutter: ^5.0.1
   equatable: ^2.0.3
 
+  #UI
+  flutter_spinkit: ^5.1.0
+
+  #Network
+  graphql_flutter: ^5.0.1
+
+  #State management
+  bloc: ^8.0.3
+  flutter_bloc: ^8.0.1
 
 
   cupertino_icons: ^1.0.2
