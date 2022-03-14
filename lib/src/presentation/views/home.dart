@@ -1,5 +1,6 @@
 import 'package:banking/src/presentation/styles.dart';
 import 'package:banking/src/presentation/utils/clippers.dart';
+import 'package:banking/src/presentation/views/settings/settings.dart';
 import 'package:banking/src/presentation/widgets/bottom_app_bar.dart';
 import 'package:banking/src/presentation/widgets/card_widget.dart';
 import 'package:banking/src/presentation/widgets/transaction_item.dart';
@@ -14,6 +15,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   bool isSheetExpanded = false;
+  int _selectedIndex = 0;
 
   Widget _homeSheet(ScrollController controller) {
     return Padding(
@@ -94,17 +96,23 @@ class _HomeState extends State<Home> {
             width: double.infinity,
             height: double.infinity,
             decoration: AppColors.appBackgroundGradient,
-            child: Column(
-              children: [
-                const SizedBox(height: 90),
-                Expanded(flex: 2, child: CardWidget()),
-                const Spacer(flex: 2),
-              ],
-            ),
+            child: _selectedIndex == 0
+                ? Column(
+                    children: [
+                      const SizedBox(height: 90),
+                      Expanded(flex: 2, child: CardWidget()),
+                      const Spacer(flex: 2),
+                    ],
+                  )
+                : const SettingsPage(),
           ),
-          _buildSheet(),
+          _selectedIndex == 0 ? _buildSheet() : Container(),
           CustomAppBar(
-            onSelected: (index) {},
+            onSelected: (index) {
+              setState(() {
+                _selectedIndex = index;
+              });
+            },
           ),
         ],
       ),
