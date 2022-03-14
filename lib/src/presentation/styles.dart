@@ -5,6 +5,14 @@ class AppColors {
   static final HexColor gradientDark = HexColor('#EBD0D0');
   static final HexColor gradientLow = HexColor('#F4F5F9');
 
+  static HexColor mainMid = HexColor('#001064');
+  static HexColor mainLow = HexColor('#5f5fc4');
+  static HexColor mainDark = HexColor('#001064');
+  static HexColor mainScaffold = HexColor('#FFFFFF');
+  static HexColor language = HexColor('#FEECE3');
+  static HexColor units = HexColor('#E3F7FD');
+  static HexColor notifications = HexColor('#FFE2EA');
+
   static final BoxDecoration appBackgroundGradient = BoxDecoration(
     gradient: LinearGradient(
       begin: Alignment.bottomLeft,
@@ -18,6 +26,27 @@ class AppColors {
 }
 
 class AppTextStyles {
+  static const TextStyle settingsBig = TextStyle(
+    fontFamily: 'Open Sans SemiBold',
+    color: Colors.black,
+    fontSize: 46,
+    fontWeight: FontWeight.w800,
+  );
+
+  static const TextStyle settingsMid = TextStyle(
+    fontFamily: 'Open Sans Bold',
+    color: Colors.black,
+    fontSize: 18,
+    fontWeight: FontWeight.w700,
+  );
+
+  static final TextStyle settingsSmall = TextStyle(
+    fontFamily: 'Open Sans SemiBold',
+    color: Colors.grey.withOpacity(0.8),
+    fontSize: 14,
+    fontWeight: FontWeight.w700,
+  );
+
   static const TextStyle boldMediumValue = TextStyle(
     fontSize: 22,
     fontFamily: 'Fredoka Bold',

@@ -18,6 +18,5 @@ class SignInRegisterDoneState extends SignInRegisterState {
 
 class SignInRegisterErrorState extends SignInRegisterState {
   final String error;
-
   const SignInRegisterErrorState(this.error);
 }

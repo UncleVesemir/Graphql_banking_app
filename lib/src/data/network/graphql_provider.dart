@@ -8,8 +8,9 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 class UserProvider {
   QueryMutation addMutation = QueryMutation();
 
+  final GraphQLClient _client = graphQLConfiguration.clientToQuery();
+
   Future<User> login(SignInEvent data) async {
-    GraphQLClient _client = graphQLConfiguration.clientToQuery();
     QueryResult result = await _client.query(
       QueryOptions(
         document: gql(addMutation.login()),
@@ -31,7 +32,6 @@ class UserProvider {
   }
 
   Future<User> register(RegisterEvent data) async {
-    GraphQLClient _client = graphQLConfiguration.clientToQuery();
     QueryResult result = await _client.query(
       QueryOptions(
         document: gql(addMutation.createUser()),
@@ -40,27 +40,13 @@ class UserProvider {
       ),
     );
     if (result.hasException) {
-      // UtilsWidget.showInfoSnackBar(
-      //   context,
-      //   'This email already taken',
-      // );
       throw Exception('Email already taken');
     } else {
       if (result.data!['insert_user_one'].toString().length > 10) {
         print(result.data!['insert_user_one'].toString());
         var user = UserModel.fromJson(result.data!['insert_user_one']);
-        // UtilsWidget.navigateToScreen(context, const Home());
-        // UtilsWidget.showInfoSnackBar(
-        //   context,
-        //   'Logged as $name',
-        // );
         return user;
       } else {
-        // print(result.data.toString());
-        // UtilsWidget.showInfoSnackBar(
-        //   context,
-        //   'Something gone wrong. Try again',
-        // );
         throw Exception('Something gone wrong. Try again');
       }
     }
