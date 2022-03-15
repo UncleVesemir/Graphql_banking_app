@@ -1,4 +1,6 @@
 import 'package:banking/src/presentation/styles.dart';
+import 'package:banking/src/presentation/utils/helper_widgets.dart';
+import 'package:banking/src/presentation/views/settings/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 
@@ -12,61 +14,67 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   bool _switcherValue = false;
 
-  Card _profile() {
-    return Card(
-      color: AppColors.mainScaffold,
-      elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  backgroundColor: AppColors.language,
-                  radius: 32,
-                  child: const Icon(
-                    Icons.person,
-                    size: 30,
-                    color: Colors.orange,
-                  ),
-                ),
-                const SizedBox(width: 15),
-                const Text(
-                  'Profile',
-                  style: AppTextStyles.settingsMid,
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                Text(
-                  'Edit',
-                  style: AppTextStyles.settingsSmall,
-                ),
-                const SizedBox(width: 20),
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Center(
-                    child: Icon(
-                      Icons.keyboard_arrow_right_rounded,
-                      size: 28,
-                      color: Colors.black,
+  GestureDetector _profile() {
+    return GestureDetector(
+      onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext ctx) => const ProfilePage())),
+      child: Card(
+        color: AppColors.mainScaffold,
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: AppColors.language,
+                    radius: 32,
+                    child: const Icon(
+                      Icons.person,
+                      size: 30,
+                      color: Colors.orange,
                     ),
                   ),
-                )
-              ],
-            ),
-          ],
+                  const SizedBox(width: 15),
+                  const Text(
+                    'Profile',
+                    style: AppTextStyles.settingsMid,
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Text(
+                    'Edit',
+                    style: AppTextStyles.settingsSmall,
+                  ),
+                  const SizedBox(width: 20),
+                  Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Center(
+                      child: Icon(
+                        Icons.keyboard_arrow_right_rounded,
+                        size: 28,
+                        color: Colors.black,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

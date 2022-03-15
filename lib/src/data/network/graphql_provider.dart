@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:banking/src/data/models/user.dart';
 import 'package:banking/src/data/network/query_mutation.dart';
 import 'package:banking/src/domain/entities/user.dart';
@@ -18,7 +20,7 @@ class UserProvider {
       ),
     );
     if (result.hasException) {
-      print(result.exception);
+      // print(result.exception);
     } else {
       if (result.data!['user'].toString().length > 10) {
         print(result.data!['user'].toString());
@@ -43,12 +45,35 @@ class UserProvider {
       throw Exception('Email already taken');
     } else {
       if (result.data!['insert_user_one'].toString().length > 10) {
-        print(result.data!['insert_user_one'].toString());
+        // print(result.data!['insert_user_one'].toString());
         var user = UserModel.fromJson(result.data!['insert_user_one']);
         return user;
       } else {
         throw Exception('Something gone wrong. Try again');
       }
     }
+  }
+
+  Future<User> uploadImage(UploadImageEvent data) async {
+    QueryResult result = await _client.query(
+      QueryOptions(
+        document: gql(addMutation.updateImage()),
+        variables: addMutation.updateImageVariables(data.userId, data.file),
+      ),
+    );
+    // print(result.toString());
+    if (result.hasException) {
+      // print(result.exception.toString());
+    } else {
+      if (result.data!['update_user']['returning'][0].toString().length > 10) {
+        print(result.data!['update_user']['returning'][0].toString());
+        var user =
+            UserModel.fromJson(result.data!['update_user']['returning'][0]);
+        return user;
+      } else {
+        throw Exception('Incorrect email or password');
+      }
+    }
+    throw Exception('Something gone wrong. Try again');
   }
 }

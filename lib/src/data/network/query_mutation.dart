@@ -1,6 +1,26 @@
 import 'package:banking/src/domain/entities/card.dart';
+import 'package:http/http.dart';
 
 class QueryMutation {
+  String updateImage() {
+    return """
+      mutation UpdateImage(\$user_id: Int!, \$file: String!) {
+  update_user(where: {user_id: {_eq: \$user_id}}, _set: {user_image: \$file}) {
+    returning {
+      user_image
+    }
+  }
+}
+""";
+  }
+
+  Map<String, dynamic> updateImageVariables(int userId, String file) {
+    return {
+      'user_id': userId,
+      'file': file,
+    };
+  }
+
   String createUser() {
     return """
       mutation CreateUser(
@@ -19,6 +39,7 @@ class QueryMutation {
             user_email
             user_password
             user_name
+            user_image
           }
       }
       """;
@@ -45,6 +66,7 @@ class QueryMutation {
           user_name
           user_email
           user_password
+          user_image
           }
       }
       """;

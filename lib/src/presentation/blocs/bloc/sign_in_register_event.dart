@@ -14,6 +14,12 @@ class SignInEvent extends SignInRegisterEvent {
   const SignInEvent({required this.email, required this.password});
 }
 
+class UploadImageEvent extends SignInRegisterEvent {
+  final dynamic file;
+  final int userId;
+  const UploadImageEvent({required this.file, required this.userId});
+}
+
 class RegisterEvent extends SignInRegisterEvent {
   final String email;
   final String password;

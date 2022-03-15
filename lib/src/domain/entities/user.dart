@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'package:http/http.dart';
 
 import 'card.dart';
 
@@ -9,6 +9,7 @@ class User {
     required this.email,
     required this.password,
     required this.id,
+    this.image,
     this.cards,
   });
 
@@ -17,6 +18,7 @@ class User {
   final String email;
   final String password;
   final int id;
+  final String? image;
   final List<Card>? cards;
 
   @override

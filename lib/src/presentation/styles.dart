@@ -12,6 +12,7 @@ class AppColors {
   static HexColor language = HexColor('#FEECE3');
   static HexColor units = HexColor('#E3F7FD');
   static HexColor notifications = HexColor('#FFE2EA');
+  static HexColor green = HexColor('#58CB70');
 
   static final BoxDecoration appBackgroundGradient = BoxDecoration(
     gradient: LinearGradient(
@@ -49,13 +50,13 @@ class AppTextStyles {
 
   static const TextStyle boldMediumValue = TextStyle(
     fontSize: 22,
-    fontFamily: 'Fredoka Bold',
+    fontFamily: 'Open Sans Bold',
   );
 
   static const TextStyle boldLowValueBlack = TextStyle(
     fontSize: 17,
     color: Colors.black,
-    fontFamily: 'Fredoka SemiBold',
+    fontFamily: 'Open Sans Semi  Bold',
   );
 
   static const TextStyle hyperLinkInactive = TextStyle(
@@ -84,66 +85,66 @@ class AppTextStyles {
 
   static const TextStyle boldLowValueWhiteMedium = TextStyle(
     fontSize: 17,
-    fontFamily: 'Fredoka SemiBold',
+    fontFamily: 'Open Sans SemiBold',
     color: Colors.white,
   );
 
   static const TextStyle regularLowValueGrey = TextStyle(
     fontSize: 15,
-    fontFamily: 'Fredoka',
+    fontFamily: 'Open Sans',
     color: Colors.grey,
   );
 
   static const TextStyle signInGrey = TextStyle(
     fontSize: 26,
-    // fontFamily: 'Fredoka SemiBold',
+    fontFamily: 'Open Sans SemiBold',
     fontWeight: FontWeight.w600,
     color: Colors.grey,
   );
 
   static const TextStyle signInBlack = TextStyle(
     fontSize: 36,
-    // fontFamily: 'Fredoka SemiBold',
+    fontFamily: 'Open Sans SemiBold',
     fontWeight: FontWeight.w600,
     color: Colors.black,
   );
 
   static const TextStyle loginGrey = TextStyle(
     fontSize: 20,
-    // fontFamily: 'Fredoka SemiBold',
+    fontFamily: 'Open Sans SemiBold',
     fontWeight: FontWeight.w400,
     color: Colors.grey,
   );
 
   static const TextStyle loginBlack = TextStyle(
     fontSize: 36,
-    // fontFamily: 'Fredoka SemiBold',
+    fontFamily: 'Open Sans SemiBold',
     fontWeight: FontWeight.w800,
     color: Colors.black,
   );
 
   static const TextStyle semiMediumValue = TextStyle(
     fontSize: 24,
-    fontFamily: 'Fredoka SemiBold',
+    fontFamily: 'Open Sans SemiBold',
     fontWeight: FontWeight.w100,
   );
 
   static const TextStyle boldLowValueWhite = TextStyle(
     fontSize: 15,
-    // fontFamily: 'Fredoka Bold',
+    fontFamily: 'Open Sans Bold',
     color: Colors.white,
   );
 
   static const TextStyle regularLowValueWhite = TextStyle(
     fontSize: 15,
-    // fontFamily: 'Fredoka',
+    fontFamily: 'Open Sans',
     color: Colors.white,
   );
 
   static const TextStyle boldMediumValueWhite = TextStyle(
     fontSize: 32,
     fontWeight: FontWeight.w800,
-    // fontFamily: 'Fredoka Bold',
+    fontFamily: 'Open Sans Bold',
     color: Colors.white,
   );
 }

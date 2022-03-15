@@ -58,6 +58,44 @@ class CardClipper extends CustomClipper<Path> {
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
 
+class ReceiptClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    double radius = 10.0;
+    double topRadius = 5.0;
+    var controlPointTL = Offset(radius, radius);
+    var endPointTL = Offset(radius, 0);
+
+    var controlPointTP = Offset(size.width - radius, radius);
+    var endPointTP = Offset(size.width, radius);
+
+    var controlPointBR = Offset(size.width - radius, size.height - radius);
+    var endPointBR = Offset(size.width - radius, size.height);
+
+    var controlPointBL = Offset(radius, size.height - radius);
+    var endPointBL = Offset(0, size.height - radius);
+
+    Path path = Path()
+      ..moveTo(0, radius)
+      ..quadraticBezierTo(
+          controlPointTL.dx, controlPointTL.dy, endPointTL.dx, endPointTL.dy)
+      ..lineTo(size.width - radius, 0)
+      ..quadraticBezierTo(
+          controlPointTP.dx, controlPointTP.dy, endPointTP.dx, endPointTP.dy)
+      ..lineTo(size.width, size.height - radius)
+      ..quadraticBezierTo(
+          controlPointBR.dx, controlPointBR.dy, endPointBR.dx, endPointBR.dy)
+      ..lineTo(radius, size.height)
+      ..quadraticBezierTo(
+          controlPointBL.dx, controlPointBL.dy, endPointBL.dx, endPointBL.dy)
+      ..close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
+}
+
 class AddButtonClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {

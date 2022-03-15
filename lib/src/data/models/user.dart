@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:banking/src/domain/entities/card.dart';
 import 'package:banking/src/domain/entities/user.dart';
+import 'package:http/http.dart';
 
 part 'user_mapper.dart';
 
@@ -16,6 +17,7 @@ class UserModel extends User {
     required String email,
     required String password,
     required int id,
+    String? image,
     List<Card>? cards,
   }) : super(
           uuid: uuid,
@@ -23,6 +25,7 @@ class UserModel extends User {
           email: email,
           password: password,
           id: id,
+          image: image,
           cards: cards,
         );
 

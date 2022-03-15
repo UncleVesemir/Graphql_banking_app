@@ -6,4 +6,6 @@ class GraphQLRepositiry {
   final UserProvider _userProvider = UserProvider();
   Future<User> login(SignInEvent data) => _userProvider.login(data);
   Future<User> register(RegisterEvent data) => _userProvider.register(data);
+  Future<User> uploadImage(UploadImageEvent data) =>
+      _userProvider.uploadImage(data);
 }

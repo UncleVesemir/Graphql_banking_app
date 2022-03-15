@@ -146,7 +146,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     ),
                   ],
                   borderRadius: BorderRadius.circular(32),
-                  color: Colors.grey[200],
+                  color: Colors.white,
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(12),

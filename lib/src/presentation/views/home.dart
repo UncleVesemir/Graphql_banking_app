@@ -1,5 +1,6 @@
 import 'package:banking/src/presentation/styles.dart';
 import 'package:banking/src/presentation/utils/clippers.dart';
+import 'package:banking/src/presentation/views/history.dart';
 import 'package:banking/src/presentation/views/settings/settings.dart';
 import 'package:banking/src/presentation/widgets/bottom_app_bar.dart';
 import 'package:banking/src/presentation/widgets/card_widget.dart';
@@ -104,7 +105,9 @@ class _HomeState extends State<Home> {
                       const Spacer(flex: 2),
                     ],
                   )
-                : const SettingsPage(),
+                : _selectedIndex == 3
+                    ? const HistoryPage()
+                    : const SettingsPage(),
           ),
           _selectedIndex == 0 ? _buildSheet() : Container(),
           CustomAppBar(
