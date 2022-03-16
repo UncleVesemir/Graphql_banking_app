@@ -1,7 +1,10 @@
 import 'package:banking/src/presentation/styles.dart';
 import 'package:banking/src/presentation/utils/clippers.dart';
 import 'package:banking/src/presentation/widgets/animated_button.dart';
+import 'package:banking/src/presentation/widgets/custom_clip.dart';
+import 'package:banking/src/presentation/widgets/custom_list_wheel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 
 class MoneyTransferScreen extends StatefulWidget {
@@ -35,6 +38,25 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
     );
   }
 
+  List<Widget> cards = const [
+    CircleAvatar(
+      radius: 40,
+      backgroundColor: Colors.white,
+    ),
+    CircleAvatar(
+      radius: 40,
+      backgroundColor: Colors.white,
+    ),
+    CircleAvatar(
+      radius: 40,
+      backgroundColor: Colors.white,
+    ),
+    CircleAvatar(
+      radius: 40,
+      backgroundColor: Colors.white,
+    ),
+  ];
+
   Widget _buildText() {
     return Column(
       children: [
@@ -61,12 +83,61 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
   Widget _buildBody() {
     return Center(
       child: Container(
-        decoration: AppColors.appBackgroundGradient,
+        decoration: AppColors.appBackgroundGradientDecoration,
         child: Column(
           children: [
             Flexible(
               flex: 3,
-              child: Container(),
+              child: SafeArea(
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: ListWheelScrollViewX(
+                        scrollDirection: Axis.horizontal,
+                        children: cards,
+                        squeeze: 0.7,
+                        perspective: 0.005,
+                        itemExtent: 80,
+                        onSelectedItemChanged: (item) {},
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 24, right: 24, top: 0, bottom: 0),
+                      child: Column(
+                        children: [
+                          ClipShadowPath(
+                            shadow: Shadow(
+                              offset: const Offset(0, 1),
+                              color: Colors.grey.withOpacity(0.5),
+                              blurRadius: 10,
+                            ),
+                            clipper: SettingsCardClipper(),
+                            child: Container(
+                              height: 80,
+                              width: double.infinity,
+                              color: Colors.white,
+                            ),
+                          ),
+                          ClipShadowPath(
+                            shadow: Shadow(
+                              offset: const Offset(0, 1),
+                              color: Colors.grey.withOpacity(0.5),
+                              blurRadius: 10,
+                            ),
+                            clipper: SettingsCardClipper(),
+                            child: Container(
+                              height: 80,
+                              width: double.infinity,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
             Expanded(
               flex: 2,

@@ -14,7 +14,7 @@ class AppColors {
   static HexColor notifications = HexColor('#FFE2EA');
   static HexColor green = HexColor('#58CB70');
 
-  static final BoxDecoration appBackgroundGradient = BoxDecoration(
+  static final BoxDecoration appBackgroundGradientDecoration = BoxDecoration(
     gradient: LinearGradient(
       begin: Alignment.bottomLeft,
       end: Alignment.topRight,
@@ -24,13 +24,50 @@ class AppColors {
       ],
     ),
   );
+
+  static final LinearGradient appBackgroundGradient = LinearGradient(
+    begin: Alignment.bottomLeft,
+    end: Alignment.topRight,
+    colors: [
+      AppColors.gradientDark,
+      AppColors.gradientLow,
+    ],
+  );
 }
 
 class AppTextStyles {
+  static const TextStyle receiptBig = TextStyle(
+    fontFamily: 'Open Sans SemiBold',
+    color: Colors.black,
+    fontSize: 30,
+    fontWeight: FontWeight.w600,
+  );
+
+  static const TextStyle receiptLow = TextStyle(
+    fontFamily: 'Open Sans',
+    color: Colors.black,
+    fontSize: 15,
+    fontWeight: FontWeight.w400,
+  );
+
+  static const TextStyle receiptLowBold = TextStyle(
+    fontFamily: 'Open Sans Bold',
+    color: Colors.black,
+    fontSize: 15,
+    fontWeight: FontWeight.w600,
+  );
+
+  static const TextStyle receiptMedium = TextStyle(
+    fontFamily: 'Open Sans SemiBold',
+    color: Colors.black,
+    fontSize: 25,
+    fontWeight: FontWeight.w600,
+  );
+
   static const TextStyle settingsBig = TextStyle(
     fontFamily: 'Open Sans SemiBold',
     color: Colors.black,
-    fontSize: 46,
+    fontSize: 32,
     fontWeight: FontWeight.w800,
   );
 
@@ -50,6 +87,12 @@ class AppTextStyles {
 
   static const TextStyle boldMediumValue = TextStyle(
     fontSize: 22,
+    fontFamily: 'Open Sans Bold',
+  );
+
+  static const TextStyle boldMediumValueBlack = TextStyle(
+    fontSize: 22,
+    color: Colors.black,
     fontFamily: 'Open Sans Bold',
   );
 

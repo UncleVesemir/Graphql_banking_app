@@ -13,7 +13,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   Widget _buildBody() {
     return Container(
-      decoration: AppColors.appBackgroundGradient,
+      decoration: AppColors.appBackgroundGradientDecoration,
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),

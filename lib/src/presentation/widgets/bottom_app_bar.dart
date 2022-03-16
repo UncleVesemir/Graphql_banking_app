@@ -1,5 +1,6 @@
 import 'package:banking/src/presentation/utils/clippers.dart';
 import 'package:banking/src/presentation/views/transfer_money.dart';
+import 'package:banking/src/presentation/widgets/custom_clip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 
@@ -61,64 +62,48 @@ class _CustomAppBarState extends State<CustomAppBar> {
 
   Widget _buildFAB() {
     return Stack(
-      alignment: Alignment.bottomCenter,
+      alignment: Alignment.center,
       children: [
-        ClipPath(
+        ClipShadowPath(
+          shadow: Shadow(
+            offset: const Offset(0, 0),
+            color: Colors.grey.withOpacity(0.5),
+            blurRadius: 20,
+          ),
           clipper: FabClipper(),
           child: Container(
-            width: 150,
-            height: 105,
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  spreadRadius: 10,
-                  color: Colors.grey[300]!,
-                  offset: const Offset(0, 60),
-                  blurRadius: 30,
-                )
-              ],
-            ),
+            width: 135,
+            height: 107,
+            color: Colors.white,
           ),
         ),
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            ClipPath(
-              clipper: FabClipper(),
-              child: Container(
-                width: 135,
-                height: 107,
-                color: Colors.white,
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute<void>(
+                builder: (BuildContext context) => const MoneyTransferScreen(),
+              ),
+            );
+          },
+          child: Container(
+            height: 80,
+            width: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: RadialGradient(
+                center: Alignment.topLeft,
+                radius: 0.85,
+                colors: [
+                  // Colors.yellowAccent.withOpacity(0.6),
+                  // Colors.deepOrange.withOpacity(1),
+                  Colors.grey.withOpacity(0.2),
+                  Colors.black.withOpacity(0.9),
+                ],
               ),
             ),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute<void>(
-                    builder: (BuildContext context) =>
-                        const MoneyTransferScreen(),
-                  ),
-                );
-              },
-              child: Container(
-                height: 80,
-                width: 80,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: RadialGradient(
-                    center: Alignment.topLeft,
-                    radius: 0.85,
-                    colors: [
-                      Colors.yellowAccent.withOpacity(0.6),
-                      Colors.deepOrange.withOpacity(1),
-                    ],
-                  ),
-                ),
-                child: const Icon(Icons.add, color: Colors.white, size: 35),
-              ),
-            ),
-          ],
+            child: const Icon(Icons.add, color: Colors.white, size: 35),
+          ),
         ),
       ],
     );
@@ -140,12 +125,12 @@ class _CustomAppBarState extends State<CustomAppBar> {
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey[600]!,
-                      offset: Offset(0.0, 1.0), //(x,y)
-                      blurRadius: 6.0,
+                      color: Colors.grey.withOpacity(0.4),
+                      offset: const Offset(0.0, 1.0),
+                      blurRadius: 20,
                     ),
                   ],
-                  borderRadius: BorderRadius.circular(32),
+                  borderRadius: BorderRadius.circular(45),
                   color: Colors.white,
                 ),
                 child: Padding(

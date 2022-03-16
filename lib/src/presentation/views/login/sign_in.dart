@@ -155,7 +155,7 @@ class _SignInPageState extends State<SignInPage> {
 
   Widget _buildBody(SignInRegisterState state) {
     return Container(
-      decoration: AppColors.appBackgroundGradient,
+      decoration: AppColors.appBackgroundGradientDecoration,
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(28),

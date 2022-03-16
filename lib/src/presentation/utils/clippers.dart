@@ -25,6 +25,39 @@ class SheetClipper extends CustomClipper<Path> {
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
 
+class SettingsCardClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    double radius = 25.0;
+    double topRadius = 10.0;
+    var controlPoint = Offset(size.width / 2, 0);
+    var endPoint = Offset(size.width - radius, topRadius);
+
+    var controlPoint2 = Offset(size.width / 2, size.height - topRadius);
+    var endPoint2 = Offset(radius, size.height);
+
+    Path path = Path()
+      ..moveTo(0, radius + topRadius)
+      ..arcToPoint(Offset(radius, topRadius), radius: Radius.circular(radius))
+      ..quadraticBezierTo(
+          controlPoint.dx, controlPoint.dy, endPoint.dx, endPoint.dy)
+      ..arcToPoint(Offset(size.width, radius + topRadius),
+          radius: Radius.circular(radius))
+      ..lineTo(size.width, size.height - radius)
+      ..arcToPoint(Offset(size.width - radius, size.height),
+          radius: Radius.circular(radius))
+      ..quadraticBezierTo(
+          controlPoint2.dx, controlPoint2.dy, endPoint2.dx, endPoint2.dy)
+      ..arcToPoint(Offset(0, size.height - radius),
+          radius: Radius.circular(radius))
+      ..close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
+}
+
 class CardClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
@@ -62,12 +95,15 @@ class ReceiptClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     double radius = 10.0;
-    double topRadius = 5.0;
+    double topRadius = 10.0;
     var controlPointTL = Offset(radius, radius);
     var endPointTL = Offset(radius, 0);
 
     var controlPointTP = Offset(size.width - radius, radius);
     var endPointTP = Offset(size.width, radius);
+
+    var controlPointTC = Offset(size.width / 2, 0);
+    var endPointTC = Offset(size.width - radius, topRadius);
 
     var controlPointBR = Offset(size.width - radius, size.height - radius);
     var endPointBR = Offset(size.width - radius, size.height);
@@ -80,6 +116,8 @@ class ReceiptClipper extends CustomClipper<Path> {
       ..quadraticBezierTo(
           controlPointTL.dx, controlPointTL.dy, endPointTL.dx, endPointTL.dy)
       ..lineTo(size.width - radius, 0)
+      // ..quadraticBezierTo(
+      //     controlPointTC.dx, controlPointTC.dy, endPointTC.dx, endPointTC.dy)
       ..quadraticBezierTo(
           controlPointTP.dx, controlPointTP.dy, endPointTP.dx, endPointTP.dy)
       ..lineTo(size.width, size.height - radius)

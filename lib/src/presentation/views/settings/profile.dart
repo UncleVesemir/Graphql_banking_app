@@ -72,60 +72,69 @@ class _ProfilePageState extends State<ProfilePage> {
                     padding: const EdgeInsets.all(24),
                     child: Column(
                       children: [
-                        const Text('Profile info',
-                            style: AppTextStyles.regularLowValueGrey),
+                        const Text(
+                          'Profile info',
+                          style: AppTextStyles.regularLowValueGrey,
+                        ),
                         const SizedBox(height: 15),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      state.user.name,
-                                      style: AppTextStyles.loginBlack,
-                                    ),
-                                    const SizedBox(width: 15),
-                                    const CircleAvatar(
-                                      radius: 15,
-                                      backgroundColor: Colors.deepOrange,
-                                      child: Icon(
-                                        Icons.edit,
-                                        size: 13,
-                                        color: Colors.white,
+                            Flexible(
+                              flex: 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        state.user.name,
+                                        style: AppTextStyles.boldMediumValue,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                Text(
-                                  state.user.email,
-                                  style: AppTextStyles.regularLowValueGrey,
-                                ),
-                              ],
+                                      const SizedBox(width: 15),
+                                      const CircleAvatar(
+                                        radius: 15,
+                                        backgroundColor: Colors.deepOrange,
+                                        child: Icon(
+                                          Icons.edit,
+                                          size: 13,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Text(
+                                    state.user.email,
+                                    style: AppTextStyles.regularLowValueGrey,
+                                  ),
+                                ],
+                              ),
                             ),
-                            Stack(
-                              alignment: Alignment.bottomRight,
-                              children: const [
-                                CircleAvatar(
-                                  radius: 30,
-                                  backgroundColor: Colors.black,
-                                  child: Icon(
-                                    Icons.person,
-                                    color: Colors.white,
+                            Flexible(
+                              flex: 1,
+                              child: Stack(
+                                alignment: Alignment.bottomRight,
+                                children: const [
+                                  CircleAvatar(
+                                    radius: 30,
+                                    backgroundColor: Colors.black,
+                                    child: Icon(
+                                      Icons.person,
+                                      color: Colors.white,
+                                    ),
                                   ),
-                                ),
-                                CircleAvatar(
-                                  radius: 12,
-                                  backgroundColor: Colors.deepOrange,
-                                  child: Icon(
-                                    Icons.edit,
-                                    size: 12,
-                                    color: Colors.white,
+                                  CircleAvatar(
+                                    radius: 12,
+                                    backgroundColor: Colors.deepOrange,
+                                    child: Icon(
+                                      Icons.edit,
+                                      size: 12,
+                                      color: Colors.white,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -148,27 +157,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: Column(
                       children: [
                         const Text('Cards',
-                            style: AppTextStyles.regularLowValueGrey),
-                        const SizedBox(height: 15),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                width: double.infinity,
-                height: 400,
-                child: Card(
-                  color: AppColors.mainScaffold,
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      children: [
-                        const Text('History',
                             style: AppTextStyles.regularLowValueGrey),
                         const SizedBox(height: 15),
                       ],
@@ -204,7 +192,7 @@ class _ProfilePageState extends State<ProfilePage> {
             elevation: 0.0,
           ),
           body: Container(
-            decoration: AppColors.appBackgroundGradient,
+            decoration: AppColors.appBackgroundGradientDecoration,
             child: state is SignInRegisterDoneState
                 ? _loaded(state)
                 : state is SignInRegisterLoadingState

@@ -16,17 +16,17 @@ class _HistoryPageState extends State<HistoryPage> {
   Widget _loaded(SignInRegisterDoneState state) {
     return Padding(
       padding: const EdgeInsets.all(14),
-      child: ListView(
-        children: const [
-          ReceiptInfoWidget(isProfit: true),
-          ReceiptDataWidget(),
-          ReceiptInfoWidget(isProfit: true),
-          ReceiptDataWidget(),
-          ReceiptInfoWidget(isProfit: false),
-          ReceiptDataWidget(),
-          ReceiptInfoWidget(isProfit: true),
-          ReceiptDataWidget(),
-        ],
+      child: SafeArea(
+        child: ListView(
+          children: const [
+            SizedBox(height: 20),
+            ReceiptDataWidget(),
+            ReceiptDataWidget(),
+            ReceiptDataWidget(),
+            ReceiptDataWidget(),
+            const SizedBox(height: 80),
+          ],
+        ),
       ),
     );
   }
@@ -46,7 +46,7 @@ class _HistoryPageState extends State<HistoryPage> {
     return BlocBuilder<SignInRegisterBloc, SignInRegisterState>(
       builder: (context, state) {
         return Container(
-          decoration: AppColors.appBackgroundGradient,
+          decoration: AppColors.appBackgroundGradientDecoration,
           child: state is SignInRegisterDoneState
               ? _loaded(state)
               : state is SignInRegisterLoadingState
