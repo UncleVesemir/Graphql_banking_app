@@ -155,6 +155,35 @@ class _HomeState extends State<Home> {
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
+      leading: null,
+      automaticallyImplyLeading: false,
+      actions: _selectedIndex == 0
+          ? [
+              Row(
+                children: [
+                  Container(
+                    height: 30,
+                    width: 30,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: RadialGradient(
+                        center: Alignment.topLeft,
+                        radius: 0.85,
+                        colors: [
+                          Colors.yellowAccent.withOpacity(0.6),
+                          Colors.deepOrange.withOpacity(1),
+                          // Colors.grey.withOpacity(0.2),
+                          // Colors.black.withOpacity(0.9),
+                        ],
+                      ),
+                    ),
+                    child: const Icon(Icons.add, color: Colors.white, size: 15),
+                  ),
+                  const SizedBox(width: 15),
+                ],
+              ),
+            ]
+          : [],
       title: Text(
         _selectedIndex == 0
             ? 'Home'

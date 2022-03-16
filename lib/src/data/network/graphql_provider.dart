@@ -33,6 +33,16 @@ class UserProvider {
     throw Exception('Something gone wrong. Try again');
   }
 
+  Stream<QueryResult<dynamic>> fetchFriends(FetchFriendsEvent data) {
+    Stream<QueryResult<dynamic>> stream;
+    stream = _client.subscribe(SubscriptionOptions(
+      document: gql(addMutation.fetchFriends()),
+      variables: addMutation.fetchFriendsVariables(data.userUuid),
+    ));
+    print('HERE');
+    return stream;
+  }
+
   Future<User> register(RegisterEvent data) async {
     QueryResult result = await _client.query(
       QueryOptions(

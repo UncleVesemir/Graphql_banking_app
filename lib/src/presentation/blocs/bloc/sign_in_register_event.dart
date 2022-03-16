@@ -31,3 +31,9 @@ class RegisterEvent extends SignInRegisterEvent {
     required this.name,
   });
 }
+
+class FetchFriendsEvent extends SignInRegisterEvent {
+  final String userUuid;
+
+  const FetchFriendsEvent({required this.userUuid});
+}

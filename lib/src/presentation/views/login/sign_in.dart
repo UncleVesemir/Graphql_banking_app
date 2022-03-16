@@ -188,6 +188,9 @@ class _SignInPageState extends State<SignInPage> {
         return BlocListener<SignInRegisterBloc, SignInRegisterState>(
           listener: (context, state) {
             if (state is SignInRegisterDoneState) {
+              final SignInRegisterBloc userBloc =
+                  BlocProvider.of<SignInRegisterBloc>(context);
+              userBloc.add(FetchFriendsEvent(userUuid: state.user.uuid));
               UtilsWidget.navigateToScreen(context, const Home());
             }
             if (state is SignInRegisterErrorState) {

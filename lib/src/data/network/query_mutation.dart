@@ -1,7 +1,25 @@
 import 'package:banking/src/domain/entities/card.dart';
-import 'package:http/http.dart';
 
 class QueryMutation {
+  String fetchFriends() {
+    return """
+      subscription FetchFriends(\$user_uuid: uuid!) {
+        friends(where: {user_first_uuid: {_eq: \$user_uuid}}) {
+          user_first_uuid
+          user_second_uuid
+          id
+          status
+        }
+      }
+    """;
+  }
+
+  Map<String, dynamic> fetchFriendsVariables(String userUuid) {
+    return {
+      'user_uuid': userUuid,
+    };
+  }
+
   String updateImage() {
     return """
       mutation UpdateImage(\$user_id: Int!, \$file: String!) {

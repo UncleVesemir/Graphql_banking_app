@@ -29,7 +29,7 @@ class SettingsCardClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     double radius = 25.0;
-    double topRadius = 10.0;
+    double topRadius = 5.0;
     var controlPoint = Offset(size.width / 2, 0);
     var endPoint = Offset(size.width - radius, topRadius);
 
@@ -102,8 +102,8 @@ class ReceiptClipper extends CustomClipper<Path> {
     var controlPointTP = Offset(size.width - radius, radius);
     var endPointTP = Offset(size.width, radius);
 
-    var controlPointTC = Offset(size.width / 2, 0);
-    var endPointTC = Offset(size.width - radius, topRadius);
+    // var controlPointTC = Offset(size.width / 2, 0);
+    // var endPointTC = Offset(size.width - radius, topRadius);
 
     var controlPointBR = Offset(size.width - radius, size.height - radius);
     var endPointBR = Offset(size.width - radius, size.height);
