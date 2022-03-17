@@ -3,12 +3,12 @@ import 'package:banking/src/domain/entities/friend.dart';
 
 class FriendModel extends Friend {
   const FriendModel({
-    required String name,
     required int id,
     List<Card>? cards,
+    required String name,
   }) : super(
           id: id,
-          cards: cards,
           name: name,
+          cards: cards,
         );
 }

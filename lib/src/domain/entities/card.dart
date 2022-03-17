@@ -1,31 +1,31 @@
 class Card {
   const Card({
-    required this.name,
+    this.id,
     required this.cvv,
-    required this.expDate,
+    required this.name,
+    required this.type,
     required this.value,
     required this.number,
-    this.id,
     required this.userId,
-    required this.type,
+    required this.expDate,
   });
-  final String name;
-  final String number;
-  final String expDate;
-  final String value;
-  final int cvv;
-  final String type;
   final int? id;
+  final int cvv;
+  final String name;
+  final String type;
+  final String value;
+  final String number;
   final int userId;
+  final String expDate;
 
   @override
   List<Object> get props {
     return [
       name,
-      expDate,
-      value,
       type,
+      value,
       userId,
+      expDate,
     ];
   }
 }

@@ -1,6 +1,6 @@
 enum CardTypes {
   visa,
-  mastercard,
   maestro,
+  mastercard,
   americanExpress,
 }
