@@ -33,9 +33,25 @@ class AppColors {
       AppColors.gradientLow,
     ],
   );
+
+  static final LinearGradient appBackgroundGradientInactive = LinearGradient(
+    begin: Alignment.bottomLeft,
+    end: Alignment.topRight,
+    colors: [
+      AppColors.gradientDark.withOpacity(0.6),
+      AppColors.gradientLow.withOpacity(0.6),
+    ],
+  );
 }
 
 class AppTextStyles {
+  static final TextStyle creditCardBig = TextStyle(
+    fontFamily: 'Open Sans SemiBold',
+    color: Colors.black.withOpacity(0.5),
+    fontSize: 24,
+    fontWeight: FontWeight.w600,
+  );
+
   static const TextStyle receiptBig = TextStyle(
     fontFamily: 'Open Sans SemiBold',
     color: Colors.black,

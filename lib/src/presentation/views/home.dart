@@ -3,6 +3,7 @@ import 'package:banking/src/presentation/utils/clippers.dart';
 import 'package:banking/src/presentation/views/history.dart';
 import 'package:banking/src/presentation/views/settings/settings.dart';
 import 'package:banking/src/presentation/widgets/bottom_app_bar.dart';
+import 'package:banking/src/presentation/widgets/card/add_credit_card.dart';
 import 'package:banking/src/presentation/widgets/card/credit_card_item.dart';
 import 'package:banking/src/presentation/widgets/card/credit_card_model.dart';
 import 'package:banking/src/presentation/widgets/card/credit_card_widget.dart';
@@ -21,6 +22,15 @@ class _HomeState extends State<Home> {
   int _selectedIndex = 0;
 
   List<CreditCardItem> cards = [];
+
+  void _showCardDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AddCardDialog();
+      },
+    );
+  }
 
   @override
   void didChangeDependencies() {
@@ -161,23 +171,27 @@ class _HomeState extends State<Home> {
           ? [
               Row(
                 children: [
-                  Container(
-                    height: 30,
-                    width: 30,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: RadialGradient(
-                        center: Alignment.topLeft,
-                        radius: 0.85,
-                        colors: [
-                          Colors.yellowAccent.withOpacity(0.6),
-                          Colors.deepOrange.withOpacity(1),
-                          // Colors.grey.withOpacity(0.2),
-                          // Colors.black.withOpacity(0.9),
-                        ],
+                  GestureDetector(
+                    onTap: _showCardDialog,
+                    child: Container(
+                      height: 30,
+                      width: 30,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: RadialGradient(
+                          center: Alignment.topLeft,
+                          radius: 0.85,
+                          colors: [
+                            Colors.yellowAccent.withOpacity(0.6),
+                            Colors.deepOrange.withOpacity(1),
+                            // Colors.grey.withOpacity(0.2),
+                            // Colors.black.withOpacity(0.9),
+                          ],
+                        ),
                       ),
+                      child:
+                          const Icon(Icons.add, color: Colors.white, size: 15),
                     ),
-                    child: const Icon(Icons.add, color: Colors.white, size: 15),
                   ),
                   const SizedBox(width: 15),
                 ],
@@ -203,6 +217,62 @@ class _HomeState extends State<Home> {
       extendBodyBehindAppBar: true,
       appBar: _buildAppBar(),
       body: _buildBody(),
+    );
+  }
+}
+
+class AddCardDialog extends StatefulWidget {
+  const AddCardDialog({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<AddCardDialog> createState() => _AddCardDialogState();
+}
+
+class _AddCardDialogState extends State<AddCardDialog> {
+  bool _checked = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      insetPadding: EdgeInsets.zero,
+      contentPadding: EdgeInsets.zero,
+      titlePadding: EdgeInsets.zero,
+      buttonPadding: EdgeInsets.zero,
+      actions: [
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: _checked
+                    ? AppColors.appBackgroundGradient
+                    : AppColors.appBackgroundGradientInactive,
+              ),
+              child: const Icon(
+                Icons.add,
+                size: 35,
+              ),
+            ),
+          ),
+        ),
+      ],
+      content: AddCreditCardItem(
+        width: 350,
+        height: 240,
+        gradient: AppColors.appBackgroundGradient,
+        onChecked: (value) {
+          setState(() {
+            _checked = value;
+          });
+        },
+      ),
     );
   }
 }
