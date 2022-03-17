@@ -4,7 +4,7 @@ import 'package:banking/main.dart';
 import 'package:banking/src/data/models/user.dart';
 import 'package:banking/src/data/network/query_mutation.dart';
 import 'package:banking/src/internal/application.dart';
-import 'package:banking/src/presentation/blocs/bloc/sign_in_register_bloc.dart';
+import 'package:banking/src/presentation/blocs/sign_in_register/sign_in_register_bloc.dart';
 import 'package:banking/src/presentation/styles.dart';
 import 'package:banking/src/presentation/utils/helper_widgets.dart';
 import 'package:banking/src/presentation/views/home.dart';
@@ -187,7 +187,7 @@ class _RegisterPageState extends State<RegisterPage> {
       builder: (context, state) {
         return BlocListener<SignInRegisterBloc, SignInRegisterState>(
           listener: (context, state) {
-            if (state is SignInRegisterDoneState) {
+            if (state is SignInRegisterLoadedState) {
               UtilsWidget.navigateToScreen(context, const Home());
             }
             if (state is SignInRegisterErrorState) {

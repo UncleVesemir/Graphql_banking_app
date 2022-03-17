@@ -1,4 +1,4 @@
-import 'package:banking/src/presentation/blocs/bloc/sign_in_register_bloc.dart';
+import 'package:banking/src/presentation/blocs/sign_in_register/sign_in_register_bloc.dart';
 import 'package:banking/src/presentation/styles.dart';
 import 'package:banking/src/presentation/widgets/receipt.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +13,7 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
-  Widget _loaded(SignInRegisterDoneState state) {
+  Widget _loaded(SignInRegisterLoadedState state) {
     return Padding(
       padding: const EdgeInsets.all(14),
       child: SafeArea(
@@ -47,7 +47,7 @@ class _HistoryPageState extends State<HistoryPage> {
       builder: (context, state) {
         return Container(
           decoration: AppColors.appBackgroundGradientDecoration,
-          child: state is SignInRegisterDoneState
+          child: state is SignInRegisterLoadedState
               ? _loaded(state)
               : state is SignInRegisterLoadingState
                   ? _loading()

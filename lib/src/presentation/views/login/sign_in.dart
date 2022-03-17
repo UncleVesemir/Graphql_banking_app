@@ -1,17 +1,11 @@
-import 'package:banking/main.dart';
-import 'package:banking/src/data/models/user.dart';
-import 'package:banking/src/data/network/query_mutation.dart';
-import 'package:banking/src/presentation/blocs/bloc/sign_in_register_bloc.dart';
+import 'package:banking/src/presentation/blocs/sign_in_register/sign_in_register_bloc.dart';
 import 'package:banking/src/presentation/styles.dart';
-import 'package:banking/src/presentation/utils/clippers.dart';
 import 'package:banking/src/presentation/utils/helper_widgets.dart';
 import 'package:banking/src/presentation/views/home.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
-import 'dart:convert' as convert;
 
 import 'register.dart';
 
@@ -187,7 +181,7 @@ class _SignInPageState extends State<SignInPage> {
       builder: (context, state) {
         return BlocListener<SignInRegisterBloc, SignInRegisterState>(
           listener: (context, state) {
-            if (state is SignInRegisterDoneState) {
+            if (state is SignInRegisterLoadedState) {
               final SignInRegisterBloc userBloc =
                   BlocProvider.of<SignInRegisterBloc>(context);
               userBloc.add(FetchFriendsEvent(userUuid: state.user.uuid));

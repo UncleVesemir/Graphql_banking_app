@@ -2,7 +2,7 @@ import 'dart:convert' as convert;
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:banking/src/presentation/blocs/bloc/sign_in_register_bloc.dart';
+import 'package:banking/src/presentation/blocs/sign_in_register/sign_in_register_bloc.dart';
 import 'package:banking/src/presentation/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,7 +24,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void _uploadImage() async {
     final SignInRegisterBloc userBloc =
         BlocProvider.of<SignInRegisterBloc>(context);
-    final state = userBloc.state as SignInRegisterDoneState;
+    final state = userBloc.state as SignInRegisterLoadedState;
     // var image = await selectImage();
     // userBloc
     // .add(UploadImageEvent(file: image!.toString(), userId: state.user.id));
@@ -50,7 +50,7 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  Widget _loaded(SignInRegisterDoneState state) {
+  Widget _loaded(SignInRegisterLoadedState state) {
     return Padding(
       padding: const EdgeInsets.all(24),
       child: SizedBox(
@@ -193,7 +193,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           body: Container(
             decoration: AppColors.appBackgroundGradientDecoration,
-            child: state is SignInRegisterDoneState
+            child: state is SignInRegisterLoadedState
                 ? _loaded(state)
                 : state is SignInRegisterLoadingState
                     ? _loading()
