@@ -1,10 +1,8 @@
-import 'dart:developer';
-
 import 'package:banking/src/data/models/user.dart';
 import 'package:banking/src/data/network/query_mutation.dart';
 import 'package:banking/src/domain/entities/user.dart';
 import 'package:banking/src/internal/application.dart';
-import 'package:banking/src/presentation/blocs/bloc/sign_in_register_bloc.dart';
+import 'package:banking/src/presentation/blocs/sign_in_register/sign_in_register_bloc.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class UserProvider {

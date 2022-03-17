@@ -1,5 +1,3 @@
-import 'package:http/http.dart';
-
 import 'card.dart';
 
 class User {

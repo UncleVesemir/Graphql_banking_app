@@ -6,7 +6,7 @@ class GraphQLConfiguration {
     'wss://divine-goat-11.hasura.app/v1/graphql',
     config: SocketClientConfig(
       autoReconnect: true,
-      inactivityTimeout: Duration(seconds: 30),
+      inactivityTimeout: const Duration(seconds: 30),
       initialPayload: () async {
         return {
           'headers': {

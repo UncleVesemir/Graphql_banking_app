@@ -20,16 +20,16 @@ class TransactionItem extends StatelessWidget {
               const SizedBox(width: 15),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                children: const [
                   Text('Name', style: AppTextStyles.boldLowValueBlack),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   Text('09, July, 2022',
                       style: AppTextStyles.regularLowValueGrey),
                 ],
               ),
             ],
           ),
-          Text('+273\$', style: AppTextStyles.semiMediumValue),
+          const Text('+273\$', style: AppTextStyles.semiMediumValue),
         ],
       ),
     );
