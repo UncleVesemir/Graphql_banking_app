@@ -1,5 +1,6 @@
 import 'package:banking/src/data/network/graphql_configuration.dart';
 import 'package:banking/src/data/network/graphql_repository.dart';
+import 'package:banking/src/presentation/blocs/cards/cards_bloc.dart';
 import 'package:banking/src/presentation/blocs/sign_in_register/sign_in_register_bloc.dart';
 import 'package:banking/src/presentation/views/login/login.dart';
 import 'package:flutter/material.dart';
@@ -19,8 +20,13 @@ class Application extends StatelessWidget {
       child: MultiBlocProvider(
         providers: [
           BlocProvider<SignInRegisterBloc>(
-              create: (context) =>
-                  SignInRegisterBloc(graphQLRepositiry: graphQLRepositiry)),
+            create: (context) =>
+                SignInRegisterBloc(graphQLRepositiry: graphQLRepositiry),
+          ),
+          BlocProvider<CardsBloc>(
+            create: (context) =>
+                CardsBloc(graphQLRepositiry: graphQLRepositiry),
+          ),
         ],
         child: const MaterialApp(
           title: 'Banking',

@@ -7,7 +7,11 @@ abstract class CardsEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class AddCardEvent extends CardsEvent {}
+class AddCardEvent extends CardsEvent {
+  final Card card;
+
+  const AddCardEvent({required this.card});
+}
 
 class FetchCardsEvent extends CardsEvent {}
 

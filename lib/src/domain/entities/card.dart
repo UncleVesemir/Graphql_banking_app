@@ -1,36 +1,30 @@
-import 'card_types.dart';
-import 'history.dart';
-
 class Card {
-  Card({
-    required this.userUuid,
-    required this.cardName,
+  const Card({
+    required this.name,
+    required this.cvv,
     required this.expDate,
     required this.value,
-    required this.id,
+    required this.number,
+    this.id,
     required this.userId,
     required this.type,
-    this.history,
   });
-
-  final String userUuid;
-  final String cardName;
+  final String name;
+  final String number;
   final String expDate;
   final String value;
-  final CardTypes type;
-  final int id;
+  final int cvv;
+  final String type;
+  final int? id;
   final int userId;
-  final List<History>? history;
 
   @override
   List<Object> get props {
     return [
-      userUuid,
-      cardName,
+      name,
       expDate,
       value,
       type,
-      id,
       userId,
     ];
   }

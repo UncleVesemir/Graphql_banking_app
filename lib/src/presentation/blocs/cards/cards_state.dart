@@ -11,6 +11,12 @@ class CardsEmptyState extends CardsState {}
 
 class CardsLoadingState extends CardsState {}
 
-class CardsLoadedState extends CardsState {}
+class CardsLoadedState extends CardsState {
+  final Card card;
+  const CardsLoadedState({required this.card});
+}
 
-class CardsErrorState extends CardsState {}
+class CardsErrorState extends CardsState {
+  final dynamic error;
+  const CardsErrorState({required this.error});
+}

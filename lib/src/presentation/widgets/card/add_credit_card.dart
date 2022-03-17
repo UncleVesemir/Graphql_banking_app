@@ -8,7 +8,10 @@ class AddCreditCardItem extends StatefulWidget {
   final LinearGradient? gradient;
   final Color? color;
   final Function(bool value) onChecked;
+  final Function(String name, String number, String expDate, int cvv)
+      onComplete;
   const AddCreditCardItem({
+    required this.onComplete,
     required this.onChecked,
     required this.width,
     required this.height,
@@ -34,6 +37,13 @@ class _AddCreditCardItemState extends State<AddCreditCardItem> {
           _cardNameController.text.isNotEmpty &&
           _cardNumberController.text.isNotEmpty) {
         widget.onChecked(true);
+        widget.onComplete(
+            _cardNameController.text,
+            _cardNumberController.text,
+            _cardExpDateController.text,
+            int.parse(
+              _cardCvvController.text,
+            ));
       } else {
         widget.onChecked(false);
       }
@@ -62,8 +72,13 @@ class _AddCreditCardItemState extends State<AddCreditCardItem> {
         padding:
             const EdgeInsets.only(left: 24, bottom: 18, right: 24, top: 18),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 20),
+            const Text(
+              'Card Number',
+              style: TextStyle(fontSize: 12),
+            ),
             TextFormField(
               inputFormatters: FuncUtils.getFormatter(TextFieldType.creditCard),
               textAlign: TextAlign.start,

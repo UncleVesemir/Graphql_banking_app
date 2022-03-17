@@ -36,8 +36,8 @@ class FuncUtils {
       case TextFieldType.name:
         {
           return [
-            LengthLimitingTextInputFormatter(19),
-            FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9]')),
+            LengthLimitingTextInputFormatter(18),
+            FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9 ]')),
           ];
         }
       case TextFieldType.digits:

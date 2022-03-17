@@ -1,6 +1,35 @@
 import 'package:banking/src/domain/entities/card.dart';
 
 class QueryMutation {
+  String addCard() {
+    return """
+      mutation AddCard(\$card_name: String, \$card_value: String!, \$card_type: String!, \$card_cvv: Int!, \$card_user_id: Int!, \$card_exp_date: String!, \$card_number: String!) {
+  insert_card_one(object: {card_number: \$card_number, card_name: \$card_name, card_value: \$card_value, card_type: \$card_type, card_cvv: \$card_cvv, card_user_id: \$card_user_id, card_exp_date: \$card_exp_date}) {
+    card_id
+    card_name
+    card_number
+    card_value
+    card_type
+    card_cvv
+    card_user_id
+    card_exp_date
+  }
+}
+""";
+  }
+
+  Map<String, dynamic> addCardVariables(Card model) {
+    return {
+      'card_number': model.number,
+      'card_name': model.name,
+      'card_exp_date': model.expDate,
+      'card_value': model.value,
+      'card_type': model.type,
+      'card_cvv': model.cvv,
+      'card_user_id': model.userId,
+    };
+  }
+
   String fetchFriends() {
     return """
       subscription FetchFriends(\$user_uuid: uuid!) {
@@ -95,16 +124,6 @@ class QueryMutation {
       "email": email,
       "password": password,
     };
-  }
-
-  String addCard(Card object) {
-    return """
-      mutation AddCard($object: card_insert_input!) {
-        insert_card_one(object: $object) {
-          card_id
-        }
-      }
-      """;
   }
 
   String deleteCard() {

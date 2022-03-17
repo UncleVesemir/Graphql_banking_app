@@ -1,7 +1,10 @@
+import 'package:banking/src/data/models/card.dart';
 import 'package:banking/src/data/models/user.dart';
 import 'package:banking/src/data/network/query_mutation.dart';
+import 'package:banking/src/domain/entities/card.dart';
 import 'package:banking/src/domain/entities/user.dart';
 import 'package:banking/src/internal/application.dart';
+import 'package:banking/src/presentation/blocs/cards/cards_bloc.dart';
 import 'package:banking/src/presentation/blocs/sign_in_register/sign_in_register_bloc.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -56,6 +59,26 @@ class UserProvider {
         // print(result.data!['insert_user_one'].toString());
         var user = UserModel.fromJson(result.data!['insert_user_one']);
         return user;
+      } else {
+        throw Exception('Something gone wrong. Try again');
+      }
+    }
+  }
+
+  Future<Card> addCard(AddCardEvent data) async {
+    QueryResult result = await _client.query(
+      QueryOptions(
+        document: gql(addMutation.addCard()),
+        variables: addMutation.addCardVariables(data.card),
+      ),
+    );
+    if (result.hasException) {
+      throw Exception(result.exception);
+    } else {
+      if (result.data!['insert_card_one'].toString().length > 10) {
+        print(result.data!['insert_user_one'].toString());
+        var card = CardModel.fromJson(result.data!['insert_card_one']);
+        return card;
       } else {
         throw Exception('Something gone wrong. Try again');
       }
