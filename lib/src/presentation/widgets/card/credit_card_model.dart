@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class CreditCardModel {
   final int index;
   final String cardHolderName;
-  final int cardNumber;
+  final String cardNumber;
   final String expDate;
   final LinearGradient? gradient;
   final Color? color;

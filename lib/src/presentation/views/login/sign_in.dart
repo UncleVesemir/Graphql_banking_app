@@ -1,3 +1,4 @@
+import 'package:banking/src/presentation/blocs/cards/cards_bloc.dart';
 import 'package:banking/src/presentation/blocs/sign_in_register/sign_in_register_bloc.dart';
 import 'package:banking/src/presentation/styles.dart';
 import 'package:banking/src/presentation/utils/helper_widgets.dart';
@@ -177,23 +178,25 @@ class _SignInPageState extends State<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SignInRegisterBloc, SignInRegisterState>(
+    return BlocConsumer<SignInRegisterBloc, SignInRegisterState>(
+      listener: (context, state) {
+        if (state is SignInRegisterLoadedState) {
+          // final SignInRegisterBloc userBloc =
+          //     BlocProvider.of<SignInRegisterBloc>(context);
+          // userBloc.add(FetchFriendsEvent(userUuid: state.user.uuid));
+          var _state = BlocProvider.of<SignInRegisterBloc>(context).state;
+          var _st = _state as SignInRegisterLoadedState;
+          BlocProvider.of<CardsBloc>(context)
+              .add(FetchCardsEvent(userId: _st.user.id));
+          UtilsWidget.navigateToScreen(context, const Home());
+        }
+        if (state is SignInRegisterErrorState) {
+          UtilsWidget.showInfoSnackBar(context, state.error);
+        }
+      },
       builder: (context, state) {
-        return BlocListener<SignInRegisterBloc, SignInRegisterState>(
-          listener: (context, state) {
-            if (state is SignInRegisterLoadedState) {
-              final SignInRegisterBloc userBloc =
-                  BlocProvider.of<SignInRegisterBloc>(context);
-              userBloc.add(FetchFriendsEvent(userUuid: state.user.uuid));
-              UtilsWidget.navigateToScreen(context, const Home());
-            }
-            if (state is SignInRegisterErrorState) {
-              UtilsWidget.showInfoSnackBar(context, state.error);
-            }
-          },
-          child: Scaffold(
-            body: _buildBody(state),
-          ),
+        return Scaffold(
+          body: _buildBody(state),
         );
       },
     );

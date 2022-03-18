@@ -30,6 +30,29 @@ class QueryMutation {
     };
   }
 
+  String fetchCards() {
+    return """
+      subscription FetchCards(\$user_id: Int!) {
+        card(where: {card_user_id: {_eq: \$user_id}}) {
+          card_cvv
+          card_exp_date
+          card_id
+          card_name
+          card_number
+          card_type
+          card_user_id
+          card_value
+        }
+      }
+    """;
+  }
+
+  Map<String, dynamic> fetchCardsVariables(int userId) {
+    return {
+      'user_id': userId,
+    };
+  }
+
   String fetchFriends() {
     return """
       subscription FetchFriends(\$user_uuid: uuid!) {

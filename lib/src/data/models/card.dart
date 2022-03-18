@@ -4,9 +4,9 @@ import 'package:banking/src/domain/entities/card.dart';
 
 part 'card_mapper.dart';
 
-CardModel userModelFromJson(String str) => CardModel.fromJson(json.decode(str));
+CardModel cardModelFromJson(String str) => CardModel.fromJson(json.decode(str));
 
-String userModelToJson(CardModel data) => json.encode(data.toJson());
+String cardModelToJson(CardModel data) => json.encode(data.toJson());
 
 class CardModel extends Card {
   const CardModel({

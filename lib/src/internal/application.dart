@@ -24,8 +24,10 @@ class Application extends StatelessWidget {
                 SignInRegisterBloc(graphQLRepositiry: graphQLRepositiry),
           ),
           BlocProvider<CardsBloc>(
-            create: (context) =>
-                CardsBloc(graphQLRepositiry: graphQLRepositiry),
+            create: (context) => CardsBloc(
+              graphQLRepositiry: graphQLRepositiry,
+              signInRegisterBloc: BlocProvider.of<SignInRegisterBloc>(context),
+            ),
           ),
         ],
         child: const MaterialApp(

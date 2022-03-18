@@ -13,7 +13,15 @@ class AddCardEvent extends CardsEvent {
   const AddCardEvent({required this.card});
 }
 
-class FetchCardsEvent extends CardsEvent {}
+class FetchCardsEvent extends CardsEvent {
+  final int userId;
+  const FetchCardsEvent({required this.userId});
+}
+
+class UpdatedDataEvent extends CardsEvent {
+  final List<Card> userCards;
+  const UpdatedDataEvent({required this.userCards});
+}
 
 class EditCardEvent extends CardsEvent {}
 

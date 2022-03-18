@@ -11,6 +11,6 @@ class FriendsEmptyState extends FriendsState {}
 
 class FriendsLoadingState extends FriendsState {}
 
-class SignInRegisterLoadedState extends FriendsState {}
+class FriendsLoadedState extends FriendsState {}
 
 class FriendsErrorState extends FriendsState {}

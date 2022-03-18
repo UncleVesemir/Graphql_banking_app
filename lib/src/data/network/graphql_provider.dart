@@ -40,7 +40,15 @@ class UserProvider {
       document: gql(addMutation.fetchFriends()),
       variables: addMutation.fetchFriendsVariables(data.userUuid),
     ));
-    print('HERE');
+    return stream;
+  }
+
+  Stream<QueryResult<dynamic>> fetchCards(FetchCardsEvent data) {
+    Stream<QueryResult<dynamic>> stream;
+    stream = _client.subscribe(SubscriptionOptions(
+      document: gql(addMutation.fetchCards()),
+      variables: addMutation.fetchCardsVariables(data.userId),
+    ));
     return stream;
   }
 
@@ -76,7 +84,6 @@ class UserProvider {
       throw Exception(result.exception);
     } else {
       if (result.data!['insert_card_one'].toString().length > 10) {
-        print(result.data!['insert_user_one'].toString());
         var card = CardModel.fromJson(result.data!['insert_card_one']);
         return card;
       } else {

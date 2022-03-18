@@ -9,7 +9,6 @@ import 'package:banking/src/presentation/widgets/card/add_credit_card.dart';
 import 'package:banking/src/presentation/widgets/card/credit_card_item.dart';
 import 'package:banking/src/presentation/widgets/card/credit_card_model.dart';
 import 'package:banking/src/presentation/widgets/card/credit_card_widget.dart';
-import 'package:banking/src/presentation/widgets/transaction_item.dart';
 import 'package:banking/src/domain/entities/card.dart' as card;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,73 +27,12 @@ class _HomeState extends State<Home> {
 
   List<CreditCardItem> cards = [];
 
-  void _showCardDialog() {
+  void _showCardDialog(CardsState state) {
     showDialog(
       context: context,
       builder: (context) {
-        return AddCardDialog();
+        return AddCardDialog(state: state);
       },
-    );
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    cards.add(
-      CreditCardItem(
-        // key: UniqueKey(),
-        cardInfo: CreditCardModel(
-          index: 0,
-          height: 170.0,
-          width: 280.0,
-          cardHolderName: 'ILYA LEBEDZEU',
-          expDate: '21/05',
-          cardNumber: 1234567898765432,
-          gradient: AppColors.appBackgroundGradient,
-        ),
-      ),
-    );
-    cards.add(
-      CreditCardItem(
-        // key: UniqueKey(),
-        cardInfo: CreditCardModel(
-          index: 1,
-          height: 170.0,
-          width: 280.0,
-          cardHolderName: 'ILYA LEBEDZEU',
-          expDate: '21/05',
-          cardNumber: 1234567898765432,
-          gradient: AppColors.appBackgroundGradient,
-        ),
-      ),
-    );
-    cards.add(
-      CreditCardItem(
-        // key: UniqueKey(),
-        cardInfo: CreditCardModel(
-          index: 2,
-          height: 170.0,
-          width: 280.0,
-          cardHolderName: 'ILYA LEBEDZEU',
-          expDate: '21/05',
-          cardNumber: 1234567898765432,
-          gradient: AppColors.appBackgroundGradient,
-        ),
-      ),
-    );
-    cards.add(
-      CreditCardItem(
-        // key: UniqueKey(),
-        cardInfo: CreditCardModel(
-          index: 3,
-          height: 170.0,
-          width: 280.0,
-          cardHolderName: 'ILYA LEBEDZEU',
-          expDate: '21/05',
-          cardNumber: 1234567898765432,
-          gradient: AppColors.appBackgroundGradient,
-        ),
-      ),
     );
   }
 
@@ -105,7 +43,25 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _buildCards() {
+  Widget _buildCards(CardsState state) {
+    List<CreditCardItem> cards = [];
+    if (state is CardsLoadedState) {
+      for (var i = 0; i < state.card.length; i++) {
+        cards.add(
+          CreditCardItem(
+            cardInfo: CreditCardModel(
+              index: i,
+              cardHolderName: state.card[i].name,
+              cardNumber: state.card[i].number,
+              expDate: state.card[i].expDate,
+              width: 290,
+              height: 190,
+              gradient: AppColors.appBackgroundGradient,
+            ),
+          ),
+        );
+      }
+    }
     return Flexible(
       flex: 6,
       child: ClipPath(
@@ -114,23 +70,29 @@ class _HomeState extends State<Home> {
           width: double.infinity,
           height: double.infinity,
           color: Colors.white,
-          child: Column(
-            children: [
-              Flexible(
-                child: CreditCards3d(
-                  children: cards,
-                  onSelected: (item) {},
-                ),
-              ),
-              const SizedBox(height: 90),
-            ],
-          ),
+          child: state is CardsLoadedState
+              ? Column(
+                  children: [
+                    Flexible(
+                      child: CreditCards3d(
+                        children: cards,
+                        onSelected: (item) {},
+                      ),
+                    ),
+                    const SizedBox(height: 90),
+                  ],
+                )
+              : state is CardsLoadingState
+                  ? const SpinKitWave(color: Colors.black)
+                  : state is CardsEmptyState
+                      ? Container(color: Colors.grey)
+                      : Container(),
         ),
       ),
     );
   }
 
-  Widget _buildBody() {
+  Widget _buildBody(CardsState state) {
     return Container(
       width: double.infinity,
       height: double.infinity,
@@ -147,7 +109,7 @@ class _HomeState extends State<Home> {
                     children: [
                       const SizedBox(height: 120),
                       _buildCardsInfo(),
-                      _buildCards(),
+                      _buildCards(state),
                     ],
                   )
                 : _selectedIndex == 3
@@ -166,7 +128,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  AppBar _buildAppBar() {
+  AppBar _buildAppBar(CardsState state) {
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
@@ -177,7 +139,7 @@ class _HomeState extends State<Home> {
               Row(
                 children: [
                   GestureDetector(
-                    onTap: _showCardDialog,
+                    onTap: () async => _showCardDialog(state),
                     child: Container(
                       height: 30,
                       width: 30,
@@ -218,16 +180,27 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: _buildAppBar(),
-      body: _buildBody(),
+    return BlocConsumer<CardsBloc, CardsState>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        var _state = BlocProvider.of<SignInRegisterBloc>(context).state;
+        var _st = _state as SignInRegisterLoadedState;
+        // BlocProvider.of<CardsBloc>(context)
+        //     .add(FetchCardsEvent(userId: _st.user.id));
+        return Scaffold(
+          extendBodyBehindAppBar: true,
+          appBar: _buildAppBar(state),
+          body: _buildBody(state),
+        );
+      },
     );
   }
 }
 
 class AddCardDialog extends StatefulWidget {
+  final CardsState state;
   const AddCardDialog({
+    required this.state,
     Key? key,
   }) : super(key: key);
 
@@ -264,69 +237,67 @@ class _AddCardDialogState extends State<AddCardDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CardsBloc, CardsState>(
+    return BlocConsumer<CardsBloc, CardsState>(
+      listener: (context, state) {
+        if (state is CardsLoadedState) {
+          Navigator.pop(context);
+        }
+      },
       builder: (context, state) {
-        return BlocListener<CardsBloc, CardsState>(
-          listener: (context, state) {
-            if (state is CardsLoadedState) {
-              Navigator.pop(context);
-            }
-          },
-          child: AlertDialog(
-            elevation: 0,
-            backgroundColor: Colors.transparent,
-            insetPadding: EdgeInsets.zero,
-            contentPadding: EdgeInsets.zero,
-            titlePadding: EdgeInsets.zero,
-            buttonPadding: EdgeInsets.zero,
-            actions: [
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: state is! CardsLoadingState
-                      ? GestureDetector(
-                          onTap: _checked ? () async => _addCard() : null,
-                          child: Container(
-                            width: 80,
-                            height: 80,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: _checked
-                                  ? AppColors.appBackgroundGradient
-                                  : AppColors.appBackgroundGradientInactive,
-                            ),
-                            child: const Icon(
-                              Icons.add,
-                              size: 35,
-                            ),
+        return AlertDialog(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          insetPadding: EdgeInsets.zero,
+          contentPadding: EdgeInsets.zero,
+          titlePadding: EdgeInsets.zero,
+          buttonPadding: EdgeInsets.zero,
+          actions: [
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: widget.state is! CardsLoadingState
+                    ? GestureDetector(
+                        onTap: _checked ? () async => _addCard() : null,
+                        child: Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: _checked
+                                ? AppColors.appBackgroundGradient
+                                : AppColors.appBackgroundGradientInactive,
                           ),
-                        )
-                      : const SizedBox(
-                          width: 60,
-                          height: 60,
-                          child: SpinKitWave(color: Colors.white),
+                          child: const Icon(
+                            Icons.add,
+                            size: 35,
+                          ),
                         ),
-                ),
+                      )
+                    : const SizedBox(
+                        width: 60,
+                        height: 60,
+                        child: SpinKitWave(color: Colors.white),
+                      ),
               ),
-            ],
-            content: AddCreditCardItem(
-              width: 350,
-              height: 240,
-              gradient: AppColors.appBackgroundGradient,
-              onComplete: (name, number, expDate, cvv) {
-                setState(() {
-                  cardName = name;
-                  cardNumber = number;
-                  cardExpDate = expDate;
-                  cardCvv = cvv;
-                });
-              },
-              onChecked: (value) {
-                setState(() {
-                  _checked = value;
-                });
-              },
             ),
+          ],
+          content: AddCreditCardItem(
+            width: 350,
+            height: 240,
+            gradient: AppColors.appBackgroundGradient,
+            onComplete: (name, number, expDate, cvv) {
+              setState(() {
+                cardName = name;
+                cardNumber = number;
+                cardExpDate = expDate;
+                cardCvv = cvv;
+              });
+            },
+            onChecked: (value) {
+              setState(() {
+                _checked = value;
+              });
+            },
           ),
         );
       },

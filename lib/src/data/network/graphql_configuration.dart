@@ -19,16 +19,6 @@ class GraphQLConfiguration {
     ),
   );
 
-  // static ValueNotifier<GraphQLClient> initailizeClient() {
-  //   ValueNotifier<GraphQLClient> client = ValueNotifier(
-  //     GraphQLClient(
-  //       cache: GraphQLCache(store: InMemoryStore()),
-  //       link: webSocketLink,
-  //     ),
-  //   );
-  //   return client;
-  // }
-
   ValueNotifier<GraphQLClient> client = ValueNotifier(
     GraphQLClient(
       link: webSocketLink,

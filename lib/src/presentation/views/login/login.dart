@@ -1,7 +1,9 @@
+import 'package:banking/src/presentation/blocs/cards/cards_bloc.dart';
 import 'package:banking/src/presentation/styles.dart';
 import 'package:banking/src/presentation/views/login/register.dart';
 import 'package:banking/src/presentation/views/login/sign_in.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -51,10 +53,12 @@ class _LoginPageState extends State<LoginPage> {
                       child: ElevatedButton(
                         onPressed: () {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext ctx) =>
-                                      const RegisterPage()));
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext ctx) =>
+                                  const RegisterPage(),
+                            ),
+                          );
                         },
                         style: ButtonStyle(
                           backgroundColor:
@@ -79,9 +83,11 @@ class _LoginPageState extends State<LoginPage> {
                       child: GestureDetector(
                         onTap: () {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext ctx) => SignInPage()));
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext ctx) => const SignInPage(),
+                            ),
+                          );
                         },
                         child: const Center(
                           child: Text(
