@@ -1,6 +1,43 @@
 import 'package:banking/src/domain/entities/card.dart';
 
 class QueryMutation {
+  String fetchFriends() {
+    return """
+      subscription FetchFriends(\$user_id: Int!) {
+        friends(where: {user_first_uuid: {_eq: \$user_id}, status: {_eq: "confirmed"}}) {
+          user_second_id
+          user_first_id
+          status
+        }
+      }
+    """;
+  }
+
+  Map<String, dynamic> fetchFriendsVariables(int userId) {
+    return {
+      'user_id': userId,
+    };
+  }
+
+  String getProfileInfo() {
+    return """
+      query GetProfileInfo(\$user_id: Int!) {
+        user(where: {user_id: {_eq: \$user_id}}) {
+          user_email
+          user_image
+          user_name
+          user_id
+        }
+      }
+    """;
+  }
+
+  Map<String, dynamic> getProfileInfoVariables(int userId) {
+    return {
+      'user_id': userId,
+    };
+  }
+
   String addCard() {
     return """
       mutation AddCard(\$card_name: String, \$card_value: String!, \$card_type: String!, \$card_cvv: Int!, \$card_user_id: Int!, \$card_exp_date: String!, \$card_number: String!) {
@@ -53,35 +90,16 @@ class QueryMutation {
     };
   }
 
-  String fetchFriends() {
-    return """
-      subscription FetchFriends(\$user_uuid: uuid!) {
-        friends(where: {user_first_uuid: {_eq: \$user_uuid}}) {
-          user_first_uuid
-          user_second_uuid
-          id
-          status
-        }
-      }
-    """;
-  }
-
-  Map<String, dynamic> fetchFriendsVariables(String userUuid) {
-    return {
-      'user_uuid': userUuid,
-    };
-  }
-
   String updateImage() {
     return """
       mutation UpdateImage(\$user_id: Int!, \$file: String!) {
-  update_user(where: {user_id: {_eq: \$user_id}}, _set: {user_image: \$file}) {
-    returning {
-      user_image
-    }
-  }
-}
-""";
+        update_user(where: {user_id: {_eq: \$user_id}}, _set: {user_image: \$file}) {
+          returning {
+            user_image
+          }
+        }
+      }
+    """;
   }
 
   Map<String, dynamic> updateImageVariables(int userId, String file) {

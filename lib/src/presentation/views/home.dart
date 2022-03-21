@@ -2,14 +2,16 @@ import 'package:banking/src/presentation/blocs/cards/cards_bloc.dart';
 import 'package:banking/src/presentation/blocs/sign_in_register/sign_in_register_bloc.dart';
 import 'package:banking/src/presentation/styles.dart';
 import 'package:banking/src/presentation/utils/clippers.dart';
+import 'package:banking/src/presentation/utils/func_utils.dart';
+import 'package:banking/src/presentation/views/friends.dart';
 import 'package:banking/src/presentation/views/history.dart';
 import 'package:banking/src/presentation/views/settings/settings.dart';
 import 'package:banking/src/presentation/widgets/bottom_app_bar.dart';
 import 'package:banking/src/presentation/widgets/card/add_credit_card.dart';
 import 'package:banking/src/presentation/widgets/card/credit_card_item.dart';
-import 'package:banking/src/presentation/widgets/card/credit_card_model.dart';
 import 'package:banking/src/presentation/widgets/card/credit_card_widget.dart';
 import 'package:banking/src/domain/entities/card.dart' as card;
+import 'package:banking/src/presentation/widgets/custom_clip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -24,6 +26,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   bool isSheetExpanded = false;
   int _selectedIndex = 0;
+  int? _selectedCardIndex;
 
   List<CreditCardItem> cards = [];
 
@@ -36,10 +39,69 @@ class _HomeState extends State<Home> {
     );
   }
 
+  void _onCardSelected(int? item) {
+    setState(() {
+      _selectedCardIndex = item;
+    });
+  }
+
   Widget _buildCardsInfo() {
     return Flexible(
       flex: 2,
-      child: Column(),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: _selectedCardIndex != null
+            ? ClipShadowPath(
+                shadow: Shadow(
+                  offset: const Offset(0, 0),
+                  color: Colors.grey.withOpacity(0.3),
+                  blurRadius: 10,
+                ),
+                clipper: SettingsCardClipper(),
+                child: Container(
+                  color: Colors.white,
+                ),
+              )
+            : Container(),
+      ),
+    );
+  }
+
+  Widget _userCards() {
+    return Flexible(
+      flex: 6,
+      child: ClipPath(
+        clipper: SheetClipper(),
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          color: Colors.white,
+          child: BlocBuilder<CardsBloc, CardsState>(
+            builder: (context, state) {
+              if (state is CardsLoadedState) {
+                return Column(
+                  children: [
+                    Flexible(
+                      child: CreditCards3d(
+                        children: state.card,
+                        // onSelected: (item) => _onCardSelected(item),
+                        onSelected: (item) => {},
+                      ),
+                    ),
+                    const SizedBox(height: 90),
+                  ],
+                );
+              }
+              if (state is CardsLoadingState) {
+                return const Center(
+                  child: SpinKitWave(color: Colors.black),
+                );
+              }
+              return Container();
+            },
+          ),
+        ),
+      ),
     );
   }
 
@@ -60,12 +122,14 @@ class _HomeState extends State<Home> {
                     children: [
                       const SizedBox(height: 120),
                       _buildCardsInfo(),
-                      UserCards(),
+                      _userCards(),
                     ],
                   )
-                : _selectedIndex == 3
-                    ? const HistoryPage()
-                    : const SettingsPage(),
+                : _selectedIndex == 1
+                    ? FriendsPage()
+                    : _selectedIndex == 2
+                        ? const SettingsPage()
+                        : const HistoryPage(),
           ),
           CustomAppBar(
             onSelected: (index) {
@@ -80,8 +144,10 @@ class _HomeState extends State<Home> {
   }
 
   AppBar _buildAppBar(CardsState state) {
+    var userState = BlocProvider.of<SignInRegisterBloc>(context).state
+        as SignInRegisterLoadedState;
     return AppBar(
-      backgroundColor: Colors.transparent,
+      backgroundColor: _selectedIndex == 1 ? Colors.white : Colors.transparent,
       elevation: 0,
       leading: null,
       automaticallyImplyLeading: false,
@@ -92,8 +158,8 @@ class _HomeState extends State<Home> {
                   GestureDetector(
                     onTap: () async => _showCardDialog(state),
                     child: Container(
-                      height: 30,
-                      width: 30,
+                      height: 40,
+                      width: 40,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         gradient: RadialGradient(
@@ -116,15 +182,16 @@ class _HomeState extends State<Home> {
               ),
             ]
           : [],
-      title: Text(
-        _selectedIndex == 0
-            ? 'Home'
-            : _selectedIndex == 1
-                ? 'Friends'
-                : _selectedIndex == 2
-                    ? 'Settings'
-                    : 'History',
-        style: AppTextStyles.boldMediumValueBlack,
+      centerTitle: false,
+      title: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(FuncUtils.getCurrentDateFormatted(),
+              style: AppTextStyles.loginGrey),
+          Text('Hey, ${userState.user.name}!',
+              style: AppTextStyles.boldMediumValueBlack),
+        ],
       ),
     );
   }
@@ -136,8 +203,6 @@ class _HomeState extends State<Home> {
       builder: (context, state) {
         var _state = BlocProvider.of<SignInRegisterBloc>(context).state;
         var _st = _state as SignInRegisterLoadedState;
-        // BlocProvider.of<CardsBloc>(context)
-        //     .add(FetchCardsEvent(userId: _st.user.id));
         return Scaffold(
           extendBodyBehindAppBar: true,
           appBar: _buildAppBar(state),
@@ -148,52 +213,18 @@ class _HomeState extends State<Home> {
   }
 }
 
-class UserCards extends StatelessWidget {
-  const UserCards({
-    Key? key,
-  }) : super(key: key);
+// class UserCards extends StatelessWidget {
+//   final Function(int?) onSelected;
+//   const UserCards({
+//     required this.onSelected,
+//     Key? key,
+//   }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Flexible(
-      flex: 6,
-      child: ClipPath(
-        clipper: SheetClipper(),
-        child: Container(
-            width: double.infinity,
-            height: double.infinity,
-            color: Colors.white,
-            child: BlocConsumer<CardsBloc, CardsState>(
-              listener: (_, state) {
-                print(state);
-              },
-              builder: (context, state) {
-                if (state is CardsLoadedState) {
-                  print(state.card.length);
-                  return Column(
-                    children: [
-                      Flexible(
-                        child: CreditCards3d(
-                          children: state.card,
-                          onSelected: (item) {},
-                        ),
-                      ),
-                      const SizedBox(height: 90),
-                    ],
-                  );
-                }
-                if (state is CardsLoadingState) {
-                  return const Center(
-                    child: SpinKitWave(color: Colors.black),
-                  );
-                }
-                return Container();
-              },
-            )),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return
+//   }
+// }
 
 class AddCardDialog extends StatefulWidget {
   final CardsState state;

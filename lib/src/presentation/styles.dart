@@ -175,6 +175,27 @@ class AppTextStyles {
     color: Colors.grey,
   );
 
+  static const TextStyle loginBlackSemi = TextStyle(
+    fontSize: 20,
+    fontFamily: 'Open Sans SemiBold',
+    fontWeight: FontWeight.w400,
+    color: Colors.black,
+  );
+
+  static const TextStyle friendsSmallBlack = TextStyle(
+    fontSize: 14,
+    fontFamily: 'Open Sans SemiBold',
+    fontWeight: FontWeight.w800,
+    color: Colors.black,
+  );
+
+  static const TextStyle friendsSmallGrey = TextStyle(
+    fontSize: 14,
+    fontFamily: 'Open Sans SemiBold',
+    fontWeight: FontWeight.w800,
+    color: Colors.grey,
+  );
+
   static const TextStyle loginBlack = TextStyle(
     fontSize: 36,
     fontFamily: 'Open Sans SemiBold',

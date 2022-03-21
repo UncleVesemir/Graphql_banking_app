@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class CreditCards3d extends StatefulWidget {
   final List<CreditCardItem> children;
-  final Function(LinearGradient?) onSelected;
+  final Function(int?) onSelected;
   const CreditCards3d({
     required this.children,
     required this.onSelected,
@@ -64,9 +64,10 @@ class _CreditCards3dState extends State<CreditCards3d> {
 
   void _onSelected(int? index) {
     setState(() {
+      // print(index);
       _selectedCardIndex = index;
       if (index != null) {
-        widget.onSelected(widget.children[index].cardInfo.gradient!);
+        widget.onSelected(widget.children[index].cardInfo.index);
       } else {
         widget.onSelected(null);
       }
@@ -136,6 +137,7 @@ class _CardAnimationControllerState extends State<CardAnimationController>
   double perspectiveEnd = 0.000;
 
   double yStart = 0.5;
+  double yCenter = 1.0;
   double yEnd = 1.0;
 
   double xStart = 0;
@@ -174,7 +176,7 @@ class _CardAnimationControllerState extends State<CardAnimationController>
 
     x = [animationStart, animationCenter, animationEnd];
     fx = [xStart, xCenter, xEnd];
-    fy = [yStart, yEnd, yEnd];
+    fy = [yStart, yCenter, yEnd];
     fz = [zStart, zCenter, zEnd];
     fp = [perspectiveStart, perspectiveEnd, perspectiveEnd];
 
@@ -188,15 +190,17 @@ class _CardAnimationControllerState extends State<CardAnimationController>
     animationController?.addListener(() {
       if (animation != null) {
         if (animation!.value >= 1.2) {
-          // print(widget.activeIndex);
           widget.onTop(widget.item.cardInfo.index);
         }
-        if (animation!.value >= 1.2) {
-          widget.onSelected(widget.item.cardInfo.index);
-        }
-        if (animation!.value >= 2.4 || animation!.value < 1.2) {
-          widget.onSelected(null);
-        }
+
+        // if (animation!.value == animationCenter) {
+        //   widget.onSelected(widget.item.cardInfo.index);
+        // }
+
+        // if (animation!.value == animationEnd ||
+        //     animation!.value == animationStart) {
+        //   widget.onSelected(null);
+        // }
       }
     });
 
@@ -250,22 +254,30 @@ class _CardAnimationControllerState extends State<CardAnimationController>
 
   /// Move [widget.item] From Bottom to Center
   void _animateBottomToCenter() {
-    animationController?.animateTo(controllerCenter);
+    animationController?.animateTo(controllerCenter).then((value) {
+      widget.onSelected(widget.item.cardInfo.index);
+    });
   }
 
   /// Move [widget.item] From Center to Bottom if user swipe to Bottom
   void _animateCenterToBottom() {
-    animationController?.reverse();
+    animationController?.reverse().then((value) {
+      widget.onSelected(null);
+    });
   }
 
   /// Move [widget.item] From End to Center
   void _animateEndToCenter() {
-    animationController?.animateTo(controllerCenter);
+    animationController?.animateTo(controllerCenter).then((value) {
+      widget.onSelected(widget.item.cardInfo.index);
+    });
   }
 
   /// Move [widget.item] From Center to End if user swipe to Top
   void _animateCenterToEnd() {
-    animationController?.forward();
+    animationController?.forward().then((value) {
+      widget.onSelected(null);
+    });
   }
 
   /// Dependence X [xStart], Y [yStart], Z [zStart], P [perspectiveStart] on T [animation]

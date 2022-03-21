@@ -58,6 +58,35 @@ class SettingsCardClipper extends CustomClipper<Path> {
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
 
+class TabClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    double radius = 25.0;
+    double topRadius = 5.0;
+    var controlPoint = Offset(size.width / 2, 0);
+    var endPoint = Offset(size.width - radius, topRadius);
+
+    var controlPoint2 = Offset(size.width / 2, size.height - topRadius);
+    var endPoint2 = Offset(radius, size.height);
+
+    Path path = Path()
+      ..moveTo(0, 0)
+      ..lineTo(size.width, 0)
+      ..lineTo(size.width, size.height - radius)
+      ..arcToPoint(Offset(size.width - radius, size.height),
+          radius: Radius.circular(radius))
+      ..quadraticBezierTo(
+          controlPoint2.dx, controlPoint2.dy, endPoint2.dx, endPoint2.dy)
+      ..arcToPoint(Offset(0, size.height - radius),
+          radius: Radius.circular(radius))
+      ..close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
+}
+
 class CardClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {

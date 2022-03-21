@@ -45,8 +45,8 @@ class ReceiptDataWidget extends StatelessWidget {
               children: [
                 Text(
                   3 < 2 ? 'Transfer Received' : 'Transfer Sended',
-                  style: AppTextStyles.receiptBig.copyWith(
-                      color: 3 < 2 ? Colors.green : Colors.deepOrange),
+                  style: AppTextStyles.receiptBig
+                      .copyWith(color: 3 < 2 ? Colors.grey : Colors.black),
                 ),
                 const SizedBox(height: 20),
                 _rowItem('Date:', '2022-03-10, 10:04'),

@@ -38,7 +38,7 @@ class UserProvider {
     Stream<QueryResult<dynamic>> stream;
     stream = _client.subscribe(SubscriptionOptions(
       document: gql(addMutation.fetchFriends()),
-      variables: addMutation.fetchFriendsVariables(data.userUuid),
+      variables: addMutation.fetchFriendsVariables(data.userId),
     ));
     return stream;
   }
