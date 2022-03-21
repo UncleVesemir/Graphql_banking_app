@@ -43,55 +43,6 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _buildCards(CardsState state) {
-    List<CreditCardItem> cards = [];
-    if (state is CardsLoadedState) {
-      for (var i = 0; i < state.card.length; i++) {
-        cards.add(
-          CreditCardItem(
-            cardInfo: CreditCardModel(
-              index: i,
-              cardHolderName: state.card[i].name,
-              cardNumber: state.card[i].number,
-              expDate: state.card[i].expDate,
-              width: 290,
-              height: 190,
-              gradient: AppColors.appBackgroundGradient,
-            ),
-          ),
-        );
-      }
-    }
-    return Flexible(
-      flex: 6,
-      child: ClipPath(
-        clipper: SheetClipper(),
-        child: Container(
-          width: double.infinity,
-          height: double.infinity,
-          color: Colors.white,
-          child: state is CardsLoadedState
-              ? Column(
-                  children: [
-                    Flexible(
-                      child: CreditCards3d(
-                        children: cards,
-                        onSelected: (item) {},
-                      ),
-                    ),
-                    const SizedBox(height: 90),
-                  ],
-                )
-              : state is CardsLoadingState
-                  ? const SpinKitWave(color: Colors.black)
-                  : state is CardsEmptyState
-                      ? Container(color: Colors.grey)
-                      : Container(),
-        ),
-      ),
-    );
-  }
-
   Widget _buildBody(CardsState state) {
     return Container(
       width: double.infinity,
@@ -109,7 +60,7 @@ class _HomeState extends State<Home> {
                     children: [
                       const SizedBox(height: 120),
                       _buildCardsInfo(),
-                      _buildCards(state),
+                      UserCards(),
                     ],
                   )
                 : _selectedIndex == 3
@@ -193,6 +144,53 @@ class _HomeState extends State<Home> {
           body: _buildBody(state),
         );
       },
+    );
+  }
+}
+
+class UserCards extends StatelessWidget {
+  const UserCards({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Flexible(
+      flex: 6,
+      child: ClipPath(
+        clipper: SheetClipper(),
+        child: Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: Colors.white,
+            child: BlocConsumer<CardsBloc, CardsState>(
+              listener: (_, state) {
+                print(state);
+              },
+              builder: (context, state) {
+                if (state is CardsLoadedState) {
+                  print(state.card.length);
+                  return Column(
+                    children: [
+                      Flexible(
+                        child: CreditCards3d(
+                          children: state.card,
+                          onSelected: (item) {},
+                        ),
+                      ),
+                      const SizedBox(height: 90),
+                    ],
+                  );
+                }
+                if (state is CardsLoadingState) {
+                  return const Center(
+                    child: SpinKitWave(color: Colors.black),
+                  );
+                }
+                return Container();
+              },
+            )),
+      ),
     );
   }
 }

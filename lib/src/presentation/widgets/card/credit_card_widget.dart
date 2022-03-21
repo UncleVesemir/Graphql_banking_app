@@ -27,21 +27,18 @@ class _CreditCards3dState extends State<CreditCards3d> {
   @override
   void initState() {
     super.initState();
-    _cards = widget.children;
+    _initCards();
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void didUpdateWidget(CreditCards3d oldWidget) {
+    super.didUpdateWidget(oldWidget);
     _initCards();
   }
 
   void _onTop(int index) {
     setState(() {
-      print('_cards - ${_cards!.length}');
       if (_items.length == widget.children.length) {
-        // print(
-        // '${_items[0].item.cardInfo.index} ${_items[1].item.cardInfo.index} ${_items[2].item.cardInfo.index} ${_items[3].item.cardInfo.index}');
         final elIndex = _items
             .indexWhere((element) => element.item.cardInfo.index == index);
         _topCards.add(_items[elIndex]);
@@ -79,6 +76,8 @@ class _CreditCards3dState extends State<CreditCards3d> {
 
   void _initCards() {
     setState(() {
+      _cards = widget.children;
+      _items = [];
       for (var i = 0; i < widget.children.length; i++) {
         _items.add(
           CardAnimationController(
@@ -101,12 +100,10 @@ class _CreditCards3dState extends State<CreditCards3d> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: _items,
-        ),
+    return Center(
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: _items,
       ),
     );
   }
@@ -191,7 +188,7 @@ class _CardAnimationControllerState extends State<CardAnimationController>
     animationController?.addListener(() {
       if (animation != null) {
         if (animation!.value >= 1.2) {
-          print(widget.activeIndex);
+          // print(widget.activeIndex);
           widget.onTop(widget.item.cardInfo.index);
         }
         if (animation!.value >= 1.2) {
