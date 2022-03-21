@@ -31,7 +31,7 @@ class CardsBloc extends Bloc<CardsEvent, CardsState> {
     on<AddCardEvent>((event, emit) async {
       emit(CardsLoadingState());
       try {
-        final Card card = await graphQLRepositiry.addCard(event);
+        await graphQLRepositiry.addCard(event);
       } catch (e) {
         print(e);
       }
