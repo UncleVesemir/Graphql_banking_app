@@ -20,7 +20,7 @@ class _FriendsPageState extends State<FriendsPage>
     super.initState();
     tabController = TabController(
       initialIndex: 0,
-      length: 3,
+      length: 2,
       vsync: this,
     );
   }
@@ -32,23 +32,22 @@ class _FriendsPageState extends State<FriendsPage>
           selectedTab = value;
         });
       },
+      unselectedLabelColor: Colors.grey,
+      indicator: BoxDecoration(
+        borderRadius: BorderRadius.circular(30), // Creates border
+        color: Colors.greenAccent,
+      ),
       enableFeedback: true,
       indicatorColor: Colors.transparent,
       overlayColor: MaterialStateProperty.all(Colors.red),
       controller: tabController,
-      tabs: [
-        Text('Friends',
-            style: selectedTab == 0
-                ? AppTextStyles.friendsSmallBlack
-                : AppTextStyles.friendsSmallGrey),
-        Text('Subscribers',
-            style: selectedTab == 1
-                ? AppTextStyles.friendsSmallBlack
-                : AppTextStyles.friendsSmallGrey),
-        Text('Subscriptions',
-            style: selectedTab == 2
-                ? AppTextStyles.friendsSmallBlack
-                : AppTextStyles.friendsSmallGrey),
+      tabs: const [
+        Text(
+          'Friends',
+        ),
+        Text(
+          'Requests',
+        ),
       ],
     );
   }
@@ -148,15 +147,6 @@ class _FriendsPageState extends State<FriendsPage>
             child: TabBarView(
               controller: tabController,
               children: [
-                MediaQuery.removePadding(
-                  removeTop: true,
-                  context: context,
-                  child: ListView(
-                    children: [
-                      _friend(),
-                    ],
-                  ),
-                ),
                 MediaQuery.removePadding(
                   removeTop: true,
                   context: context,

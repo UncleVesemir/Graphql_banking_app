@@ -147,6 +147,7 @@ class _HomeState extends State<Home> {
     var userState = BlocProvider.of<SignInRegisterBloc>(context).state
         as SignInRegisterLoadedState;
     return AppBar(
+      toolbarHeight: 80,
       backgroundColor: _selectedIndex == 1 ? Colors.white : Colors.transparent,
       elevation: 0,
       leading: null,
@@ -187,6 +188,7 @@ class _HomeState extends State<Home> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(height: 10),
           Text(FuncUtils.getCurrentDateFormatted(),
               style: AppTextStyles.loginGrey),
           Text('Hey, ${userState.user.name}!',

@@ -5,6 +5,7 @@ import 'package:banking/src/domain/entities/card.dart';
 import 'package:banking/src/domain/entities/user.dart';
 import 'package:banking/src/internal/application.dart';
 import 'package:banking/src/presentation/blocs/cards/cards_bloc.dart';
+import 'package:banking/src/presentation/blocs/friends/friends_bloc.dart';
 import 'package:banking/src/presentation/blocs/sign_in_register/sign_in_register_bloc.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 

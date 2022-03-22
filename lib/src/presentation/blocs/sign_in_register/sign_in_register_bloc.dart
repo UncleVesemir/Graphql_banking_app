@@ -44,13 +44,5 @@ class SignInRegisterBloc
         emit(SignInRegisterErrorState(e.toString()));
       }
     });
-    // Fetch Friends
-    on<FetchFriendsEvent>((event, emit) async {
-      Stream<QueryResult<dynamic>> stream =
-          graphQLRepositiry.fetchFriends(event);
-      stream.listen((event) {
-        print(event.data);
-      });
-    });
   }
 }

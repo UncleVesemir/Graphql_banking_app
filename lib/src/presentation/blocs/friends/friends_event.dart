@@ -7,7 +7,15 @@ abstract class FriendsEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class FetchFriendsEvent extends FriendsEvent {}
+class FetchFriendsEvent extends FriendsEvent {
+  final int userId;
+  const FetchFriendsEvent({required this.userId});
+}
+
+class UpdateDataEvent extends FriendsEvent {
+  final List<User> friends;
+  const UpdateDataEvent({required this.friends});
+}
 
 class ConfirmFriendEvent extends FriendsEvent {}
 

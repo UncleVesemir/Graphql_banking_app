@@ -11,6 +11,9 @@ class FriendsEmptyState extends FriendsState {}
 
 class FriendsLoadingState extends FriendsState {}
 
-class FriendsLoadedState extends FriendsState {}
+class FriendsLoadedState extends FriendsState {
+  final List<User> friends;
+  const FriendsLoadedState({required this.friends});
+}
 
 class FriendsErrorState extends FriendsState {}
