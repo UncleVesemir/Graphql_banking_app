@@ -13,8 +13,9 @@ class FetchFriendsEvent extends FriendsEvent {
 }
 
 class UpdateDataEvent extends FriendsEvent {
-  final List<User> friends;
-  const UpdateDataEvent({required this.friends});
+  final List<Friend> friends;
+  final List<Friend> requests;
+  const UpdateDataEvent({required this.friends, required this.requests});
 }
 
 class ConfirmFriendEvent extends FriendsEvent {}

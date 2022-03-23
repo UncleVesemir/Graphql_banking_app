@@ -39,7 +39,7 @@ class CardsBloc extends Bloc<CardsEvent, CardsState> {
     on<UpdatedDataEvent>((event, emit) async {
       emit(CardsLoadingState());
       emit(CardsLoadedState(card: event.userCards));
-      print('data updated');
+      print('cards updated');
     });
     on<FetchCardsEvent>((event, emit) async {
       emit(CardsLoadingState());

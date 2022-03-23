@@ -35,6 +35,28 @@ class UserProvider {
     throw Exception('Something gone wrong. Try again');
   }
 
+  Future<User> fetchProfileInfo(int id) async {
+    QueryResult result = await _client.query(
+      QueryOptions(
+        document: gql(addMutation.getProfileInfo()),
+        variables: addMutation.getProfileInfoVariables(id),
+      ),
+    );
+    print(result);
+    if (result.hasException) {
+      // print(result.exception);
+    } else {
+      if (result.data!['user'].toString().length > 10) {
+        print(result.data!['user'].toString());
+        var user = UserModel.fromJson(result.data!['user'][0]);
+        return user;
+      } else {
+        throw Exception('Error');
+      }
+    }
+    throw Exception('Something gone wrong. Try again');
+  }
+
   Stream<QueryResult<dynamic>> fetchFriends(FetchFriendsEvent data) {
     Stream<QueryResult<dynamic>> stream;
     stream = _client.subscribe(SubscriptionOptions(

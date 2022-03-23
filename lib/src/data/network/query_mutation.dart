@@ -4,9 +4,9 @@ class QueryMutation {
   String fetchFriends() {
     return """
       subscription FetchFriends(\$user_id: Int!) {
-        friends(where: {user_first_uuid: {_eq: \$user_id}, status: {_eq: "confirmed"}}) {
-          user_second_id
+        friends(where: {user_first_id: {_eq: \$user_id}}) {
           user_first_id
+          user_second_id
           status
         }
       }

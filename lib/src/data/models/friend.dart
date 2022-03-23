@@ -1,14 +1,17 @@
+import 'dart:convert';
+
 import 'package:banking/src/domain/entities/card.dart';
 import 'package:banking/src/domain/entities/friend.dart';
+import 'package:banking/src/domain/entities/user.dart';
 
 class FriendModel extends Friend {
   const FriendModel({
-    required int id,
+    required User info,
+    required String status,
     List<Card>? cards,
-    required String name,
   }) : super(
-          id: id,
-          name: name,
+          info: info,
+          status: status,
           cards: cards,
         );
 }

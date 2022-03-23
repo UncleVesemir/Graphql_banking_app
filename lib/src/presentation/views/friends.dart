@@ -1,7 +1,10 @@
+import 'package:banking/src/presentation/blocs/friends/friends_bloc.dart';
 import 'package:banking/src/presentation/styles.dart';
 import 'package:banking/src/presentation/utils/clippers.dart';
 import 'package:banking/src/presentation/widgets/custom_clip.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class FriendsPage extends StatefulWidget {
   const FriendsPage({Key? key}) : super(key: key);
@@ -52,9 +55,9 @@ class _FriendsPageState extends State<FriendsPage>
     );
   }
 
-  Widget _friend() {
+  Widget _friend(String name) {
     return Padding(
-      padding: const EdgeInsets.only(top: 8, bottom: 8),
+      padding: const EdgeInsets.only(top: 6),
       child: ClipShadowPath(
         clipper: SettingsCardClipper(),
         shadow: Shadow(
@@ -63,52 +66,63 @@ class _FriendsPageState extends State<FriendsPage>
           blurRadius: 10,
         ),
         child: Container(
-          height: 120,
           color: Colors.white,
           child: Padding(
-            padding: const EdgeInsets.all(14),
+            padding:
+                const EdgeInsets.only(top: 30, bottom: 30, left: 20, right: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 70,
-                      height: 70,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            offset: const Offset(0, 0),
-                            color: Colors.grey.withOpacity(0.3),
-                            blurRadius: 10,
+                Flexible(
+                  flex: 4,
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 70,
+                        height: 70,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              offset: const Offset(0, 0),
+                              color: Colors.grey.withOpacity(0.3),
+                              blurRadius: 10,
+                            ),
+                          ],
+                        ),
+                        child: const CircleAvatar(
+                          radius: 25,
+                          backgroundColor: Colors.white,
+                          child: Icon(
+                            Icons.person,
+                            color: Colors.black,
                           ),
-                        ],
-                      ),
-                      child: const CircleAvatar(
-                        radius: 35,
-                        backgroundColor: Colors.white,
-                        child: Icon(
-                          Icons.person,
-                          color: Colors.black,
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 15),
-                    const Text('Gabe Newell',
-                        style: AppTextStyles.loginBlackSemi),
-                  ],
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    shape: const CircleBorder(),
-                    padding: const EdgeInsets.all(15),
-                    primary: Colors.white,
+                      const SizedBox(width: 15),
+                      Flexible(
+                        child: Text(
+                          name,
+                          style: AppTextStyles.loginBlackSemi,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
                   ),
-                  child: const Icon(
-                    Icons.delete,
-                    color: Colors.red,
+                ),
+                Flexible(
+                  flex: 1,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      shape: const CircleBorder(),
+                      padding: const EdgeInsets.all(10),
+                      primary: Colors.white,
+                    ),
+                    child: const Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                    ),
                   ),
                 )
               ],
@@ -119,13 +133,113 @@ class _FriendsPageState extends State<FriendsPage>
     );
   }
 
+  Widget _requestFriend(String name) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 6),
+      child: ClipShadowPath(
+        clipper: SettingsCardClipper(),
+        shadow: Shadow(
+          offset: const Offset(0, 0),
+          color: Colors.grey.withOpacity(0.3),
+          blurRadius: 10,
+        ),
+        child: Container(
+          color: Colors.white,
+          child: Padding(
+            padding:
+                const EdgeInsets.only(top: 30, bottom: 30, left: 20, right: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  flex: 2,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 70,
+                        height: 70,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              offset: const Offset(0, 0),
+                              color: Colors.grey.withOpacity(0.3),
+                              blurRadius: 10,
+                            ),
+                          ],
+                        ),
+                        child: const CircleAvatar(
+                          radius: 25,
+                          backgroundColor: Colors.white,
+                          child: Icon(
+                            Icons.person,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 15),
+                      Flexible(
+                        child: Text(
+                          name,
+                          style: AppTextStyles.loginBlackSemi,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Flexible(
+                  flex: 2,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          shape: const CircleBorder(),
+                          padding: const EdgeInsets.all(10),
+                          primary: Colors.white,
+                        ),
+                        child: const Icon(
+                          Icons.done,
+                          color: Colors.greenAccent,
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          shape: const CircleBorder(),
+                          padding: const EdgeInsets.all(10),
+                          primary: Colors.white,
+                        ),
+                        child: const Icon(
+                          Icons.close,
+                          color: Colors.red,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _loading() {
+    return const SpinKitWave(color: Colors.black);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Container(
           color: Colors.white,
-          height: 120,
+          height: 150,
         ),
         ClipShadowPath(
           clipper: TabClipper(),
@@ -142,30 +256,40 @@ class _FriendsPageState extends State<FriendsPage>
         ),
         Expanded(
           child: Padding(
-            padding:
-                const EdgeInsets.only(left: 12, right: 12, top: 15, bottom: 24),
-            child: TabBarView(
-              controller: tabController,
-              children: [
-                MediaQuery.removePadding(
-                  removeTop: true,
-                  context: context,
-                  child: ListView(
-                    children: [
-                      _friend(),
-                    ],
-                  ),
-                ),
-                MediaQuery.removePadding(
-                  removeTop: true,
-                  context: context,
-                  child: ListView(
-                    children: [
-                      _friend(),
-                    ],
-                  ),
-                ),
-              ],
+            padding: const EdgeInsets.only(left: 18, right: 18),
+            child: BlocBuilder<FriendsBloc, FriendsState>(
+              builder: (context, state) {
+                return TabBarView(
+                  controller: tabController,
+                  children: [
+                    state is FriendsLoadedState
+                        ? MediaQuery.removePadding(
+                            removeTop: true,
+                            context: context,
+                            child: ListView.builder(
+                              itemCount: state.friends.length,
+                              itemBuilder: (BuildContext ctx, int i) {
+                                return _friend(state.friends[i].info.name);
+                              },
+                            ),
+                          )
+                        : _loading(),
+                    state is FriendsLoadedState
+                        ? MediaQuery.removePadding(
+                            removeTop: true,
+                            context: context,
+                            child: ListView.builder(
+                              itemCount: state.requests.length,
+                              itemBuilder: (BuildContext ctx, int i) {
+                                return _requestFriend(
+                                    state.requests[i].info.name);
+                              },
+                            ),
+                          )
+                        : _loading(),
+                  ],
+                );
+              },
             ),
           ),
         ),

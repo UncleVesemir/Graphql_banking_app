@@ -1,15 +1,14 @@
 import 'package:banking/src/domain/entities/card.dart';
+import 'package:banking/src/domain/entities/user.dart';
 
 class Friend {
-  final int id;
-  final String name;
-  final String? image;
+  final User info;
+  final String status;
   final List<Card>? cards;
 
   const Friend({
-    required this.id,
-    required this.name,
-    this.image,
+    required this.info,
+    required this.status,
     this.cards,
   });
 }

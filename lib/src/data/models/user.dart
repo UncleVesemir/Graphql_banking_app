@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:banking/src/domain/entities/card.dart';
 import 'package:banking/src/domain/entities/user.dart';
 
 part 'user_mapper.dart';
