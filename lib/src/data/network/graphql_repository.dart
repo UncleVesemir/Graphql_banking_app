@@ -18,4 +18,8 @@ class GraphQLRepositiry {
   Stream<QueryResult<dynamic>> fetchCards(FetchCardsEvent data) =>
       _userProvider.fetchCards(data);
   Future<User> fetchProfileInfo(int id) => _userProvider.fetchProfileInfo(id);
+  Future<List<User>?> searchUsers(String text) =>
+      _userProvider.searchUsers(text);
+  Future<String?> checkUserFriend(int userId, int friendId) =>
+      _userProvider.checkUserFriend(userId, friendId);
 }

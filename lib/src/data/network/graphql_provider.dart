@@ -35,6 +35,54 @@ class UserProvider {
     throw Exception('Something gone wrong. Try again');
   }
 
+  Future<List<User>?> searchUsers(String text) async {
+    QueryResult result = await _client.query(
+      QueryOptions(
+        document: gql(addMutation.searchUsers()),
+        variables: addMutation.searchUsersVariables(text),
+      ),
+    );
+    if (result.hasException) {
+      throw Exception(result.exception);
+    } else {
+      if (result.data != null && result.data!.isNotEmpty) {
+        List<User> users = [];
+        int i = 0;
+        for (var user in result.data!['user']) {
+          var person = UserModel.fromJson(user);
+          users.add(person);
+          i++;
+        }
+        return users;
+      } else {
+        return null;
+      }
+    }
+  }
+
+  Future<String?> checkUserFriend(int userId, int friendId) async {
+    QueryResult result = await _client.query(
+      QueryOptions(
+        document: gql(addMutation.checkUserFriend()),
+        variables: addMutation.checkUserFriendVariables(userId, friendId),
+      ),
+    );
+    if (result.hasException) {
+      throw Exception(result.exception);
+    } else {
+      if (result.data != null && result.data!.isNotEmpty) {
+        if (result.data!['user_by_pk']['friends'].toString().length > 10) {
+          return (result.data!['user_by_pk']['friends'][0]['status']
+              .toString());
+        } else {
+          return null;
+        }
+      } else {
+        return null;
+      }
+    }
+  }
+
   Future<User> fetchProfileInfo(int id) async {
     QueryResult result = await _client.query(
       QueryOptions(
@@ -42,12 +90,10 @@ class UserProvider {
         variables: addMutation.getProfileInfoVariables(id),
       ),
     );
-    print(result);
     if (result.hasException) {
       // print(result.exception);
     } else {
       if (result.data!['user'].toString().length > 10) {
-        print(result.data!['user'].toString());
         var user = UserModel.fromJson(result.data!['user'][0]);
         return user;
       } else {
@@ -60,7 +106,7 @@ class UserProvider {
   Stream<QueryResult<dynamic>> fetchFriends(FetchFriendsEvent data) {
     Stream<QueryResult<dynamic>> stream;
     stream = _client.subscribe(SubscriptionOptions(
-      document: gql(addMutation.fetchFriends()),
+      document: gql(addMutation.fetchUserFriends()),
       variables: addMutation.fetchFriendsVariables(data.userId),
     ));
     return stream;

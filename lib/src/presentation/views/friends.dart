@@ -7,7 +7,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class FriendsPage extends StatefulWidget {
-  const FriendsPage({Key? key}) : super(key: key);
+  final String? searchText;
+  const FriendsPage({
+    required this.searchText,
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<FriendsPage> createState() => _FriendsPageState();
@@ -42,7 +46,6 @@ class _FriendsPageState extends State<FriendsPage>
       ),
       enableFeedback: true,
       indicatorColor: Colors.transparent,
-      overlayColor: MaterialStateProperty.all(Colors.red),
       controller: tabController,
       tabs: const [
         Text(
@@ -251,7 +254,17 @@ class _FriendsPageState extends State<FriendsPage>
           child: Container(
             color: Colors.white,
             height: 50,
-            child: _tabController(),
+            width: double.infinity,
+            child: widget.searchText == null
+                ? _tabController()
+                : const Center(
+                    child: Text(
+                      'Search',
+                      style: TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
           ),
         ),
         Expanded(
@@ -259,36 +272,67 @@ class _FriendsPageState extends State<FriendsPage>
             padding: const EdgeInsets.only(left: 18, right: 18),
             child: BlocBuilder<FriendsBloc, FriendsState>(
               builder: (context, state) {
-                return TabBarView(
-                  controller: tabController,
-                  children: [
-                    state is FriendsLoadedState
-                        ? MediaQuery.removePadding(
-                            removeTop: true,
-                            context: context,
-                            child: ListView.builder(
-                              itemCount: state.friends.length,
-                              itemBuilder: (BuildContext ctx, int i) {
-                                return _friend(state.friends[i].info.name);
-                              },
-                            ),
-                          )
-                        : _loading(),
-                    state is FriendsLoadedState
-                        ? MediaQuery.removePadding(
-                            removeTop: true,
-                            context: context,
-                            child: ListView.builder(
-                              itemCount: state.requests.length,
-                              itemBuilder: (BuildContext ctx, int i) {
+                if (widget.searchText == null) {
+                  return TabBarView(
+                    controller: tabController,
+                    children: [
+                      state is FriendsLoadedState
+                          ? MediaQuery.removePadding(
+                              removeTop: true,
+                              context: context,
+                              child: ListView.builder(
+                                itemCount: state.friends != null
+                                    ? state.friends!.length
+                                    : 0,
+                                itemBuilder: (BuildContext ctx, int i) {
+                                  return _friend(state.friends![i].info.name);
+                                },
+                              ),
+                            )
+                          : _loading(),
+                      state is FriendsLoadedState
+                          ? MediaQuery.removePadding(
+                              removeTop: true,
+                              context: context,
+                              child: ListView.builder(
+                                itemCount: state.requests != null
+                                    ? state.requests!.length
+                                    : 0,
+                                itemBuilder: (BuildContext ctx, int i) {
+                                  return _requestFriend(
+                                      state.requests![i].info.name);
+                                },
+                              ),
+                            )
+                          : _loading(),
+                    ],
+                  );
+                } else {
+                  return state is FriendsLoadedState &&
+                          state.search != null &&
+                          state.search!.isNotEmpty
+                      ? MediaQuery.removePadding(
+                          removeTop: true,
+                          context: context,
+                          child: ListView.builder(
+                            itemCount:
+                                state.search != null ? state.search!.length : 0,
+                            itemBuilder: (BuildContext ctx, int i) {
+                              if (state.search![i].status == 'confirmed') {
+                                return _friend(state.search![i].info.name);
+                              } else {
                                 return _requestFriend(
-                                    state.requests[i].info.name);
-                              },
-                            ),
-                          )
-                        : _loading(),
-                  ],
-                );
+                                    state.search![i].info.name);
+                              }
+                            },
+                          ),
+                        )
+                      : state is FriendsLoadedState &&
+                              state.search != null &&
+                              state.search!.isEmpty
+                          ? Container()
+                          : _loading();
+                }
               },
             ),
           ),

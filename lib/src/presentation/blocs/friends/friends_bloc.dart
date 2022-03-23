@@ -27,10 +27,38 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
       }
     });
     on<UpdateDataEvent>((event, emit) {
-      emit(FriendsLoadingState());
       emit(
-          FriendsLoadedState(friends: event.friends, requests: event.requests));
-      print('friends updated, length - ${event.friends.length}');
+        FriendsLoadedState(
+          friends: event.friends,
+          requests: event.requests,
+          search: event.search,
+        ),
+      );
+    });
+    on<SearchFriendEvent>((event, emit) async {
+      if (streamSubscription != null) {
+        streamSubscription!.cancel();
+        streamSubscription = null;
+      }
+      emit(FriendsLoadingState());
+      try {
+        if (event.text != null) {
+          List<Friend> result = [];
+          var users = await graphQLRepositiry.searchUsers(event.text!);
+          if (users != null) {
+            for (var user in users) {
+              String? status =
+                  await graphQLRepositiry.checkUserFriend(event.id, user.id);
+              status == null
+                  ? result.add(Friend(info: user, status: '', cards: null))
+                  : result.add(Friend(info: user, status: status, cards: null));
+            }
+            add(UpdateDataEvent(search: result));
+          }
+        }
+      } catch (e) {
+        print(e);
+      }
     });
     on<FetchFriendsEvent>((event, emit) {
       emit(FriendsLoadingState());
@@ -58,5 +86,11 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
         print(e);
       }
     });
+  }
+
+  @override
+  Future<void> close() {
+    streamSubscription?.cancel();
+    return super.close();
   }
 }

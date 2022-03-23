@@ -1,7 +1,45 @@
 import 'package:banking/src/domain/entities/card.dart';
 
 class QueryMutation {
-  String fetchFriends() {
+  String searchUsers() {
+    return """
+      query SearchUsers(\$search: String!) {
+        user(where: {user_name: {_regex: \$search}}) {
+          user_id
+          user_name
+          user_image
+          user_email
+        }
+      }
+    """;
+  }
+
+  Map<String, dynamic> searchUsersVariables(String search) {
+    return {
+      'search': search,
+    };
+  }
+
+  String checkUserFriend() {
+    return """
+      query checkUserFriends(\$user_id: Int!, \$friend_id: Int!) {
+        user_by_pk(user_id: \$user_id) {
+          friends(where: {user_second_id: {_eq: \$friend_id}}) {
+            status
+          }
+        }
+      }
+    """;
+  }
+
+  Map<String, dynamic> checkUserFriendVariables(int userId, int friendId) {
+    return {
+      'user_id': userId,
+      'friend_id': friendId,
+    };
+  }
+
+  String fetchUserFriends() {
     return """
       subscription FetchFriends(\$user_id: Int!) {
         friends(where: {user_first_id: {_eq: \$user_id}}) {

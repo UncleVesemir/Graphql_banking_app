@@ -4,18 +4,18 @@ import 'package:banking/src/presentation/widgets/custom_clip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 
-class CustomAppBar extends StatefulWidget {
+class CustomBottomBar extends StatefulWidget {
   final Function(int) onSelected;
-  const CustomAppBar({
+  const CustomBottomBar({
     required this.onSelected,
     Key? key,
   }) : super(key: key);
 
   @override
-  State<CustomAppBar> createState() => _CustomAppBarState();
+  State<CustomBottomBar> createState() => _CustomBottomBarState();
 }
 
-class _CustomAppBarState extends State<CustomAppBar> {
+class _CustomBottomBarState extends State<CustomBottomBar> {
   int _selected = 0;
 
   void _onTap(int index) {
