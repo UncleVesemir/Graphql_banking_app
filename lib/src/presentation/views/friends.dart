@@ -1,4 +1,5 @@
 import 'package:banking/src/presentation/blocs/friends/friends_bloc.dart';
+import 'package:banking/src/presentation/blocs/sign_in_register/sign_in_register_bloc.dart';
 import 'package:banking/src/presentation/styles.dart';
 import 'package:banking/src/presentation/utils/clippers.dart';
 import 'package:banking/src/presentation/widgets/custom_clip.dart';
@@ -58,7 +59,92 @@ class _FriendsPageState extends State<FriendsPage>
     );
   }
 
-  Widget _friend(String name) {
+  Widget _unknownUser({
+    required String name,
+    required VoidCallback onRequest,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 6),
+      child: ClipShadowPath(
+        clipper: SettingsCardClipper(),
+        shadow: Shadow(
+          offset: const Offset(0, 0),
+          color: Colors.grey.withOpacity(0.3),
+          blurRadius: 10,
+        ),
+        child: Container(
+          color: Colors.white,
+          child: Padding(
+            padding:
+                const EdgeInsets.only(top: 30, bottom: 30, left: 20, right: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  flex: 4,
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 70,
+                        height: 70,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              offset: const Offset(0, 0),
+                              color: Colors.grey.withOpacity(0.3),
+                              blurRadius: 10,
+                            ),
+                          ],
+                        ),
+                        child: const CircleAvatar(
+                          radius: 25,
+                          backgroundColor: Colors.white,
+                          child: Icon(
+                            Icons.person,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 15),
+                      Flexible(
+                        child: Text(
+                          name,
+                          style: AppTextStyles.loginBlackSemi,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Flexible(
+                  flex: 2,
+                  child: ElevatedButton(
+                      onPressed: onRequest,
+                      style: ElevatedButton.styleFrom(
+                        // shape: const CircleBorder(),
+                        padding: const EdgeInsets.all(10),
+                        primary: Colors.white,
+                      ),
+                      child: const Text(
+                        'Request',
+                        style: TextStyle(
+                          color: Colors.deepOrange,
+                        ),
+                      )),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _friend({
+    required String name,
+    required VoidCallback onRemove,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(top: 6),
       child: ClipShadowPath(
@@ -116,7 +202,7 @@ class _FriendsPageState extends State<FriendsPage>
                 Flexible(
                   flex: 1,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: onRemove,
                     style: ElevatedButton.styleFrom(
                       shape: const CircleBorder(),
                       padding: const EdgeInsets.all(10),
@@ -136,7 +222,11 @@ class _FriendsPageState extends State<FriendsPage>
     );
   }
 
-  Widget _requestFriend(String name) {
+  Widget _requestFriend({
+    required String name,
+    required VoidCallback onConfirm,
+    required VoidCallback onRemove,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(top: 6),
       child: ClipShadowPath(
@@ -198,7 +288,7 @@ class _FriendsPageState extends State<FriendsPage>
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: onConfirm,
                         style: ElevatedButton.styleFrom(
                           shape: const CircleBorder(),
                           padding: const EdgeInsets.all(10),
@@ -210,7 +300,7 @@ class _FriendsPageState extends State<FriendsPage>
                         ),
                       ),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: onRemove,
                         style: ElevatedButton.styleFrom(
                           shape: const CircleBorder(),
                           padding: const EdgeInsets.all(10),
@@ -272,6 +362,8 @@ class _FriendsPageState extends State<FriendsPage>
             padding: const EdgeInsets.only(left: 18, right: 18),
             child: BlocBuilder<FriendsBloc, FriendsState>(
               builder: (context, state) {
+                var userState = BlocProvider.of<SignInRegisterBloc>(context)
+                    .state as SignInRegisterLoadedState;
                 if (widget.searchText == null) {
                   return TabBarView(
                     controller: tabController,
@@ -281,11 +373,19 @@ class _FriendsPageState extends State<FriendsPage>
                               removeTop: true,
                               context: context,
                               child: ListView.builder(
-                                itemCount: state.friends != null
-                                    ? state.friends!.length
-                                    : 0,
+                                itemCount: state.friends.length,
                                 itemBuilder: (BuildContext ctx, int i) {
-                                  return _friend(state.friends![i].info.name);
+                                  return _friend(
+                                    name: state.friends[i].info.name,
+                                    onRemove: () {
+                                      BlocProvider.of<FriendsBloc>(context).add(
+                                        DeleteFriendEvent(
+                                          userId: userState.user.id,
+                                          friendId: state.friends[i].info.id,
+                                        ),
+                                      );
+                                    },
+                                  );
                                 },
                               ),
                             )
@@ -295,12 +395,28 @@ class _FriendsPageState extends State<FriendsPage>
                               removeTop: true,
                               context: context,
                               child: ListView.builder(
-                                itemCount: state.requests != null
-                                    ? state.requests!.length
-                                    : 0,
+                                itemCount: state.requests.length,
                                 itemBuilder: (BuildContext ctx, int i) {
                                   return _requestFriend(
-                                      state.requests![i].info.name);
+                                    name: state.requests[i].info.name,
+                                    onConfirm: () {
+                                      BlocProvider.of<FriendsBloc>(context).add(
+                                        ConfirmRequestFriendEvent(
+                                          status: 'confirmed',
+                                          userId: userState.user.id,
+                                          friendId: state.requests[i].info.id,
+                                        ),
+                                      );
+                                    },
+                                    onRemove: () {
+                                      BlocProvider.of<FriendsBloc>(context).add(
+                                        DeclineRequestEvent(
+                                          userId: userState.user.id,
+                                          friendId: state.requests[i].info.id,
+                                        ),
+                                      );
+                                    },
+                                  );
                                 },
                               ),
                             )
@@ -308,28 +424,57 @@ class _FriendsPageState extends State<FriendsPage>
                     ],
                   );
                 } else {
-                  return state is FriendsLoadedState &&
-                          state.search != null &&
-                          state.search!.isNotEmpty
+                  return state is FriendsLoadedState
                       ? MediaQuery.removePadding(
                           removeTop: true,
                           context: context,
                           child: ListView.builder(
-                            itemCount:
-                                state.search != null ? state.search!.length : 0,
+                            itemCount: state.search.length,
                             itemBuilder: (BuildContext ctx, int i) {
-                              if (state.search![i].status == 'confirmed') {
-                                return _friend(state.search![i].info.name);
-                              } else {
+                              if (state.search[i].status == 'confirmed') {
+                                return _friend(
+                                  name: state.search[i].info.name,
+                                  onRemove: () {
+                                    BlocProvider.of<FriendsBloc>(context).add(
+                                      DeleteFriendEvent(
+                                        userId: userState.user.id,
+                                        friendId: state.search[i].info.id,
+                                      ),
+                                    );
+                                  },
+                                );
+                              } else if (state.search[i].status ==
+                                  'requested') {
                                 return _requestFriend(
-                                    state.search![i].info.name);
+                                  name: state.search[i].info.name,
+                                  onConfirm: () {
+                                    BlocProvider.of<FriendsBloc>(context).add(
+                                      ConfirmRequestFriendEvent(
+                                        status: 'confirmed',
+                                        userId: userState.user.id,
+                                        friendId: state.search[i].info.id,
+                                      ),
+                                    );
+                                  },
+                                  onRemove: () {},
+                                );
+                              } else {
+                                return _unknownUser(
+                                  name: state.search[i].info.name,
+                                  onRequest: () {
+                                    BlocProvider.of<FriendsBloc>(context).add(
+                                      RequestFriendEvent(
+                                        userId: userState.user.id,
+                                        friendId: state.search[i].info.id,
+                                      ),
+                                    );
+                                  },
+                                );
                               }
                             },
                           ),
                         )
-                      : state is FriendsLoadedState &&
-                              state.search != null &&
-                              state.search!.isEmpty
+                      : state is FriendsLoadedState && state.search.isEmpty
                           ? Container()
                           : _loading();
                 }

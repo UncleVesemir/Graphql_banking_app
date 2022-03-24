@@ -13,13 +13,13 @@ class FetchFriendsEvent extends FriendsEvent {
 }
 
 class UpdateDataEvent extends FriendsEvent {
-  final List<Friend>? friends;
-  final List<Friend>? requests;
-  final List<Friend>? search;
+  final List<Friend> friends;
+  final List<Friend> requests;
+  final List<Friend> search;
   const UpdateDataEvent({
-    this.friends,
-    this.requests,
-    this.search,
+    required this.friends,
+    required this.requests,
+    required this.search,
   });
 }
 
@@ -29,8 +29,40 @@ class SearchFriendEvent extends FriendsEvent {
   const SearchFriendEvent({required this.id, required this.text});
 }
 
-class ConfirmFriendEvent extends FriendsEvent {}
+class ConfirmRequestFriendEvent extends FriendsEvent {
+  final String status;
+  final int userId;
+  final int friendId;
+  const ConfirmRequestFriendEvent({
+    required this.status,
+    required this.userId,
+    required this.friendId,
+  });
+}
 
-class RemoveFriendEvent extends FriendsEvent {}
+class RequestFriendEvent extends FriendsEvent {
+  final int userId;
+  final int friendId;
+  const RequestFriendEvent({
+    required this.userId,
+    required this.friendId,
+  });
+}
 
-class RequestFriendEvent extends FriendsEvent {}
+class DeleteFriendEvent extends FriendsEvent {
+  final int userId;
+  final int friendId;
+  const DeleteFriendEvent({
+    required this.userId,
+    required this.friendId,
+  });
+}
+
+class DeclineRequestEvent extends FriendsEvent {
+  final int userId;
+  final int friendId;
+  const DeclineRequestEvent({
+    required this.userId,
+    required this.friendId,
+  });
+}

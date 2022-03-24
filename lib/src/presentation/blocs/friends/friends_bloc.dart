@@ -1,9 +1,8 @@
 import 'dart:async';
 
-import 'package:banking/src/data/models/user.dart';
 import 'package:banking/src/data/network/graphql_repository.dart';
+import 'package:banking/src/data/notifications/notification_api.dart';
 import 'package:banking/src/domain/entities/friend.dart';
-import 'package:banking/src/domain/entities/user.dart';
 import 'package:banking/src/presentation/blocs/sign_in_register/sign_in_register_bloc.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -26,7 +25,59 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
         add(FetchFriendsEvent(userId: state.user.id));
       }
     });
+    on<ConfirmRequestFriendEvent>((event, emit) async {
+      try {
+        bool isSuccesfull = await graphQLRepositiry.confirmRequestFriend(event);
+        if (isSuccesfull) {
+          print('Succes');
+        } else {
+          print('Error');
+        }
+      } catch (e) {
+        print(e);
+      }
+    });
+
+    on<DeleteFriendEvent>((event, emit) async {
+      try {
+        bool isSuccesfull = await graphQLRepositiry.deleteFriend(event);
+        if (isSuccesfull) {
+          print('Succes');
+        } else {
+          print('Error');
+        }
+      } catch (e) {
+        print(e);
+      }
+    });
+
+    on<RequestFriendEvent>((event, emit) async {
+      try {
+        bool isSuccesfull = await graphQLRepositiry.requestFriend(event);
+        if (isSuccesfull) {
+          print('Succes');
+        } else {
+          print('Error');
+        }
+      } catch (e) {
+        print(e);
+      }
+    });
+
+    on<DeclineRequestEvent>((event, emit) async {
+      try {
+        bool isSuccesfull = await graphQLRepositiry.declineRequest(event);
+        if (isSuccesfull) {
+          print('Succes');
+        } else {
+          print('Error');
+        }
+      } catch (e) {
+        print(e);
+      }
+    });
     on<UpdateDataEvent>((event, emit) {
+      emit(FriendsLoadingState());
       emit(
         FriendsLoadedState(
           friends: event.friends,
@@ -36,10 +87,7 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
       );
     });
     on<SearchFriendEvent>((event, emit) async {
-      if (streamSubscription != null) {
-        streamSubscription!.cancel();
-        streamSubscription = null;
-      }
+      _closeStream();
       emit(FriendsLoadingState());
       try {
         if (event.text != null) {
@@ -53,7 +101,11 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
                   ? result.add(Friend(info: user, status: '', cards: null))
                   : result.add(Friend(info: user, status: status, cards: null));
             }
-            add(UpdateDataEvent(search: result));
+            add(UpdateDataEvent(
+              search: result,
+              friends: [],
+              requests: [],
+            ));
           }
         }
       } catch (e) {
@@ -69,6 +121,7 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
           List<Friend> friends = [];
           List<Friend> requests = [];
           if (event.data != null && event.data!.isNotEmpty) {
+            print('friends updated');
             for (var friend in event.data!['friends']) {
               var user = Friend(
                 info: await graphQLRepositiry
@@ -80,12 +133,32 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
                   : requests.add(user);
             }
           }
-          add(UpdateDataEvent(friends: friends, requests: requests));
+          await _showNotifications(requests);
+          add(UpdateDataEvent(
+            friends: friends,
+            requests: requests,
+            search: [],
+          ));
         });
+        print(streamSubscription);
       } catch (e) {
         print(e);
       }
     });
+  }
+
+  _showNotifications(List<Friend>? requests) {
+    if (requests != null && requests.isNotEmpty) {
+      NotificationService.showNotification(
+          title: 'You have ${requests.length} friend requests');
+    }
+  }
+
+  _closeStream() {
+    if (streamSubscription != null) {
+      streamSubscription!.cancel();
+      streamSubscription = null;
+    }
   }
 
   @override

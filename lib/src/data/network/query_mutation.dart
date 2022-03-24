@@ -1,6 +1,127 @@
 import 'package:banking/src/domain/entities/card.dart';
 
 class QueryMutation {
+  String declineRequest() {
+    return """
+      mutation DeclineRequest(
+        \$first_id: Int!, 
+        \$second_id: Int!) {
+          delete_friends(where: {_or: [
+            {
+              status: {_eq: "requested"}, 
+              user_first_id: {_eq: \$first_id}, 
+              user_second_id: {_eq: \$second_id}
+            }
+          ]}) {
+            returning{
+              __typename
+            }
+          }
+      }
+    """;
+  }
+
+  String deleteFriend() {
+    return """
+      mutation DeleteFriend(
+        \$first_id: Int!, 
+        \$second_id: Int!) {
+          delete_friends(where: {_or: [
+            {
+              status: {_eq: "confirmed"}, 
+              	user_first_id: {_eq: \$first_id}, 
+              	user_second_id: {_eq: \$second_id}
+              },
+              {
+                status: {_eq: "confirmed"}, 
+                user_first_id: {_eq: \$second_id}, 
+                user_second_id: {_eq: \$first_id}
+              }
+          ]}) {
+            returning{
+              __typename
+            }
+        }
+      }
+    """;
+  }
+
+  String requestFriend() {
+    return """
+      mutation RequestFriend(
+        \$first_id: Int!, 
+        \$second_id: Int!) {
+  	      insert_friends(objects:
+            {status: "requested", user_first_id: \$second_id, user_second_id: \$first_id}
+        ) {
+          returning{
+            __typename
+          }
+        }
+      }
+    """;
+  }
+
+  Map<String, dynamic> deleteAddDeclineFriendVariables(
+    int firstId,
+    int secondId,
+  ) {
+    return {
+      'first_id': firstId,
+      'second_id': secondId,
+    };
+  }
+
+  String confirmFriend() {
+    return """
+      mutation ChangeFriendStatus(
+        \$status: String!,
+        \$first_id: Int!, 
+        \$second_id: Int!) {
+          delete_friends(where: {_or: [
+            	{
+                status: {_eq: "requested"}, 
+                user_first_id: {_eq: \$first_id}, 
+                user_second_id: {_eq: \$second_id}
+              }
+          ]}) {
+            returning {
+              __typename
+            }
+          }
+          insert_friends(
+            objects: [
+              {
+                status: \$status, 
+                user_first_id: \$first_id, 
+                user_second_id: \$second_id
+              }, 
+              {
+                status: \$status, 
+                user_first_id: \$second_id, 
+                user_second_id: \$first_id
+              } 
+            ]) {
+            returning {
+              __typename
+            }
+        } 
+      }
+    """;
+  }
+
+  Map<String, dynamic> confirmFriendVariables(
+    String status,
+    int firstId,
+    int secondId,
+  ) {
+    return {
+      'status': status,
+      'first_id': firstId,
+      'second_id': secondId,
+    };
+  }
+
   String searchUsers() {
     return """
       query SearchUsers(\$search: String!) {

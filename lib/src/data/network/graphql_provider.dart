@@ -83,6 +83,101 @@ class UserProvider {
     }
   }
 
+  Future<bool> confirmFriend(String status, int userId, int friendId) async {
+    QueryResult result = await _client.query(
+      QueryOptions(
+        document: gql(addMutation.confirmFriend()),
+        variables: addMutation.confirmFriendVariables(status, userId, friendId),
+      ),
+    );
+    if (result.hasException) {
+      throw Exception(result.exception);
+    } else {
+      if (result.data != null && result.data!.isNotEmpty) {
+        if (result.data!['insert_friends']['returning'].toString().length >
+            10) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    }
+  }
+
+  Future<bool> deleteFriend(int userId, int friendId) async {
+    QueryResult result = await _client.query(
+      QueryOptions(
+        document: gql(addMutation.deleteFriend()),
+        variables:
+            addMutation.deleteAddDeclineFriendVariables(userId, friendId),
+      ),
+    );
+    if (result.hasException) {
+      throw Exception(result.exception);
+    } else {
+      if (result.data != null && result.data!.isNotEmpty) {
+        if (result.data!['delete_friends']['returning'].toString().length >
+            10) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    }
+  }
+
+  Future<bool> declineRequest(int userId, int friendId) async {
+    QueryResult result = await _client.query(
+      QueryOptions(
+        document: gql(addMutation.declineRequest()),
+        variables:
+            addMutation.deleteAddDeclineFriendVariables(userId, friendId),
+      ),
+    );
+    if (result.hasException) {
+      throw Exception(result.exception);
+    } else {
+      if (result.data != null && result.data!.isNotEmpty) {
+        if (result.data!['delete_friends']['returning'].toString().length >
+            10) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    }
+  }
+
+  Future<bool> requestFriend(int userId, int friendId) async {
+    QueryResult result = await _client.query(
+      QueryOptions(
+        document: gql(addMutation.requestFriend()),
+        variables:
+            addMutation.deleteAddDeclineFriendVariables(userId, friendId),
+      ),
+    );
+    if (result.hasException) {
+      throw Exception(result.exception);
+    } else {
+      if (result.data != null && result.data!.isNotEmpty) {
+        if (result.data!['insert_friends']['returning'].toString().length >
+            10) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    }
+  }
+
   Future<User> fetchProfileInfo(int id) async {
     QueryResult result = await _client.query(
       QueryOptions(

@@ -22,4 +22,25 @@ class GraphQLRepositiry {
       _userProvider.searchUsers(text);
   Future<String?> checkUserFriend(int userId, int friendId) =>
       _userProvider.checkUserFriend(userId, friendId);
+  Future<bool> confirmRequestFriend(ConfirmRequestFriendEvent data) =>
+      _userProvider.confirmFriend(
+        data.status,
+        data.userId,
+        data.friendId,
+      );
+  Future<bool> deleteFriend(DeleteFriendEvent data) =>
+      _userProvider.deleteFriend(
+        data.userId,
+        data.friendId,
+      );
+  Future<bool> requestFriend(RequestFriendEvent data) =>
+      _userProvider.requestFriend(
+        data.userId,
+        data.friendId,
+      );
+  Future<bool> declineRequest(DeclineRequestEvent data) =>
+      _userProvider.declineRequest(
+        data.userId,
+        data.friendId,
+      );
 }

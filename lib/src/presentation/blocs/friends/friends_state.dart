@@ -12,13 +12,13 @@ class FriendsEmptyState extends FriendsState {}
 class FriendsLoadingState extends FriendsState {}
 
 class FriendsLoadedState extends FriendsState {
-  final List<Friend>? friends;
-  final List<Friend>? requests;
-  final List<Friend>? search;
+  final List<Friend> friends;
+  final List<Friend> requests;
+  final List<Friend> search;
   const FriendsLoadedState({
-    this.friends,
-    this.requests,
-    this.search,
+    required this.friends,
+    required this.requests,
+    required this.search,
   });
 }
 

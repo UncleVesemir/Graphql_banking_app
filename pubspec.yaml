@@ -19,6 +19,9 @@ dependencies:
   equatable: ^2.0.3
   file_picker: ^4.5.1
 
+  #Notifications
+  flutter_local_notifications: ^9.4.0
+
   #UI
   flutter_spinkit: ^5.1.0
   flutter_switch: ^0.3.2
