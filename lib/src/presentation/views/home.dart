@@ -76,7 +76,7 @@ class _HomeState extends State<Home> {
         child: Container(
           width: double.infinity,
           height: double.infinity,
-          color: Colors.white,
+          color: Colors.white.withOpacity(0.7),
           child: BlocBuilder<CardsBloc, CardsState>(
             builder: (context, state) {
               if (state is CardsLoadedState) {

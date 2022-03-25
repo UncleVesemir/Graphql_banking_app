@@ -185,19 +185,14 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
                           if (state is FriendsLoadingState) {
                             return const SpinKitWave(color: Colors.deepOrange);
                           } else if (state is FriendsLoadedState) {
-                            return Center(
-                              child: ListWheelScrollViewX(
-                                scrollDirection: Axis.horizontal,
-                                children: _getFriends(state),
-                                squeeze: 0.7,
-                                perspective: 0.005,
-                                itemExtent: 80,
-                                onSelectedItemChanged: (value) {
-                                  setState(() {
-                                    selectedFriend = value;
-                                  });
-                                },
-                              ),
+                            return ListWheelScrollViewX(
+                              scrollDirection: Axis.horizontal,
+                              children: _getFriends(state),
+                              squeeze: 0.85,
+                              perspective: 0.005,
+                              itemExtent: 100,
+                              onSelectedItemChanged: (value) =>
+                                  setState(() => selectedFriend = value),
                             );
                           } else {
                             return Container();
