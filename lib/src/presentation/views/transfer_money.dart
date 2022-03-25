@@ -1,11 +1,17 @@
+import 'package:banking/src/presentation/blocs/cards/cards_bloc.dart';
+import 'package:banking/src/presentation/blocs/friends/friends_bloc.dart';
 import 'package:banking/src/presentation/styles.dart';
 import 'package:banking/src/presentation/utils/clippers.dart';
 import 'package:banking/src/presentation/widgets/animated_button.dart';
+import 'package:banking/src/presentation/widgets/card/credit_card_item.dart';
 import 'package:banking/src/presentation/widgets/custom_clip.dart';
 import 'package:banking/src/presentation/widgets/custom_list_wheel.dart';
 import 'package:banking/src/presentation/widgets/decrease_button.dart';
 import 'package:banking/src/presentation/widgets/increase_button.dart';
+import 'package:banking/src/domain/entities/card.dart' as card;
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class MoneyTransferScreen extends StatefulWidget {
   const MoneyTransferScreen({Key? key}) : super(key: key);
@@ -16,6 +22,20 @@ class MoneyTransferScreen extends StatefulWidget {
 
 class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
   double value = 0;
+  List<Widget> cards = const [];
+
+  CreditCardItem? selectedCard;
+  int selectedFriend = 0;
+
+  List<CreditCardItem> items = [];
+
+  @override
+  void initState() {
+    super.initState();
+    if (items.isNotEmpty) {
+      selectedCard = items[0];
+    }
+  }
 
   void _increaseValue() => setState(() => value++);
 
@@ -46,24 +66,54 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
     );
   }
 
-  List<Widget> cards = const [
-    CircleAvatar(
-      radius: 40,
-      backgroundColor: Colors.white,
-    ),
-    CircleAvatar(
-      radius: 40,
-      backgroundColor: Colors.white,
-    ),
-    CircleAvatar(
-      radius: 40,
-      backgroundColor: Colors.white,
-    ),
-    CircleAvatar(
-      radius: 40,
-      backgroundColor: Colors.white,
-    ),
-  ];
+  DropdownMenuItem<CreditCardItem> buildMenuItem(CreditCardItem? item) {
+    return DropdownMenuItem(
+      value: item,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Image.asset('assets/images/mastercard.png', width: 35, height: 35),
+          Text(item != null ? '\$${item.cardInfo.value}' : '',
+              style: AppTextStyles.cardValueBlack),
+          Row(
+            children: [
+              Text(item!.cardInfo.cardNumber.substring(14),
+                  style: AppTextStyles.regularLowValueGrey),
+              const SizedBox(width: 10),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _userCards() {
+    return Padding(
+      padding: const EdgeInsets.all(25),
+      child: Center(
+        child: BlocBuilder<CardsBloc, CardsState>(
+          builder: (context, state) {
+            if (state is CardsLoadedState) {
+              selectedCard = state.card.first;
+              return DropdownButtonHideUnderline(
+                child: DropdownButton<CreditCardItem>(
+                  elevation: 0,
+                  isExpanded: true,
+                  value: selectedCard,
+                  items: state.card.map(buildMenuItem).toList(),
+                  onChanged: (value) => setState(() => selectedCard = value),
+                ),
+              );
+            } else if (state is CardsLoadingState) {
+              return const SpinKitWave(color: Colors.orange);
+            } else {
+              return const Text('Error');
+            }
+          },
+        ),
+      ),
+    );
+  }
 
   Widget _buildText() {
     return Column(
@@ -88,6 +138,36 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
     );
   }
 
+  List<Widget> _getFriends(FriendsLoadedState state) {
+    List<Widget> friends = [];
+    var i = 0;
+    for (var friend in state.friends) {
+      friends.add(
+        Column(
+          children: [
+            selectedFriend == i
+                ? const CircleAvatar(radius: 60, backgroundColor: Colors.white)
+                : const CircleAvatar(radius: 40, backgroundColor: Colors.white),
+            selectedFriend == i
+                ? Column(
+                    children: [
+                      const SizedBox(height: 10),
+                      Text(
+                        friend.info.name,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.friendValueBlack,
+                      ),
+                    ],
+                  )
+                : Container(),
+          ],
+        ),
+      );
+      i++;
+    }
+    return friends;
+  }
+
   Widget _buildBody() {
     return Center(
       child: Container(
@@ -100,13 +180,29 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
                 child: Column(
                   children: [
                     Expanded(
-                      child: ListWheelScrollViewX(
-                        scrollDirection: Axis.horizontal,
-                        children: cards,
-                        squeeze: 0.7,
-                        perspective: 0.005,
-                        itemExtent: 80,
-                        onSelectedItemChanged: (item) {},
+                      child: BlocBuilder<FriendsBloc, FriendsState>(
+                        builder: (context, state) {
+                          if (state is FriendsLoadingState) {
+                            return const SpinKitWave(color: Colors.deepOrange);
+                          } else if (state is FriendsLoadedState) {
+                            return Center(
+                              child: ListWheelScrollViewX(
+                                scrollDirection: Axis.horizontal,
+                                children: _getFriends(state),
+                                squeeze: 0.7,
+                                perspective: 0.005,
+                                itemExtent: 80,
+                                onSelectedItemChanged: (value) {
+                                  setState(() {
+                                    selectedFriend = value;
+                                  });
+                                },
+                              ),
+                            );
+                          } else {
+                            return Container();
+                          }
+                        },
                       ),
                     ),
                     Padding(
@@ -125,6 +221,7 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
                               height: 80,
                               width: double.infinity,
                               color: Colors.white,
+                              child: _userCards(),
                             ),
                           ),
                           ClipShadowPath(
@@ -186,7 +283,7 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
                   ),
                   width: double.infinity,
                   child: Padding(
-                    padding: const EdgeInsets.all(38),
+                    padding: const EdgeInsets.all(32),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,

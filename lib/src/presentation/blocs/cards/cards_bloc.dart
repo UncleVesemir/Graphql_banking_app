@@ -61,6 +61,7 @@ class CardsBloc extends Bloc<CardsEvent, CardsState> {
                   cardHolderName: card.name,
                   cardNumber: card.number,
                   expDate: card.expDate,
+                  value: card.value,
                   width: 280,
                   height: 180,
                   gradient: AppColors.appBackgroundGradient,

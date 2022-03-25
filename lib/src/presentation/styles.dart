@@ -130,6 +130,19 @@ class AppTextStyles {
     fontWeight: FontWeight.w800,
   );
 
+  static const TextStyle friendValueBlack = TextStyle(
+    fontSize: 25,
+    color: Colors.black,
+    fontFamily: 'Open Sans SemiBold',
+    fontWeight: FontWeight.w800,
+  );
+
+  static const TextStyle cardValueBlack = TextStyle(
+    fontSize: 20,
+    color: Colors.black,
+    fontWeight: FontWeight.w600,
+  );
+
   static const TextStyle errorValueBlack = TextStyle(
     fontSize: 15,
     color: Colors.black,

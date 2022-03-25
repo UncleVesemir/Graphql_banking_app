@@ -39,7 +39,7 @@ class ReceiptDataWidget extends StatelessWidget {
           color: Colors.white,
           child: Padding(
             padding:
-                const EdgeInsets.only(left: 24, right: 24, top: 25, bottom: 25),
+                const EdgeInsets.only(left: 35, right: 35, top: 35, bottom: 25),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
