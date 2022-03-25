@@ -54,28 +54,23 @@ class _HomeState extends State<Home> {
   Widget _buildCardsInfo() {
     return Flexible(
       flex: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: _selectedCardIndex != null
-            ? ClipShadowPath(
-                shadow: Shadow(
-                  offset: const Offset(0, 0),
-                  color: Colors.grey.withOpacity(0.3),
-                  blurRadius: 10,
-                ),
-                clipper: SettingsCardClipper(),
-                child: Container(
-                  color: Colors.white,
-                ),
-              )
-            : Container(),
+      child: ClipShadowPath(
+        shadow: Shadow(
+          offset: const Offset(0, 0),
+          color: Colors.grey.withOpacity(0.0),
+          blurRadius: 10,
+        ),
+        clipper: TabClipper(),
+        child: Container(
+          color: Colors.white,
+        ),
       ),
     );
   }
 
   Widget _userCards() {
     return Flexible(
-      flex: 6,
+      flex: 4,
       child: ClipPath(
         clipper: SheetClipper(),
         child: Container(
@@ -126,7 +121,6 @@ class _HomeState extends State<Home> {
             child: _selectedIndex == 0
                 ? Column(
                     children: [
-                      const SizedBox(height: 120),
                       _buildCardsInfo(),
                       _userCards(),
                     ],
@@ -154,8 +148,6 @@ class _HomeState extends State<Home> {
     return BlocConsumer<CardsBloc, CardsState>(
       listener: (context, state) {},
       builder: (context, state) {
-        var _state = BlocProvider.of<SignInRegisterBloc>(context).state;
-        var _st = _state as SignInRegisterLoadedState;
         return Scaffold(
           extendBodyBehindAppBar: true,
           appBar: PreferredSize(

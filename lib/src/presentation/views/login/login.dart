@@ -1,9 +1,7 @@
-import 'package:banking/src/presentation/blocs/cards/cards_bloc.dart';
 import 'package:banking/src/presentation/styles.dart';
 import 'package:banking/src/presentation/views/login/register.dart';
 import 'package:banking/src/presentation/views/login/sign_in.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);

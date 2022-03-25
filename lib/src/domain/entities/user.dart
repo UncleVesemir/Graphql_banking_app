@@ -1,5 +1,3 @@
-import 'card.dart';
-
 class User {
   const User({
     required this.id,

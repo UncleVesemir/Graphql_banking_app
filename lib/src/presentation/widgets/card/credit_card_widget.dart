@@ -162,7 +162,7 @@ class _CardAnimationControllerState extends State<CardAnimationController>
   List<double>? fz;
   List<double>? fp;
 
-  bool _active = false;
+  bool active = false;
 
   /// Control animation steps 0 [controllerStart] -> 0.5 [controllerCenter]-> 1[controllerEnd]
   AnimationController? animationController;

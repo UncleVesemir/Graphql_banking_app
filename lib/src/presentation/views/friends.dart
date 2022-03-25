@@ -350,9 +350,7 @@ class _FriendsPageState extends State<FriendsPage>
                 : const Center(
                     child: Text(
                       'Search',
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
+                      style: AppTextStyles.friendsSmallGrey,
                     ),
                   ),
           ),

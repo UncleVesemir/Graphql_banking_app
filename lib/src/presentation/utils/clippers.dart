@@ -3,6 +3,31 @@ import 'package:flutter/material.dart';
 class SheetClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
+    double radius = 25.0;
+    double topRadius = 5.0;
+    var controlPoint = Offset(size.width / 2, 0);
+    var endPoint = Offset(size.width - radius, topRadius);
+
+    Path path = Path()
+      ..moveTo(0, radius + topRadius)
+      ..arcToPoint(Offset(radius, topRadius), radius: Radius.circular(radius))
+      ..quadraticBezierTo(
+          controlPoint.dx, controlPoint.dy, endPoint.dx, endPoint.dy)
+      ..arcToPoint(Offset(size.width, radius + topRadius),
+          radius: Radius.circular(radius))
+      ..lineTo(size.width, size.height)
+      ..lineTo(0, size.height)
+      ..close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
+}
+
+class TransferMoneyClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
     double radius = 60.0;
     double topRadius = 15.0;
     var controlPoint = Offset(size.width / 2, 0);
@@ -63,11 +88,9 @@ class TabClipper extends CustomClipper<Path> {
   Path getClip(Size size) {
     double radius = 25.0;
     double topRadius = 5.0;
-    var controlPoint = Offset(size.width / 2, 0);
-    var endPoint = Offset(size.width - radius, topRadius);
 
-    var controlPoint2 = Offset(size.width / 2, size.height - topRadius);
-    var endPoint2 = Offset(radius, size.height);
+    var controlPoint = Offset(size.width / 2, size.height - topRadius);
+    var endPoint = Offset(radius, size.height);
 
     Path path = Path()
       ..moveTo(0, 0)
@@ -76,7 +99,7 @@ class TabClipper extends CustomClipper<Path> {
       ..arcToPoint(Offset(size.width - radius, size.height),
           radius: Radius.circular(radius))
       ..quadraticBezierTo(
-          controlPoint2.dx, controlPoint2.dy, endPoint2.dx, endPoint2.dy)
+          controlPoint.dx, controlPoint.dy, endPoint.dx, endPoint.dy)
       ..arcToPoint(Offset(0, size.height - radius),
           radius: Radius.circular(radius))
       ..close();
@@ -124,15 +147,11 @@ class ReceiptClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     double radius = 10.0;
-    double topRadius = 10.0;
     var controlPointTL = Offset(radius, radius);
     var endPointTL = Offset(radius, 0);
 
     var controlPointTP = Offset(size.width - radius, radius);
     var endPointTP = Offset(size.width, radius);
-
-    // var controlPointTC = Offset(size.width / 2, 0);
-    // var endPointTC = Offset(size.width - radius, topRadius);
 
     var controlPointBR = Offset(size.width - radius, size.height - radius);
     var endPointBR = Offset(size.width - radius, size.height);

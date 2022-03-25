@@ -19,9 +19,29 @@ class CustomAppBar extends StatefulWidget {
   State<CustomAppBar> createState() => _CustomAppBarState();
 }
 
+enum HistoryStatus { sended, received, all }
+
 class _CustomAppBarState extends State<CustomAppBar> {
   final TextEditingController _controller = TextEditingController();
   bool isSearch = false;
+  HistoryStatus historyStatus = HistoryStatus.all;
+
+  void _changeStatus() {
+    setState(() {
+      if (historyStatus == HistoryStatus.sended) {
+        historyStatus = HistoryStatus.received;
+        return;
+      }
+      if (historyStatus == HistoryStatus.received) {
+        historyStatus = HistoryStatus.all;
+        return;
+      }
+      if (historyStatus == HistoryStatus.all) {
+        historyStatus = HistoryStatus.sended;
+        return;
+      }
+    });
+  }
 
   void _showCardDialog(CardsState state) {
     showDialog(
@@ -61,6 +81,74 @@ class _CustomAppBarState extends State<CustomAppBar> {
     ];
   }
 
+  List<Widget> _settings(CardsState cardState) {
+    return [
+      Row(
+        children: [
+          GestureDetector(
+            onTap: () async {},
+            child: Container(
+              height: 40,
+              width: 40,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  center: Alignment.topLeft,
+                  radius: 0.85,
+                  colors: [
+                    Colors.white.withOpacity(0.6),
+                    Colors.purple.withOpacity(1),
+                  ],
+                ),
+              ),
+              child: const Icon(Icons.dark_mode, color: Colors.white, size: 15),
+            ),
+          ),
+          const SizedBox(width: 15),
+        ],
+      )
+    ];
+  }
+
+  List<Widget> _history(CardsState cardState) {
+    return [
+      Row(
+        children: [
+          GestureDetector(
+            onTap: () {
+              _changeStatus();
+            },
+            child: Container(
+              height: 40,
+              width: 40,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  center: Alignment.topLeft,
+                  radius: 0.85,
+                  colors: [
+                    Colors.white.withOpacity(0.6),
+                    Colors.black.withOpacity(1),
+                  ],
+                ),
+              ),
+              child: Icon(
+                historyStatus == HistoryStatus.sended
+                    ? Icons.arrow_upward
+                    : historyStatus == HistoryStatus.received
+                        ? Icons.arrow_downward
+                        : Icons.compare_arrows_sharp,
+                color: Colors.white,
+                size: 15,
+              ),
+            ),
+          ),
+          const SizedBox(width: 15),
+        ],
+      )
+    ];
+  }
+
   Widget _searchField() {
     return SizedBox(
       height: 50,
@@ -80,16 +168,17 @@ class _CustomAppBarState extends State<CustomAppBar> {
         textAlignVertical: TextAlignVertical.bottom,
         decoration: InputDecoration(
           hintText: 'Search people',
+          hintStyle: TextStyle(color: Colors.grey.withOpacity(0.4)),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(25.0),
+            borderRadius: BorderRadius.circular(5.0),
             borderSide: const BorderSide(
               color: Colors.greenAccent,
             ),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(25.0),
-            borderSide: const BorderSide(
-              color: Colors.black,
+            borderSide: BorderSide(
+              color: Colors.grey.withOpacity(0.4),
             ),
           ),
           border: OutlineInputBorder(
@@ -150,7 +239,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
 
     return AppBar(
       toolbarHeight: 80,
-      backgroundColor: widget.index == 1 ? Colors.white : Colors.transparent,
+      backgroundColor: Colors.white,
       elevation: 0,
       leading: null,
       automaticallyImplyLeading: false,
@@ -158,7 +247,11 @@ class _CustomAppBarState extends State<CustomAppBar> {
           ? _home(cardState)
           : widget.index == 1
               ? _friends(cardState)
-              : [],
+              : widget.index == 2
+                  ? _settings(cardState)
+                  : widget.index == 3
+                      ? _history(cardState)
+                      : [],
       centerTitle: false,
       title: Column(
         mainAxisAlignment: MainAxisAlignment.start,

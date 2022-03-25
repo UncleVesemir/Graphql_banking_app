@@ -103,8 +103,8 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
             }
             add(UpdateDataEvent(
               search: result,
-              friends: [],
-              requests: [],
+              friends: const [],
+              requests: const [],
             ));
           }
         }

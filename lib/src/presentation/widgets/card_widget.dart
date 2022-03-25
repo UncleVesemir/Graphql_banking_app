@@ -28,15 +28,15 @@ class CardWidget extends StatelessWidget {
                       width: 50,
                       child: Image.asset('assets/images/mastercard.png')),
                   const Spacer(),
-                  Text('*5321', style: AppTextStyles.boldLowValueWhite),
+                  const Text('*5321', style: AppTextStyles.boldLowValueWhite),
                 ],
               ),
               const Spacer(),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                children: const [
                   Text('03/28', style: AppTextStyles.regularLowValueWhite),
-                  const SizedBox(height: 6),
+                  SizedBox(height: 6),
                   Text('\$24,123', style: AppTextStyles.boldMediumValueWhite),
                 ],
               ),

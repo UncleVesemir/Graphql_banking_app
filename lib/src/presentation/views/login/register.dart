@@ -1,9 +1,4 @@
-import 'dart:developer';
-
-import 'package:banking/main.dart';
-import 'package:banking/src/data/models/user.dart';
 import 'package:banking/src/data/network/query_mutation.dart';
-import 'package:banking/src/internal/application.dart';
 import 'package:banking/src/presentation/blocs/sign_in_register/sign_in_register_bloc.dart';
 import 'package:banking/src/presentation/styles.dart';
 import 'package:banking/src/presentation/utils/helper_widgets.dart';
@@ -12,7 +7,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 
 import 'sign_in.dart';
 

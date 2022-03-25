@@ -24,7 +24,7 @@ class _CreditCardItemState extends State<CreditCardItem> {
             color: Colors.black.withOpacity(0.2),
             blurRadius: 20.0,
             spreadRadius: 1.0,
-            offset: Offset(0.0, 1.0), // shadow direction: bottom right
+            offset: const Offset(0.0, 1.0), // shadow direction: bottom right
           )
         ],
         color: widget.cardInfo.color,

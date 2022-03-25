@@ -3,9 +3,9 @@ import 'package:banking/src/presentation/utils/clippers.dart';
 import 'package:banking/src/presentation/widgets/animated_button.dart';
 import 'package:banking/src/presentation/widgets/custom_clip.dart';
 import 'package:banking/src/presentation/widgets/custom_list_wheel.dart';
+import 'package:banking/src/presentation/widgets/decrease_button.dart';
+import 'package:banking/src/presentation/widgets/increase_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 
 class MoneyTransferScreen extends StatefulWidget {
   const MoneyTransferScreen({Key? key}) : super(key: key);
@@ -15,6 +15,14 @@ class MoneyTransferScreen extends StatefulWidget {
 }
 
 class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
+  double value = 0;
+
+  void _increaseValue() => setState(() => value++);
+
+  void _decreaseValue() => setState(() {
+        if (value > 0) value--;
+      });
+
   AppBar _buildAppBar() {
     return AppBar(
       elevation: 0.0,
@@ -60,11 +68,11 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
   Widget _buildText() {
     return Column(
       children: [
-        const Text(
-          '20',
-          style: TextStyle(
+        Text(
+          value.toString(),
+          style: const TextStyle(
             color: Colors.black,
-            fontSize: 50,
+            fontSize: 40,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -122,14 +130,43 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
                           ClipShadowPath(
                             shadow: Shadow(
                               offset: const Offset(0, 1),
-                              color: Colors.grey.withOpacity(0.5),
+                              color: Colors.grey.withOpacity(0.1),
                               blurRadius: 10,
                             ),
                             clipper: SettingsCardClipper(),
-                            child: Container(
-                              height: 80,
-                              width: double.infinity,
-                              color: Colors.white,
+                            child: Stack(
+                              children: [
+                                Container(
+                                  height: 80,
+                                  width: double.infinity,
+                                  color: Colors.white,
+                                  child: Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                        left: 10,
+                                        right: 10,
+                                      ),
+                                      child: TextFormField(
+                                        style: TextStyle(
+                                          color: Colors.grey.withOpacity(0.4),
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                        cursorColor: Colors.deepOrange,
+                                        cursorWidth: 2,
+                                        decoration: InputDecoration(
+                                          border: InputBorder.none,
+                                          hintText: 'Type something',
+                                          hintStyle: TextStyle(
+                                            color: Colors.grey.withOpacity(0.4),
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -142,7 +179,7 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
             Expanded(
               flex: 2,
               child: ClipPath(
-                clipper: SheetClipper(),
+                clipper: TransferMoneyClipper(),
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.7),
@@ -151,16 +188,19 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(38),
                     child: Column(
-                      // crossAxisAlignment: CrossAxisAlignment.stretch,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            DecreaseButton(),
+                            DecreaseButton(
+                              onTap: _decreaseValue,
+                            ),
                             _buildText(),
-                            IncreaseButton(),
+                            IncreaseButton(
+                              onTap: _increaseValue,
+                            ),
                           ],
                         ),
                         AnimatedButton(
@@ -186,71 +226,6 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
       extendBodyBehindAppBar: true,
       appBar: _buildAppBar(),
       body: _buildBody(),
-    );
-  }
-}
-
-class IncreaseButton extends StatefulWidget {
-  const IncreaseButton({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  State<IncreaseButton> createState() => _IncreaseButtonState();
-}
-
-class _IncreaseButtonState extends State<IncreaseButton> {
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {},
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Transform(
-            transform: Matrix4.skewY(0.1),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.4),
-                borderRadius: BorderRadius.circular(24),
-              ),
-              height: 130,
-              width: 80,
-            ),
-          ),
-          const Icon(Icons.add, size: 35),
-        ],
-      ),
-    );
-  }
-}
-
-class DecreaseButton extends StatelessWidget {
-  const DecreaseButton({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Transform(
-          transform: Matrix4.skewY(-0.1),
-          child: Container(
-            decoration: BoxDecoration(
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(24),
-                border: Border.all(
-                  color: Colors.grey.withOpacity(0.4),
-                  width: 3,
-                )),
-            height: 130,
-            width: 80,
-          ),
-        ),
-        const Icon(Icons.remove, size: 35),
-      ],
     );
   }
 }

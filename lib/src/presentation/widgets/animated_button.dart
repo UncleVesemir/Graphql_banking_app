@@ -26,7 +26,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
       vsync: this,
       duration: const Duration(milliseconds: 200),
       value: 1,
-      lowerBound: 0.7,
+      lowerBound: 0.9,
       upperBound: 1,
     );
     animation = Tween(begin: 1, end: 2).animate(animationController!);

@@ -47,11 +47,9 @@ class UserProvider {
     } else {
       if (result.data != null && result.data!.isNotEmpty) {
         List<User> users = [];
-        int i = 0;
         for (var user in result.data!['user']) {
           var person = UserModel.fromJson(user);
           users.add(person);
-          i++;
         }
         return users;
       } else {

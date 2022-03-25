@@ -1,9 +1,7 @@
 import 'package:banking/src/data/network/graphql_repository.dart';
 import 'package:banking/src/domain/entities/user.dart';
-import 'package:banking/src/presentation/blocs/cards/cards_bloc.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 
 part 'sign_in_register_event.dart';
 part 'sign_in_register_state.dart';
