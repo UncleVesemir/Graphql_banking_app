@@ -182,9 +182,6 @@ class _SignInPageState extends State<SignInPage> {
     return BlocConsumer<SignInRegisterBloc, SignInRegisterState>(
       listener: (context, state) {
         if (state is SignInRegisterLoadedState) {
-          // final SignInRegisterBloc userBloc =
-          //     BlocProvider.of<SignInRegisterBloc>(context);
-          // userBloc.add(FetchFriendsEvent(userUuid: state.user.uuid));
           var _state = BlocProvider.of<SignInRegisterBloc>(context).state;
           var _st = _state as SignInRegisterLoadedState;
           BlocProvider.of<CardsBloc>(context)
