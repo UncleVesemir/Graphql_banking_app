@@ -1,5 +1,8 @@
+import 'package:banking/src/domain/entities/operation.dart';
 import 'package:banking/src/presentation/blocs/cards/cards_bloc.dart';
 import 'package:banking/src/presentation/blocs/friends/friends_bloc.dart';
+import 'package:banking/src/presentation/blocs/operations/operations_bloc_bloc.dart';
+import 'package:banking/src/presentation/blocs/sign_in_register/sign_in_register_bloc.dart';
 import 'package:banking/src/presentation/styles.dart';
 import 'package:banking/src/presentation/utils/clippers.dart';
 import 'package:banking/src/presentation/widgets/animated_button.dart';
@@ -43,6 +46,35 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
         if (value > 0) value--;
       });
 
+  void _transferMoney() {
+    var friendsState = BlocProvider.of<FriendsBloc>(context).state;
+    var cardsState = BlocProvider.of<CardsBloc>(context).state;
+    var userState = BlocProvider.of<SignInRegisterBloc>(context).state;
+
+    if (friendsState is FriendsLoadedState &&
+        cardsState is CardsLoadedState &&
+        userState is SignInRegisterLoadedState) {
+      var friendCards = friendsState.friends[selectedFriend].cards;
+      if (friendCards != null && friendCards.isNotEmpty) {
+        BlocProvider.of<OperationsBloc>(context).add(
+          AddOperationEvent(
+            operation: Operation(
+              userFrom: userState.user.id,
+              userTo: friendsState.friends[selectedFriend].info.id,
+              cardFrom: selectedCard!.cardInfo.cardId,
+              cardTo: friendCards[0].cardId,
+              status: 'sended',
+              value: value.toString(),
+            ),
+          ),
+        );
+      }
+    }
+    setState(() {
+      value = 0;
+    });
+  }
+
   AppBar _buildAppBar() {
     return AppBar(
       elevation: 0.0,
@@ -77,7 +109,7 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
               style: AppTextStyles.cardValueBlack),
           Row(
             children: [
-              Text(item!.cardInfo.cardNumber.substring(14),
+              Text('*${item!.cardInfo.cardNumber.substring(14)}',
                   style: AppTextStyles.regularLowValueGrey),
               const SizedBox(width: 10),
             ],
@@ -94,18 +126,18 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
         child: BlocBuilder<CardsBloc, CardsState>(
           builder: (context, state) {
             if (state is CardsLoadedState) {
-              selectedCard = state.card.first;
+              selectedCard = state.cards.first;
               return DropdownButtonHideUnderline(
                 child: DropdownButton<CreditCardItem>(
                   elevation: 0,
                   isExpanded: true,
                   value: selectedCard,
-                  items: state.card.map(buildMenuItem).toList(),
+                  items: state.cards.map(buildMenuItem).toList(),
                   onChanged: (value) => setState(() => selectedCard = value),
                 ),
               );
             } else if (state is CardsLoadingState) {
-              return const SpinKitWave(color: Colors.orange);
+              return const SpinKitWave(color: Colors.deepOrange);
             } else {
               return const Text('Error');
             }
@@ -295,9 +327,15 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
                             ),
                           ],
                         ),
-                        AnimatedButton(
-                          onTap: () {
-                            print('tapped');
+                        BlocBuilder<CardsBloc, CardsState>(
+                          builder: (context, state) {
+                            if (state is CardsLoadedState) {
+                              return AnimatedButton(
+                                onTap: _transferMoney,
+                              );
+                            } else {
+                              return Container();
+                            }
                           },
                         ),
                       ],
