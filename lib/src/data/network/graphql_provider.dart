@@ -1,11 +1,15 @@
 import 'package:banking/src/data/models/card.dart';
+import 'package:banking/src/data/models/friend_card.dart';
 import 'package:banking/src/data/models/user.dart';
 import 'package:banking/src/data/network/query_mutation.dart';
 import 'package:banking/src/domain/entities/card.dart';
+import 'package:banking/src/domain/entities/friend.dart';
+import 'package:banking/src/domain/entities/friend_card.dart';
 import 'package:banking/src/domain/entities/user.dart';
 import 'package:banking/src/internal/application.dart';
 import 'package:banking/src/presentation/blocs/cards/cards_bloc.dart';
 import 'package:banking/src/presentation/blocs/friends/friends_bloc.dart';
+import 'package:banking/src/presentation/blocs/operations/operations_bloc_bloc.dart';
 import 'package:banking/src/presentation/blocs/sign_in_register/sign_in_register_bloc.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -54,6 +58,42 @@ class UserProvider {
         return users;
       } else {
         return null;
+      }
+    }
+  }
+
+  Future<bool> updateCardValue(UpdateCardValueEvent data) async {
+    QueryResult result = await _client.query(
+      QueryOptions(
+        document: gql(addMutation.updateCardValue()),
+        variables: addMutation.updateCardValueVariables(data),
+      ),
+    );
+    if (result.hasException) {
+      throw Exception(result.exception);
+    } else {
+      if (result.data != null) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
+  Future<bool> addOperation(AddOperationEvent data) async {
+    QueryResult result = await _client.query(
+      QueryOptions(
+        document: gql(addMutation.addOperation()),
+        variables: addMutation.addOperationVariables(data),
+      ),
+    );
+    if (result.hasException) {
+      throw Exception(result.exception);
+    } else {
+      if (result.data != null) {
+        return true;
+      } else {
+        return false;
       }
     }
   }
@@ -176,7 +216,7 @@ class UserProvider {
     }
   }
 
-  Future<User> fetchProfileInfo(int id) async {
+  Future<Friend> fetchProfileInfo(int id) async {
     QueryResult result = await _client.query(
       QueryOptions(
         document: gql(addMutation.getProfileInfo()),
@@ -188,12 +228,25 @@ class UserProvider {
     } else {
       if (result.data!['user'].toString().length > 10) {
         var user = UserModel.fromJson(result.data!['user'][0]);
-        return user;
+        List<FriendCardModel> cards = [];
+        for (var card in result.data!['user'][0]['cards']) {
+          cards.add(FriendCardModel.fromJson(card));
+        }
+        return Friend(info: user, status: '', cards: cards);
       } else {
         throw Exception('Error');
       }
     }
     throw Exception('Something gone wrong. Try again');
+  }
+
+  Stream<QueryResult<dynamic>> fetchOperations(FetchOperationsEvent data) {
+    Stream<QueryResult<dynamic>> stream;
+    stream = _client.subscribe(SubscriptionOptions(
+      document: gql(addMutation.fetchOperations()),
+      variables: addMutation.fetchOperationsVariables(data.userId),
+    ));
+    return stream;
   }
 
   Stream<QueryResult<dynamic>> fetchFriends(FetchFriendsEvent data) {

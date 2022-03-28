@@ -6,6 +6,7 @@ class CreditCardModel {
   final String cardNumber;
   final String expDate;
   final String value;
+  final int cardId;
   final LinearGradient? gradient;
   final Color? color;
   final double width;
@@ -13,6 +14,7 @@ class CreditCardModel {
 
   CreditCardModel({
     required this.value,
+    required this.cardId,
     required this.index,
     required this.cardHolderName,
     required this.cardNumber,

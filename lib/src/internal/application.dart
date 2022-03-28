@@ -2,6 +2,7 @@ import 'package:banking/src/data/network/graphql_configuration.dart';
 import 'package:banking/src/data/network/graphql_repository.dart';
 import 'package:banking/src/presentation/blocs/cards/cards_bloc.dart';
 import 'package:banking/src/presentation/blocs/friends/friends_bloc.dart';
+import 'package:banking/src/presentation/blocs/operations/operations_bloc_bloc.dart';
 import 'package:banking/src/presentation/blocs/sign_in_register/sign_in_register_bloc.dart';
 import 'package:banking/src/presentation/views/login/login.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,13 @@ class Application extends StatelessWidget {
             create: (context) => FriendsBloc(
               graphQLRepositiry: graphQLRepositiry,
               signInRegisterBloc: BlocProvider.of<SignInRegisterBloc>(context),
+            ),
+          ),
+          BlocProvider<OperationsBloc>(
+            create: (context) => OperationsBloc(
+              graphQLRepositiry: graphQLRepositiry,
+              signInRegisterBloc: BlocProvider.of<SignInRegisterBloc>(context),
+              cardsBloc: BlocProvider.of<CardsBloc>(context),
             ),
           ),
         ],

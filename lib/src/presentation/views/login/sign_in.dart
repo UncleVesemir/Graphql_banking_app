@@ -1,5 +1,6 @@
 import 'package:banking/src/presentation/blocs/cards/cards_bloc.dart';
 import 'package:banking/src/presentation/blocs/friends/friends_bloc.dart';
+import 'package:banking/src/presentation/blocs/operations/operations_bloc_bloc.dart';
 import 'package:banking/src/presentation/blocs/sign_in_register/sign_in_register_bloc.dart';
 import 'package:banking/src/presentation/styles.dart';
 import 'package:banking/src/presentation/utils/helper_widgets.dart';
@@ -188,6 +189,8 @@ class _SignInPageState extends State<SignInPage> {
               .add(FetchCardsEvent(userId: _st.user.id));
           BlocProvider.of<FriendsBloc>(context)
               .add(FetchFriendsEvent(userId: _st.user.id));
+          BlocProvider.of<OperationsBloc>(context)
+              .add(FetchOperationsEvent(userId: _st.user.id));
           UtilsWidget.navigateToScreen(context, const Home());
         }
         if (state is SignInRegisterErrorState) {

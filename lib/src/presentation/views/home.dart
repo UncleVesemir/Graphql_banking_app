@@ -84,7 +84,7 @@ class _HomeState extends State<Home> {
                   children: [
                     Flexible(
                       child: CreditCards3d(
-                        children: state.card,
+                        children: state.cards,
                         // onSelected: (item) => _onCardSelected(item),
                         onSelected: (item) => {},
                       ),

@@ -1,6 +1,105 @@
 import 'package:banking/src/domain/entities/card.dart';
+import 'package:banking/src/presentation/blocs/cards/cards_bloc.dart';
+import 'package:banking/src/presentation/blocs/operations/operations_bloc_bloc.dart';
 
 class QueryMutation {
+  String updateCardValue() {
+    return """
+      mutation UpdateCardInfo(
+        \$card_id: Int!, 
+        \$value: String!) {
+          update_card_by_pk(
+            pk_columns: {card_id: \$card_id},
+            _set: {card_value: \$value}) {
+              __typename
+            }
+        }
+    """;
+  }
+
+  Map<String, dynamic> updateCardValueVariables(UpdateCardValueEvent data) {
+    return {
+      'card_id': data.cardId,
+      'value': data.value,
+    };
+  }
+
+  String fetchOperations() {
+    return """
+      subscription FetchOperations(\$user_id: Int!) {
+        user(where: {user_id: {_eq: \$user_id}}) {
+          operations {
+            value
+            user_id_to
+            user_id_from
+            time
+            status
+            id
+            card_id_to
+            card_id_from
+          }
+          operationsByUserIdTo {
+            id
+            value
+            user_id_to
+            user_id_from
+            time
+            status
+            id
+            card_id_to
+            card_id_from
+          }
+        }
+      }
+    """;
+  }
+
+  Map<String, dynamic> fetchOperationsVariables(
+    int userId,
+  ) {
+    return {
+      'user_id': userId,
+    };
+  }
+
+  String addOperation() {
+    return """
+      mutation AddOperation(
+        \$user_from: Int!, 
+        \$user_to: Int!, 
+        \$card_from: Int!, 
+        \$card_to: Int!, 
+        \$status: String!, 
+        \$value: String!) {
+          insert_operations(
+            objects: 
+            {
+              user_id_from: \$user_from, 
+              user_id_to: \$user_to, 
+              card_id_from: \$card_from, 
+              card_id_to: \$card_to, 
+              status: \$status, 
+              value: \$value
+            }) {
+              returning {
+                __typename
+              }
+            }
+          }
+    """;
+  }
+
+  Map<String, dynamic> addOperationVariables(AddOperationEvent data) {
+    return {
+      'user_from': data.operation.userFrom,
+      'user_to': data.operation.userTo,
+      'card_from': data.operation.cardFrom,
+      'card_to': data.operation.cardTo,
+      'status': data.operation.status,
+      'value': data.operation.value,
+    };
+  }
+
   String declineRequest() {
     return """
       mutation DeclineRequest(
@@ -130,6 +229,11 @@ class QueryMutation {
           user_name
           user_image
           user_email
+          cards{
+            card_id
+            card_number
+            card_type
+          }
         }
       }
     """;
@@ -186,6 +290,11 @@ class QueryMutation {
           user_image
           user_name
           user_id
+          cards{
+            card_id
+            card_number
+            card_type
+          }
         }
       }
     """;

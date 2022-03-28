@@ -36,10 +36,21 @@ class CardsBloc extends Bloc<CardsEvent, CardsState> {
         print(e);
       }
     });
-    on<UpdatedDataEvent>((event, emit) async {
+    on<UpdateCardDataEvent>((event, emit) async {
       emit(CardsLoadingState());
-      emit(CardsLoadedState(card: event.userCards));
+      emit(CardsLoadedState(cards: event.userCards));
       print('cards updated');
+    });
+    on<UpdateCardValueEvent>((event, emit) async {
+      emit(CardsLoadingState());
+      try {
+        bool isSuccesful = await graphQLRepositiry.updateCardValue(event);
+        isSuccesful
+            ? print('card value updated')
+            : print('error, value not updated');
+      } catch (e) {
+        print(e);
+      }
     });
     on<FetchCardsEvent>((event, emit) async {
       emit(CardsLoadingState());
@@ -64,13 +75,14 @@ class CardsBloc extends Bloc<CardsEvent, CardsState> {
                   value: card.value,
                   width: 280,
                   height: 180,
+                  cardId: card.id!,
                   gradient: AppColors.appBackgroundGradient,
                 ),
               ),
             );
             i++;
           }
-          add(UpdatedDataEvent(userCards: _cards));
+          add(UpdateCardDataEvent(userCards: _cards));
         });
       } catch (e) {
         print(e);

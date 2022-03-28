@@ -12,8 +12,8 @@ class CardsEmptyState extends CardsState {}
 class CardsLoadingState extends CardsState {}
 
 class CardsLoadedState extends CardsState {
-  final List<CreditCardItem> card;
-  const CardsLoadedState({required this.card});
+  final List<CreditCardItem> cards;
+  const CardsLoadedState({required this.cards});
 }
 
 class CardsErrorState extends CardsState {

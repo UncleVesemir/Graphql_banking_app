@@ -32,7 +32,7 @@ class ReceiptDataWidget extends StatelessWidget {
           color: Colors.grey.withOpacity(0.5),
           blurRadius: 10,
         ),
-        clipper: ReceiptClipper(),
+        clipper: SettingsCardClipper(),
         child: Container(
           width: double.infinity,
           height: 420,

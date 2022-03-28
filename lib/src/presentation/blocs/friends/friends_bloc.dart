@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:banking/src/data/models/friend_card.dart';
 import 'package:banking/src/data/network/graphql_repository.dart';
 import 'package:banking/src/data/notifications/notification_api.dart';
 import 'package:banking/src/domain/entities/friend.dart';
+import 'package:banking/src/domain/entities/friend_card.dart';
 import 'package:banking/src/presentation/blocs/sign_in_register/sign_in_register_bloc.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -76,7 +78,7 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
         print(e);
       }
     });
-    on<UpdateDataEvent>((event, emit) {
+    on<UpdateFriendDataEvent>((event, emit) {
       emit(FriendsLoadingState());
       emit(
         FriendsLoadedState(
@@ -101,7 +103,7 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
                   ? result.add(Friend(info: user, status: '', cards: null))
                   : result.add(Friend(info: user, status: status, cards: null));
             }
-            add(UpdateDataEvent(
+            add(UpdateFriendDataEvent(
               search: result,
               friends: const [],
               requests: const [],
@@ -123,24 +125,25 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
           if (event.data != null && event.data!.isNotEmpty) {
             print('friends updated');
             for (var friend in event.data!['friends']) {
+              var info = await graphQLRepositiry
+                  .fetchProfileInfo(friend['user_second_id']);
               var user = Friend(
-                info: await graphQLRepositiry
-                    .fetchProfileInfo(friend['user_second_id']),
+                info: info.info,
                 status: friend['status'],
+                cards: info.cards,
               );
               user.status == 'confirmed'
                   ? friends.add(user)
                   : requests.add(user);
             }
           }
-          await _showNotifications(requests);
-          add(UpdateDataEvent(
+          add(UpdateFriendDataEvent(
             friends: friends,
             requests: requests,
-            search: [],
+            search: const [],
           ));
+          await _showNotifications(requests);
         });
-        print(streamSubscription);
       } catch (e) {
         print(e);
       }

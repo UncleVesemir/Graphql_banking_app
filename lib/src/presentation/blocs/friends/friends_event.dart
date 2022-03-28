@@ -12,11 +12,11 @@ class FetchFriendsEvent extends FriendsEvent {
   const FetchFriendsEvent({required this.userId});
 }
 
-class UpdateDataEvent extends FriendsEvent {
+class UpdateFriendDataEvent extends FriendsEvent {
   final List<Friend> friends;
   final List<Friend> requests;
   final List<Friend> search;
-  const UpdateDataEvent({
+  const UpdateFriendDataEvent({
     required this.friends,
     required this.requests,
     required this.search,

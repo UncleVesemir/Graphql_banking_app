@@ -18,9 +18,18 @@ class FetchCardsEvent extends CardsEvent {
   const FetchCardsEvent({required this.userId});
 }
 
-class UpdatedDataEvent extends CardsEvent {
+class UpdateCardValueEvent extends CardsEvent {
+  final int cardId;
+  final String value;
+  const UpdateCardValueEvent({
+    required this.cardId,
+    required this.value,
+  });
+}
+
+class UpdateCardDataEvent extends CardsEvent {
   final List<CreditCardItem> userCards;
-  const UpdatedDataEvent({required this.userCards});
+  const UpdateCardDataEvent({required this.userCards});
 }
 
 class EditCardEvent extends CardsEvent {}

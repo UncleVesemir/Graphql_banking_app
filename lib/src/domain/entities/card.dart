@@ -10,7 +10,7 @@ class Card {
     required this.expDate,
   });
   final int? id;
-  final int cvv;
+  final int? cvv;
   final String name;
   final String type;
   final String value;
