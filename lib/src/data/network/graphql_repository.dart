@@ -4,6 +4,7 @@ import 'package:banking/src/domain/entities/friend.dart';
 import 'package:banking/src/domain/entities/user.dart';
 import 'package:banking/src/presentation/blocs/cards/cards_bloc.dart';
 import 'package:banking/src/presentation/blocs/friends/friends_bloc.dart';
+import 'package:banking/src/presentation/blocs/history/history_bloc.dart';
 import 'package:banking/src/presentation/blocs/operations/operations_bloc_bloc.dart';
 import 'package:banking/src/presentation/blocs/sign_in_register/sign_in_register_bloc.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -59,4 +60,16 @@ class GraphQLRepositiry {
       _userProvider.addOperation(data);
   Stream<QueryResult<dynamic>> fetchOperations(FetchOperationsEvent data) =>
       _userProvider.fetchOperations(data);
+  Future<bool> updateStatus(UpdateOperationStatusEvent data) =>
+      _userProvider.updateOperationStatus(data);
+  Future<bool> deleteOperation(int operationId) =>
+      _userProvider.deleteOperation(operationId);
+
+  /// HISTORY
+  Stream<QueryResult<dynamic>> fetchHistory(FetchHistoryEvent data) =>
+      _userProvider.fetchHistory(data);
+  Future<bool> updateHistory(UpdateHistoryEvent data) =>
+      _userProvider.updateHistory(data);
+  Future<bool> addHistory(AddHistoryEvent data) =>
+      _userProvider.addHistory(data);
 }

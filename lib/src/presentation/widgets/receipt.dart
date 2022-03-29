@@ -1,10 +1,17 @@
+import 'package:banking/src/domain/entities/operation.dart';
 import 'package:banking/src/presentation/styles.dart';
 import 'package:banking/src/presentation/utils/clippers.dart';
 import 'package:banking/src/presentation/widgets/custom_clip.dart';
 import 'package:flutter/material.dart';
 
 class ReceiptDataWidget extends StatelessWidget {
-  const ReceiptDataWidget({Key? key}) : super(key: key);
+  final bool isSended;
+  final Operation operation;
+  const ReceiptDataWidget({
+    required this.isSended,
+    required this.operation,
+    Key? key,
+  }) : super(key: key);
 
   Widget _rowItem(String left, String right) {
     return Row(
@@ -44,30 +51,29 @@ class ReceiptDataWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  3 < 2 ? 'Transfer Received' : 'Transfer Sended',
+                  isSended ? 'Transfer Sended' : 'Transfer Received',
                   style: AppTextStyles.receiptBig
                       .copyWith(color: 3 < 2 ? Colors.grey : Colors.black),
                 ),
                 const SizedBox(height: 20),
-                _rowItem('Date:', '2022-03-10, 10:04'),
-                _rowItem('Transfer from:', 'Ilya'),
-                _rowItem('Transfer to:', 'Max'),
-                _rowItem('Transfer unique id:', '123qwe123'),
-                _rowItem('Card:', '*1234'),
-                _rowItem('Operation status:', 'Completed'),
+                _rowItem('Date:', operation.time!.substring(11)),
+                _rowItem('Transfer from:', operation.userFrom.toString()),
+                _rowItem('Transfer to:', operation.userTo.toString()),
+                _rowItem('Transfer unique id:', operation.id.toString()),
+                _rowItem('Operation status:', operation.status),
                 const SizedBox(height: 30),
-                _rowItem('Total:', '\$100'),
+                _rowItem('Total:', '\$${operation.value}'),
                 _rowItem('Taxes:', '\$0'),
                 const SizedBox(height: 30),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text(
+                  children: [
+                    const Text(
                       'Total:',
                       style: AppTextStyles.receiptMedium,
                     ),
                     Text(
-                      '\$100',
+                      '\$${operation.value}',
                       style: AppTextStyles.receiptMedium,
                     ),
                   ],

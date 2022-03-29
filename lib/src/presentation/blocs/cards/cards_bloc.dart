@@ -3,6 +3,9 @@ import 'dart:async';
 import 'package:banking/src/data/models/card.dart';
 import 'package:banking/src/data/network/graphql_repository.dart';
 import 'package:banking/src/domain/entities/card.dart';
+import 'package:banking/src/domain/entities/operation.dart' as op;
+import 'package:banking/src/presentation/blocs/history/history_bloc.dart';
+import 'package:banking/src/presentation/blocs/operations/operations_bloc_bloc.dart';
 import 'package:banking/src/presentation/blocs/sign_in_register/sign_in_register_bloc.dart';
 import 'package:banking/src/presentation/styles.dart';
 import 'package:banking/src/presentation/widgets/card/credit_card_item.dart';
@@ -45,9 +48,13 @@ class CardsBloc extends Bloc<CardsEvent, CardsState> {
       emit(CardsLoadingState());
       try {
         bool isSuccesful = await graphQLRepositiry.updateCardValue(event);
-        isSuccesful
-            ? print('card value updated')
-            : print('error, value not updated');
+        if (isSuccesful) {
+          if (event.operation.status == 'sended') {
+            graphQLRepositiry.updateStatus(event.operation);
+          } else if (event.operation.status == 'not confirmed') {
+            graphQLRepositiry.deleteOperation(event.operation.operationId);
+          }
+        }
       } catch (e) {
         print(e);
       }

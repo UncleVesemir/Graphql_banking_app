@@ -64,7 +64,6 @@ class _CreditCards3dState extends State<CreditCards3d> {
 
   void _onSelected(int? index) {
     setState(() {
-      // print(index);
       _selectedCardIndex = index;
       if (index != null) {
         widget.onSelected(widget.children[index].cardInfo.index);

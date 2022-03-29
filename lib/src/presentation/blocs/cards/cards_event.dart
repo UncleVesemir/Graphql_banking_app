@@ -21,9 +21,11 @@ class FetchCardsEvent extends CardsEvent {
 class UpdateCardValueEvent extends CardsEvent {
   final int cardId;
   final String value;
+  final UpdateOperationStatusEvent operation;
   const UpdateCardValueEvent({
     required this.cardId,
     required this.value,
+    required this.operation,
   });
 }
 

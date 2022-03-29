@@ -11,7 +11,6 @@ import 'package:banking/src/presentation/widgets/custom_clip.dart';
 import 'package:banking/src/presentation/widgets/custom_list_wheel.dart';
 import 'package:banking/src/presentation/widgets/decrease_button.dart';
 import 'package:banking/src/presentation/widgets/increase_button.dart';
-import 'package:banking/src/domain/entities/card.dart' as card;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -24,6 +23,8 @@ class MoneyTransferScreen extends StatefulWidget {
 }
 
 class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
+  bool isLoading = false;
+
   double value = 0;
   List<Widget> cards = const [];
 
@@ -31,6 +32,8 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
   int selectedFriend = 0;
 
   List<CreditCardItem> items = [];
+
+  final TextEditingController _controller = TextEditingController();
 
   @override
   void initState() {
@@ -46,12 +49,21 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
         if (value > 0) value--;
       });
 
+  bool _check() {
+    if (selectedCard != null && value > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   void _transferMoney() {
     var friendsState = BlocProvider.of<FriendsBloc>(context).state;
     var cardsState = BlocProvider.of<CardsBloc>(context).state;
     var userState = BlocProvider.of<SignInRegisterBloc>(context).state;
 
-    if (friendsState is FriendsLoadedState &&
+    if (_check() &&
+        friendsState is FriendsLoadedState &&
         cardsState is CardsLoadedState &&
         userState is SignInRegisterLoadedState) {
       var friendCards = friendsState.friends[selectedFriend].cards;
@@ -65,6 +77,7 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
               cardTo: friendCards[0].cardId,
               status: 'sended',
               value: value.toString(),
+              text: _controller.text,
             ),
           ),
         );
@@ -72,6 +85,7 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
     }
     setState(() {
       value = 0;
+      _controller.text = '';
     });
   }
 
@@ -109,7 +123,8 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
               style: AppTextStyles.cardValueBlack),
           Row(
             children: [
-              Text('*${item!.cardInfo.cardNumber.substring(14)}',
+              Text(
+                  '*${item != null ? item.cardInfo.cardNumber.substring(14) : ''}',
                   style: AppTextStyles.regularLowValueGrey),
               const SizedBox(width: 10),
             ],
@@ -271,6 +286,7 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
                                         right: 10,
                                       ),
                                       child: TextFormField(
+                                        controller: _controller,
                                         style: TextStyle(
                                           color: Colors.grey.withOpacity(0.4),
                                           fontWeight: FontWeight.w800,

@@ -1,19 +1,23 @@
 class Operation {
   final int? id;
-  final int userFrom;
   final int userTo;
-  final int cardFrom;
   final int cardTo;
-  final String status;
+  final int userFrom;
+  final int cardFrom;
+  final String text;
   final String value;
+  final String status;
+  final String? time;
 
   const Operation({
     this.id,
-    required this.userFrom,
     required this.userTo,
-    required this.cardFrom,
     required this.cardTo,
-    required this.status,
+    required this.userFrom,
+    required this.cardFrom,
+    required this.text,
     required this.value,
+    required this.status,
+    this.time,
   });
 }

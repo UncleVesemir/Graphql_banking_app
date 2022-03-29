@@ -2,6 +2,7 @@ import 'package:banking/src/data/network/graphql_configuration.dart';
 import 'package:banking/src/data/network/graphql_repository.dart';
 import 'package:banking/src/presentation/blocs/cards/cards_bloc.dart';
 import 'package:banking/src/presentation/blocs/friends/friends_bloc.dart';
+import 'package:banking/src/presentation/blocs/history/history_bloc.dart';
 import 'package:banking/src/presentation/blocs/operations/operations_bloc_bloc.dart';
 import 'package:banking/src/presentation/blocs/sign_in_register/sign_in_register_bloc.dart';
 import 'package:banking/src/presentation/views/login/login.dart';
@@ -31,6 +32,12 @@ class Application extends StatelessWidget {
               signInRegisterBloc: BlocProvider.of<SignInRegisterBloc>(context),
             ),
           ),
+          BlocProvider<HistoryBloc>(
+            create: (context) => HistoryBloc(
+              graphQLRepositiry: graphQLRepositiry,
+              signInRegisterBloc: BlocProvider.of<SignInRegisterBloc>(context),
+            ),
+          ),
           BlocProvider<FriendsBloc>(
             create: (context) => FriendsBloc(
               graphQLRepositiry: graphQLRepositiry,
@@ -39,6 +46,7 @@ class Application extends StatelessWidget {
           ),
           BlocProvider<OperationsBloc>(
             create: (context) => OperationsBloc(
+              historyBloc: BlocProvider.of<HistoryBloc>(context),
               graphQLRepositiry: graphQLRepositiry,
               signInRegisterBloc: BlocProvider.of<SignInRegisterBloc>(context),
               cardsBloc: BlocProvider.of<CardsBloc>(context),

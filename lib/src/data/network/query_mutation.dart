@@ -1,8 +1,104 @@
 import 'package:banking/src/domain/entities/card.dart';
 import 'package:banking/src/presentation/blocs/cards/cards_bloc.dart';
+import 'package:banking/src/presentation/blocs/history/history_bloc.dart';
 import 'package:banking/src/presentation/blocs/operations/operations_bloc_bloc.dart';
 
 class QueryMutation {
+  String fetchHistory() {
+    return """
+      subscription FetchHistory(\$user_id: Int!) {
+        user(where: {user_id: {_eq: \$user_id}}) {
+          histories {
+            card_id_from
+            card_id_to
+            id
+            text
+            time
+            user_id_from
+            user_id_to
+            value
+            status
+          }
+          historiesByUserIdTo {
+            card_id_from
+            card_id_to
+            id
+            text
+            time
+            user_id_from
+            user_id_to
+            value
+            status
+          }
+        }
+      }
+    """;
+  }
+
+  Map<String, dynamic> fetchHistoryVariables(FetchHistoryEvent data) {
+    return {
+      'user_id': data.userId,
+    };
+  }
+
+  String addHistory() {
+    return """
+      mutation AddHistory(
+        \$value: String!, 
+        \$user_to: Int!, 
+        \$user_from: Int!, 
+        \$text: String!, 
+        \$card_to: Int!, 
+        \$status: String!,
+        \$card_from: Int!) {
+          insert_history_one(object: {
+            value: \$value, 
+            user_id_to: \$user_to, 
+            user_id_from: \$user_from,
+            status: \$status, 
+            text: \$text, 
+            card_id_to: \$card_to, 
+            card_id_from: \$card_from}) {
+              __typename
+            }
+          }
+    """;
+  }
+
+  Map<String, dynamic> addHistoryVariables(AddHistoryEvent data) {
+    return {
+      'value': data.operation.value,
+      'user_to': data.operation.userTo,
+      'user_from': data.operation.userFrom,
+      'text': data.operation.text,
+      'card_to': data.operation.cardTo,
+      'card_from': data.operation.cardFrom,
+      'status': data.operation.status,
+    };
+  }
+
+  String updateHistory() {
+    return """
+      mutation UpdateHistory(
+        \$id: Int!, 
+        \$status: String!) {
+          update_history_by_pk(pk_columns: 
+          {
+            id: \$id}, 
+            _set: {status: \$status}) {
+              __typename
+            }
+          }
+    """;
+  }
+
+  Map<String, dynamic> updateHistoryVariables(UpdateHistoryEvent data) {
+    return {
+      'id': data.transactionId,
+      'status': data.status,
+    };
+  }
+
   String updateCardValue() {
     return """
       mutation UpdateCardInfo(
@@ -24,6 +120,44 @@ class QueryMutation {
     };
   }
 
+  String deleteOperation() {
+    return """
+      mutation DeleteOperation(\$operation_id: Int!) {
+        delete_operations_by_pk(id: \$operation_id) {
+          __typename
+        }
+      }
+    """;
+  }
+
+  Map<String, dynamic> deleteOperationVariables(int operationId) {
+    return {
+      'operation_id': operationId,
+    };
+  }
+
+  String updateOperationStatus() {
+    return """
+      mutation UpdateOperation(
+        \$operation_id: Int!, 
+        \$status: String!) {
+          update_operations_by_pk(
+            pk_columns: {id: \$operation_id}, 
+            _set: {status: \$status}) {
+              __typename
+            }
+        }
+    """;
+  }
+
+  Map<String, dynamic> updateOperationStatusVariables(
+      UpdateOperationStatusEvent data) {
+    return {
+      'operation_id': data.operationId,
+      'status': 'not confirmed',
+    };
+  }
+
   String fetchOperations() {
     return """
       subscription FetchOperations(\$user_id: Int!) {
@@ -37,6 +171,7 @@ class QueryMutation {
             id
             card_id_to
             card_id_from
+            text
           }
           operationsByUserIdTo {
             id
@@ -48,6 +183,7 @@ class QueryMutation {
             id
             card_id_to
             card_id_from
+            text
           }
         }
       }
@@ -70,7 +206,8 @@ class QueryMutation {
         \$card_from: Int!, 
         \$card_to: Int!, 
         \$status: String!, 
-        \$value: String!) {
+        \$value: String!,
+        \$text: String!) {
           insert_operations(
             objects: 
             {
@@ -79,7 +216,8 @@ class QueryMutation {
               card_id_from: \$card_from, 
               card_id_to: \$card_to, 
               status: \$status, 
-              value: \$value
+              value: \$value,
+              text: \$text,
             }) {
               returning {
                 __typename
@@ -97,6 +235,7 @@ class QueryMutation {
       'card_to': data.operation.cardTo,
       'status': data.operation.status,
       'value': data.operation.value,
+      'text': data.operation.text,
     };
   }
 

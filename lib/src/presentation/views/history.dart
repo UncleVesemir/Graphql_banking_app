@@ -1,3 +1,4 @@
+import 'package:banking/src/presentation/blocs/history/history_bloc.dart';
 import 'package:banking/src/presentation/blocs/sign_in_register/sign_in_register_bloc.dart';
 import 'package:banking/src/presentation/styles.dart';
 import 'package:banking/src/presentation/utils/clippers.dart';
@@ -19,15 +20,27 @@ class _HistoryPageState extends State<HistoryPage> {
     return Padding(
       padding: const EdgeInsets.only(left: 14, right: 14),
       child: SafeArea(
-        child: ListView(
-          children: const [
-            SizedBox(height: 20),
-            ReceiptDataWidget(),
-            ReceiptDataWidget(),
-            ReceiptDataWidget(),
-            ReceiptDataWidget(),
-            SizedBox(height: 80),
-          ],
+        child: BlocBuilder<HistoryBloc, HistoryState>(
+          builder: (context, state) {
+            if (state is HistoryLoadedState) {
+              var userState =
+                  BlocProvider.of<SignInRegisterBloc>(context).state;
+              var user = userState as SignInRegisterLoadedState;
+              return ListView.builder(
+                itemCount: state.operations.length,
+                itemBuilder: (context, index) {
+                  return ReceiptDataWidget(
+                    operation: state.operations[index],
+                    isSended: state.operations[index].userFrom == user.user.id,
+                  );
+                },
+              );
+            } else if (state is HistoryLoadingState) {
+              return const Center(child: SpinKitWave(color: Colors.black));
+            } else {
+              return Container();
+            }
+          },
         ),
       ),
     );
@@ -78,7 +91,7 @@ class _HistoryPageState extends State<HistoryPage> {
                           ? _loading()
                           : state is SignInRegisterErrorState
                               ? _error(state)
-                              : Container(color: Colors.red),
+                              : Container(),
                 ),
               ],
             ),

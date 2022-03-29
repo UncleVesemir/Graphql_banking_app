@@ -4,8 +4,8 @@ import 'package:banking/src/data/models/operation.dart';
 import 'package:banking/src/data/network/graphql_repository.dart';
 import 'package:banking/src/domain/entities/operation.dart' as op;
 import 'package:banking/src/presentation/blocs/cards/cards_bloc.dart';
+import 'package:banking/src/presentation/blocs/history/history_bloc.dart';
 import 'package:banking/src/presentation/blocs/sign_in_register/sign_in_register_bloc.dart';
-import 'package:banking/src/presentation/widgets/card/credit_card_item.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,8 +18,10 @@ class OperationsBloc extends Bloc<OperationsBlocEvent, OperationsBlocState> {
   final GraphQLRepositiry graphQLRepositiry;
   final CardsBloc cardsBloc;
   final SignInRegisterBloc signInRegisterBloc;
+  final HistoryBloc historyBloc;
   StreamSubscription? streamSubscription;
   OperationsBloc({
+    required this.historyBloc,
     required this.signInRegisterBloc,
     required this.cardsBloc,
     required this.graphQLRepositiry,
@@ -32,19 +34,67 @@ class OperationsBloc extends Bloc<OperationsBlocEvent, OperationsBlocState> {
         if (userState is SignInRegisterLoadedState) {
           if (operation.userFrom == userState.user.id) {
             if (cardsState is CardsLoadedState) {
-              var value = (double.parse(cardsState.cards.first.cardInfo.value) -
-                      double.parse(operation.value))
-                  .toString();
-              int cardId = operation.cardFrom;
-              cardsBloc.add(UpdateCardValueEvent(cardId: cardId, value: value));
+              if (operation.status == 'sended') {
+                var value =
+                    (double.parse(cardsState.cards.first.cardInfo.value) -
+                            double.parse(operation.value))
+                        .toString();
+                int cardId = operation.cardFrom;
+                cardsBloc.add(
+                  UpdateCardValueEvent(
+                    cardId: cardId,
+                    value: value,
+                    operation: UpdateOperationStatusEvent(
+                      operationId: operation.id!,
+                      status: 'sended',
+                    ),
+                  ),
+                );
+                graphQLRepositiry.addHistory(
+                  AddHistoryEvent(
+                    operation: op.Operation(
+                      value: operation.value,
+                      text: operation.text,
+                      userFrom: operation.userFrom,
+                      userTo: operation.userTo,
+                      cardFrom: operation.cardFrom,
+                      cardTo: operation.cardTo,
+                      time: operation.time,
+                      status: 'not confirmed',
+                    ),
+                  ),
+                );
+              }
             }
           } else {
             if (cardsState is CardsLoadedState) {
-              var value = (double.parse(cardsState.cards.first.cardInfo.value) +
-                      double.parse(operation.value))
-                  .toString();
-              int cardId = operation.cardTo;
-              cardsBloc.add(UpdateCardValueEvent(cardId: cardId, value: value));
+              if (operation.status == 'not confirmed') {
+                var value =
+                    (double.parse(cardsState.cards.first.cardInfo.value) +
+                            double.parse(operation.value))
+                        .toString();
+                int cardId = operation.cardTo;
+                var historyState = historyBloc.state as HistoryLoadedState;
+                // var transactionIndex = historyState.operations
+                //     .indexWhere((element) => element.time == operation.time);
+                // graphQLRepositiry.updateHistory(
+                //   UpdateHistoryEvent(
+                //     status: 'confirmed',
+                //     transactionId:
+                //         historyState.operations[transactionIndex].id!,
+                //   ),
+                // );
+                cardsBloc.add(
+                  UpdateCardValueEvent(
+                    cardId: cardId,
+                    value: value,
+                    operation: UpdateOperationStatusEvent(
+                      operationId: operation.id!,
+                      status: 'not confirmed',
+                    ),
+                  ),
+                );
+              }
             }
           }
         }
@@ -52,6 +102,7 @@ class OperationsBloc extends Bloc<OperationsBlocEvent, OperationsBlocState> {
       emit(OperationsLoadedState(operations: event.operations));
       print('operations updated');
     });
+    on<UpdateOperationStatusEvent>((event, emit) {});
     on<FetchOperationsEvent>((event, emit) async {
       emit(OperationsLoadingState());
       Stream<QueryResult<dynamic>> stream =

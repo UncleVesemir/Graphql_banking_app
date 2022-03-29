@@ -332,7 +332,7 @@ class _FriendsPageState extends State<FriendsPage>
       children: [
         Container(
           color: Colors.white,
-          height: 150,
+          height: 20,
         ),
         ClipShadowPath(
           clipper: TabClipper(),

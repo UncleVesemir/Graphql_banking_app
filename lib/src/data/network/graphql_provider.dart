@@ -4,11 +4,11 @@ import 'package:banking/src/data/models/user.dart';
 import 'package:banking/src/data/network/query_mutation.dart';
 import 'package:banking/src/domain/entities/card.dart';
 import 'package:banking/src/domain/entities/friend.dart';
-import 'package:banking/src/domain/entities/friend_card.dart';
 import 'package:banking/src/domain/entities/user.dart';
 import 'package:banking/src/internal/application.dart';
 import 'package:banking/src/presentation/blocs/cards/cards_bloc.dart';
 import 'package:banking/src/presentation/blocs/friends/friends_bloc.dart';
+import 'package:banking/src/presentation/blocs/history/history_bloc.dart';
 import 'package:banking/src/presentation/blocs/operations/operations_bloc_bloc.dart';
 import 'package:banking/src/presentation/blocs/sign_in_register/sign_in_register_bloc.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -67,6 +67,42 @@ class UserProvider {
       QueryOptions(
         document: gql(addMutation.updateCardValue()),
         variables: addMutation.updateCardValueVariables(data),
+      ),
+    );
+    if (result.hasException) {
+      throw Exception(result.exception);
+    } else {
+      if (result.data != null) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
+  Future<bool> updateHistory(UpdateHistoryEvent data) async {
+    QueryResult result = await _client.query(
+      QueryOptions(
+        document: gql(addMutation.updateHistory()),
+        variables: addMutation.updateHistoryVariables(data),
+      ),
+    );
+    if (result.hasException) {
+      throw Exception(result.exception);
+    } else {
+      if (result.data != null) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
+  Future<bool> addHistory(AddHistoryEvent data) async {
+    QueryResult result = await _client.query(
+      QueryOptions(
+        document: gql(addMutation.addHistory()),
+        variables: addMutation.addHistoryVariables(data),
       ),
     );
     if (result.hasException) {
@@ -216,6 +252,50 @@ class UserProvider {
     }
   }
 
+  Future<bool> deleteOperation(int operationId) async {
+    QueryResult result = await _client.query(
+      QueryOptions(
+        document: gql(addMutation.deleteOperation()),
+        variables: addMutation.deleteOperationVariables(operationId),
+      ),
+    );
+    if (result.hasException) {
+      throw Exception(result.exception);
+    } else {
+      if (result.data != null && result.data!.isNotEmpty) {
+        if (result.data!['delete_operations_by_pk'].toString().length > 10) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    }
+  }
+
+  Future<bool> updateOperationStatus(UpdateOperationStatusEvent data) async {
+    QueryResult result = await _client.query(
+      QueryOptions(
+        document: gql(addMutation.updateOperationStatus()),
+        variables: addMutation.updateOperationStatusVariables(data),
+      ),
+    );
+    if (result.hasException) {
+      throw Exception(result.exception);
+    } else {
+      if (result.data != null && result.data!.isNotEmpty) {
+        if (result.data!['update_operations_by_pk'].toString().length > 10) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    }
+  }
+
   Future<Friend> fetchProfileInfo(int id) async {
     QueryResult result = await _client.query(
       QueryOptions(
@@ -238,6 +318,19 @@ class UserProvider {
       }
     }
     throw Exception('Something gone wrong. Try again');
+  }
+
+  Stream<QueryResult<dynamic>> fetchHistory(FetchHistoryEvent data) {
+    Stream<QueryResult<dynamic>> stream;
+    stream = _client.subscribe(SubscriptionOptions(
+      document: gql(addMutation.fetchHistory()),
+      variables: addMutation.fetchHistoryVariables(
+        FetchHistoryEvent(
+          userId: data.userId,
+        ),
+      ),
+    ));
+    return stream;
   }
 
   Stream<QueryResult<dynamic>> fetchOperations(FetchOperationsEvent data) {

@@ -3,6 +3,8 @@ part of 'operation.dart';
 OperationModel _$OperationModelFromJson(Map<String, dynamic> json) =>
     OperationModel(
       id: json['id'] as int,
+      time: json['time'] ?? '',
+      text: json['text'] as String,
       value: json['value'] as String,
       status: json['status'] as String,
       cardTo: json['card_id_to'] as int,
@@ -14,6 +16,7 @@ OperationModel _$OperationModelFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$OperationModelToJson(OperationModel instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'text': instance.text,
       'value': instance.value,
       'status': instance.status,
       'card_id_to': instance.cardTo,

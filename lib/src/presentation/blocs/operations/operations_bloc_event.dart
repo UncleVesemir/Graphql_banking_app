@@ -22,4 +22,11 @@ class UpdateOperationsDataEvent extends OperationsBlocEvent {
   const UpdateOperationsDataEvent({required this.operations});
 }
 
+class UpdateOperationStatusEvent extends OperationsBlocEvent {
+  final int operationId;
+  final String status;
+  const UpdateOperationStatusEvent(
+      {required this.operationId, required this.status});
+}
+
 class ErrorOperationEvent extends OperationsBlocEvent {}

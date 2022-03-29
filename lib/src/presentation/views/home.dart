@@ -25,16 +25,10 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   bool isSheetExpanded = false;
   int _selectedIndex = 0;
-  int? _selectedCardIndex;
+  int? selectedCardIndex;
 
   List<CreditCardItem> cards = [];
   String? searchText;
-
-  void _onCardSelected(int? item) {
-    setState(() {
-      _selectedCardIndex = item;
-    });
-  }
 
   void _search(String? text) {
     setState(() {
@@ -51,9 +45,55 @@ class _HomeState extends State<Home> {
     }
   }
 
+  Widget _editButton() {
+    return Container(
+      height: 30,
+      width: 30,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: RadialGradient(
+          center: Alignment.topLeft,
+          radius: 0.85,
+          colors: [
+            Colors.white.withOpacity(0.6),
+            Colors.black.withOpacity(1),
+          ],
+        ),
+      ),
+      child: const Icon(
+        Icons.edit,
+        color: Colors.white,
+        size: 12,
+      ),
+    );
+  }
+
+  Widget _deleteButton() {
+    return Container(
+      height: 30,
+      width: 30,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: RadialGradient(
+          center: Alignment.topLeft,
+          radius: 0.85,
+          colors: [
+            Colors.white.withOpacity(0.6),
+            Colors.black.withOpacity(1),
+          ],
+        ),
+      ),
+      child: const Icon(
+        Icons.delete,
+        color: Colors.white,
+        size: 12,
+      ),
+    );
+  }
+
   Widget _buildCardsInfo() {
-    return Flexible(
-      flex: 2,
+    return Expanded(
+      flex: 1,
       child: ClipShadowPath(
         shadow: Shadow(
           offset: const Offset(0, 0),
@@ -61,11 +101,79 @@ class _HomeState extends State<Home> {
           blurRadius: 10,
         ),
         clipper: TabClipper(),
-        child: Container(
-          color: Colors.white,
+        child: Column(
+          children: [
+            Expanded(
+              child: BlocBuilder<CardsBloc, CardsState>(
+                builder: (context, state) {
+                  if (state is CardsLoadedState) {
+                    return Container(
+                      width: double.infinity,
+                      height: 50,
+                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.all(14),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Row(
+                                  children: [
+                                    const Text(
+                                      'Balance: ',
+                                      style: AppTextStyles.loginGrey,
+                                    ),
+                                    Text(
+                                      '\$${state.cards.first.cardInfo.value}',
+                                      style: AppTextStyles.cardValueBlack,
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    const Text(
+                                      'Expiration Date: ',
+                                      style: AppTextStyles.loginGrey,
+                                    ),
+                                    Text(
+                                      state.cards.first.cardInfo.expDate,
+                                      style: AppTextStyles.cardValueBlack,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                _editButton(),
+                                const SizedBox(width: 10),
+                                _deleteButton(),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  } else {
+                    return Container();
+                  }
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
+  }
+
+  void _updateState(int? item) async {
+    setState(() {
+      selectedCardIndex = item;
+    });
   }
 
   Widget _userCards() {
@@ -85,7 +193,7 @@ class _HomeState extends State<Home> {
                     Flexible(
                       child: CreditCards3d(
                         children: state.cards,
-                        // onSelected: (item) => _onCardSelected(item),
+                        // onSelected: (item) async => _updateState(item),
                         onSelected: (item) => {},
                       ),
                     ),
@@ -107,38 +215,41 @@ class _HomeState extends State<Home> {
   }
 
   Widget _buildBody(CardsState state) {
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      decoration: AppColors.appBackgroundGradientDecoration,
-      child: Stack(
-        alignment: Alignment.bottomCenter,
-        children: [
-          Container(
-            width: double.infinity,
-            height: double.infinity,
-            decoration: AppColors.appBackgroundGradientDecoration,
-            child: _selectedIndex == 0
-                ? Column(
-                    children: [
-                      _buildCardsInfo(),
-                      _userCards(),
-                    ],
-                  )
-                : _selectedIndex == 1
-                    ? FriendsPage(searchText: searchText)
-                    : _selectedIndex == 2
-                        ? const SettingsPage()
-                        : const HistoryPage(),
-          ),
-          CustomBottomBar(
-            onSelected: (index) {
-              setState(() {
-                _selectedIndex = index;
-              });
-            },
-          ),
-        ],
+    return SafeArea(
+      child: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: AppColors.appBackgroundGradientDecoration,
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            Container(
+              width: double.infinity,
+              height: double.infinity,
+              decoration: AppColors.appBackgroundGradientDecoration,
+              child: _selectedIndex == 0
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _buildCardsInfo(),
+                        _userCards(),
+                      ],
+                    )
+                  : _selectedIndex == 1
+                      ? FriendsPage(searchText: searchText)
+                      : _selectedIndex == 2
+                          ? const SettingsPage()
+                          : const HistoryPage(),
+            ),
+            CustomBottomBar(
+              onSelected: (index) {
+                setState(() {
+                  _selectedIndex = index;
+                });
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
