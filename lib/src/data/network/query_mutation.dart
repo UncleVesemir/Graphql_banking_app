@@ -19,6 +19,8 @@ class QueryMutation {
             value
             status
             uuid
+            sender_name
+            recipient_name
           }
           historiesByUserIdTo {
             card_id_from
@@ -31,6 +33,8 @@ class QueryMutation {
             value
             status
             uuid
+            sender_name
+            recipient_name
           }
         }
       }
@@ -53,6 +57,8 @@ class QueryMutation {
         \$card_to: Int!, 
         \$status: String!,
         \$uuid: String!,
+        \$sender_name: String!,
+        \$recipient_name: String!,
         \$card_from: Int!) {
           insert_history_one(object: {
             value: \$value, 
@@ -61,6 +67,8 @@ class QueryMutation {
             user_id_from: \$user_from,
             status: \$status, 
             text: \$text, 
+            sender_name: \$sender_name,
+            recipient_name: \$recipient_name,
             card_id_to: \$card_to, 
             card_id_from: \$card_from}) {
               __typename
@@ -79,6 +87,8 @@ class QueryMutation {
       'card_from': data.operation.cardFrom,
       'status': data.operation.status,
       'uuid': data.operation.uuid,
+      'sender_name': data.operation.senderName,
+      'recipient_name': data.operation.recipientName,
     };
   }
 
@@ -178,6 +188,8 @@ class QueryMutation {
             card_id_from
             text
             uuid
+            sender_name
+            recipient_name
           }
           operationsByUserIdTo {
             id
@@ -191,6 +203,8 @@ class QueryMutation {
             card_id_from
             text
             uuid
+            sender_name
+            recipient_name
           }
         }
       }
@@ -215,6 +229,8 @@ class QueryMutation {
         \$status: String!, 
         \$value: String!,
         \$uuid: String!,
+        \$sender_name: String!,
+        \$recipient_name: String!,
         \$text: String!) {
           insert_operations(
             objects: 
@@ -227,6 +243,8 @@ class QueryMutation {
               value: \$value,
               text: \$text,
               uuid: \$uuid,
+              sender_name: \$sender_name,
+              recipient_name: \$recipient_name,
             }) {
               returning {
                 __typename
@@ -246,6 +264,8 @@ class QueryMutation {
       'value': data.operation.value,
       'text': data.operation.text,
       'uuid': data.operation.uuid,
+      'sender_name': data.operation.senderName,
+      'recipient_name': data.operation.recipientName,
     };
   }
 

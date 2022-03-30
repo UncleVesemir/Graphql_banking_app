@@ -1,4 +1,5 @@
 import 'package:banking/src/domain/entities/operation.dart';
+import 'package:banking/src/presentation/blocs/sign_in_register/sign_in_register_bloc.dart';
 import 'package:banking/src/presentation/styles.dart';
 import 'package:banking/src/presentation/utils/clippers.dart';
 import 'package:banking/src/presentation/widgets/custom_clip.dart';
@@ -7,7 +8,9 @@ import 'package:flutter/material.dart';
 class ReceiptDataWidget extends StatelessWidget {
   final bool isSended;
   final Operation operation;
+  final SignInRegisterLoadedState user;
   const ReceiptDataWidget({
+    required this.user,
     required this.isSended,
     required this.operation,
     Key? key,
@@ -25,7 +28,7 @@ class ReceiptDataWidget extends StatelessWidget {
           ),
         ),
         Flexible(
-          flex: 3,
+          flex: 5,
           child: Text(
             right,
             textAlign: TextAlign.end,
@@ -63,10 +66,11 @@ class ReceiptDataWidget extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 _rowItem('Date:', operation.time!),
-                _rowItem('Transfer from:', operation.userFrom.toString()),
-                _rowItem('Transfer to:', operation.userTo.toString()),
-                _rowItem('Transfer unique id:', operation.uuid.toString()),
-                _rowItem('Operation status:', operation.status),
+                _rowItem('From:', operation.senderName),
+                _rowItem('To:', operation.recipientName),
+                _rowItem('Unique id:', operation.uuid.toString()),
+                _rowItem('Message:', operation.text),
+                _rowItem('Status:', operation.status),
                 const SizedBox(height: 30),
                 _rowItem('Total:', '\$${operation.value}'),
                 _rowItem('Taxes:', '\$0'),
@@ -87,32 +91,6 @@ class ReceiptDataWidget extends StatelessWidget {
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class ReceiptInfoWidget extends StatelessWidget {
-  final bool isProfit;
-  const ReceiptInfoWidget({
-    Key? key,
-    required this.isProfit,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 3),
-      child: ClipPath(
-        clipper: ReceiptClipper(),
-        child: Container(
-          width: double.infinity,
-          height: 50,
-          color: isProfit ? AppColors.green : Colors.red[400],
-          child: Column(
-              // children: [Text('Money Transfer')],
-              ),
         ),
       ),
     );

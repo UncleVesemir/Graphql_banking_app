@@ -30,6 +30,7 @@ class _HistoryPageState extends State<HistoryPage> {
                 itemCount: state.operations.length,
                 itemBuilder: (context, index) {
                   return ReceiptDataWidget(
+                    user: userState,
                     operation: state.operations[index],
                     isSended: state.operations[index].userFrom == user.user.id,
                   );

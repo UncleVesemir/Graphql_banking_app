@@ -143,6 +143,8 @@ class OperationsBloc extends Bloc<OperationsBlocEvent, OperationsBlocState> {
           uuid: operation.uuid,
           value: operation.value,
           text: operation.text,
+          senderName: operation.senderName,
+          recipientName: operation.recipientName,
           userFrom: operation.userFrom,
           userTo: operation.userTo,
           cardFrom: operation.cardFrom,

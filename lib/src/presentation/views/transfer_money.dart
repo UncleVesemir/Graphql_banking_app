@@ -76,6 +76,8 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
               uuid: uuid.v1(),
               userFrom: userState.user.id,
               userTo: friendsState.friends[selectedFriend].info.id,
+              senderName: userState.user.name,
+              recipientName: friendsState.friends[selectedFriend].info.name,
               cardFrom: selectedCard!.cardInfo.cardId,
               cardTo: friendCards[0].cardId,
               status: 'sended',

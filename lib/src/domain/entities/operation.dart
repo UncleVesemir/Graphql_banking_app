@@ -2,6 +2,8 @@ class Operation {
   final int? id;
   final String? time;
   final String? uuid;
+  final String recipientName;
+  final String senderName;
   final int userTo;
   final int cardTo;
   final int userFrom;
@@ -13,6 +15,8 @@ class Operation {
   const Operation({
     this.id,
     this.time,
+    required this.senderName,
+    required this.recipientName,
     required this.uuid,
     required this.userTo,
     required this.cardTo,

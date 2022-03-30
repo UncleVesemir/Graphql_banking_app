@@ -42,7 +42,6 @@ class CardsBloc extends Bloc<CardsEvent, CardsState> {
 
     on<UpdateCardDataEvent>((event, emit) async {
       emit(CardsLoadingState());
-      print("HERE");
       emit(CardsLoadedState(cards: event.userCards));
       print('cards updated');
     });

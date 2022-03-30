@@ -107,57 +107,62 @@ class _HomeState extends State<Home> {
               child: BlocBuilder<CardsBloc, CardsState>(
                 builder: (context, state) {
                   if (state is CardsLoadedState) {
-                    return Container(
-                      width: double.infinity,
-                      height: 50,
-                      color: Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.all(14),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Row(
-                                  children: [
-                                    const Text(
-                                      'Balance: ',
-                                      style: AppTextStyles.loginGrey,
-                                    ),
-                                    Text(
-                                      '\$${state.cards.first.cardInfo.value}',
-                                      style: AppTextStyles.cardValueBlack,
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    const Text(
-                                      'Expiration Date: ',
-                                      style: AppTextStyles.loginGrey,
-                                    ),
-                                    Text(
-                                      state.cards.first.cardInfo.expDate,
-                                      style: AppTextStyles.cardValueBlack,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                _editButton(),
-                                const SizedBox(width: 10),
-                                _deleteButton(),
-                              ],
-                            ),
-                          ],
+                    if (state.cards.isNotEmpty) {
+                      return Container(
+                        width: double.infinity,
+                        height: 50,
+                        color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.all(14),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    children: [
+                                      const Text(
+                                        'Balance: ',
+                                        style: AppTextStyles.loginGrey,
+                                      ),
+                                      Text(
+                                        '\$${state.cards.first.cardInfo.value}',
+                                        style: AppTextStyles.cardValueBlack,
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      const Text(
+                                        'Expiration Date: ',
+                                        style: AppTextStyles.loginGrey,
+                                      ),
+                                      Text(
+                                        state.cards.first.cardInfo.expDate,
+                                        style: AppTextStyles.cardValueBlack,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  _editButton(),
+                                  const SizedBox(width: 10),
+                                  _deleteButton(),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    );
+                      );
+                    } else {
+                      return Container();
+                    }
                   } else {
                     return Container();
                   }

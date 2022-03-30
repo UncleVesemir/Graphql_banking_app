@@ -20,6 +20,8 @@ class OperationModel extends Operation {
     required int userTo,
     required int cardFrom,
     required int userFrom,
+    required String recipientName,
+    required String senderName,
     String? time,
   }) : super(
           id: id,
@@ -32,6 +34,8 @@ class OperationModel extends Operation {
           userTo: userTo,
           cardFrom: cardFrom,
           userFrom: userFrom,
+          recipientName: recipientName,
+          senderName: senderName,
         );
 
   factory OperationModel.fromJson(Map<String, dynamic> json) =>

@@ -12,6 +12,8 @@ OperationModel _$OperationModelFromJson(Map<String, dynamic> json) =>
       userTo: json['user_id_to'] as int,
       cardFrom: json['card_id_from'] as int,
       userFrom: json['user_id_from'] as int,
+      senderName: json['sender_name'] as String,
+      recipientName: json['recipient_name'] as String,
     );
 
 Map<String, dynamic> _$OperationModelToJson(OperationModel instance) =>
@@ -25,4 +27,6 @@ Map<String, dynamic> _$OperationModelToJson(OperationModel instance) =>
       'user_id_to': instance.userTo,
       'card_id_from': instance.cardFrom,
       'user_id_from': instance.userFrom,
+      'sender_name': instance.senderName,
+      'recipient_name': instance.recipientName,
     };

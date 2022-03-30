@@ -1,6 +1,8 @@
+import 'package:banking/src/presentation/blocs/cards/cards_bloc.dart';
 import 'package:banking/src/presentation/widgets/card/credit_card_animation_model.dart';
 import 'package:banking/src/presentation/widgets/card/credit_card_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CreditCards3d extends StatefulWidget {
   final List<CreditCardItem> children;
