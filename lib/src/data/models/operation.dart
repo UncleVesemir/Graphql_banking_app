@@ -12,6 +12,7 @@ String operationModelToJson(OperationModel data) => json.encode(data.toJson());
 class OperationModel extends Operation {
   OperationModel({
     required int id,
+    required String uuid,
     required String text,
     required String value,
     required String status,
@@ -22,6 +23,7 @@ class OperationModel extends Operation {
     String? time,
   }) : super(
           id: id,
+          uuid: uuid,
           text: text,
           time: time,
           value: value,

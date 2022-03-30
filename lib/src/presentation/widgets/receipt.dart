@@ -17,13 +17,20 @@ class ReceiptDataWidget extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          left,
-          style: AppTextStyles.receiptLow,
+        Flexible(
+          flex: 2,
+          child: Text(
+            left,
+            style: AppTextStyles.receiptLow,
+          ),
         ),
-        Text(
-          right,
-          style: AppTextStyles.receiptLowBold,
+        Flexible(
+          flex: 3,
+          child: Text(
+            right,
+            textAlign: TextAlign.end,
+            style: AppTextStyles.receiptLowBold,
+          ),
         ),
       ],
     );
@@ -42,7 +49,6 @@ class ReceiptDataWidget extends StatelessWidget {
         clipper: SettingsCardClipper(),
         child: Container(
           width: double.infinity,
-          height: 420,
           color: Colors.white,
           child: Padding(
             padding:
@@ -56,10 +62,10 @@ class ReceiptDataWidget extends StatelessWidget {
                       .copyWith(color: 3 < 2 ? Colors.grey : Colors.black),
                 ),
                 const SizedBox(height: 20),
-                _rowItem('Date:', operation.time!.substring(11)),
+                _rowItem('Date:', operation.time!),
                 _rowItem('Transfer from:', operation.userFrom.toString()),
                 _rowItem('Transfer to:', operation.userTo.toString()),
-                _rowItem('Transfer unique id:', operation.id.toString()),
+                _rowItem('Transfer unique id:', operation.uuid.toString()),
                 _rowItem('Operation status:', operation.status),
                 const SizedBox(height: 30),
                 _rowItem('Total:', '\$${operation.value}'),

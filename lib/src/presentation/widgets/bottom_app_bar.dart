@@ -115,7 +115,7 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 18, right: 18, bottom: 0),
+          padding: const EdgeInsets.only(left: 18, right: 18, bottom: 10),
           child: Stack(
             alignment: Alignment.bottomCenter,
             children: [

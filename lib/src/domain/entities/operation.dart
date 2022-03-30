@@ -1,5 +1,7 @@
 class Operation {
   final int? id;
+  final String? time;
+  final String? uuid;
   final int userTo;
   final int cardTo;
   final int userFrom;
@@ -7,10 +9,11 @@ class Operation {
   final String text;
   final String value;
   final String status;
-  final String? time;
 
   const Operation({
     this.id,
+    this.time,
+    required this.uuid,
     required this.userTo,
     required this.cardTo,
     required this.userFrom,
@@ -18,6 +21,5 @@ class Operation {
     required this.text,
     required this.value,
     required this.status,
-    this.time,
   });
 }

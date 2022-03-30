@@ -25,76 +25,104 @@ class CardsBloc extends Bloc<CardsEvent, CardsState> {
     required this.graphQLRepositiry,
     required this.signInRegisterBloc,
   }) : super(CardsEmptyState()) {
-    streamSubscription = signInRegisterBloc.stream.listen((state) {});
-    streamSubscription!.onData((state) {
+    streamSubscription = signInRegisterBloc.stream.listen((state) async {
       if (state is SignInRegisterLoadedState) {
         add(FetchCardsEvent(userId: state.user.id));
       }
     });
+
     on<AddCardEvent>((event, emit) async {
-      emit(CardsLoadingState());
       try {
+        emit(CardsLoadingState());
         await graphQLRepositiry.addCard(event);
       } catch (e) {
         print(e);
       }
     });
+
     on<UpdateCardDataEvent>((event, emit) async {
       emit(CardsLoadingState());
+      print("HERE");
       emit(CardsLoadedState(cards: event.userCards));
       print('cards updated');
     });
+
+    /// FROM OPERATIONS BLOC WHEN OPERATION ADDED
     on<UpdateCardValueEvent>((event, emit) async {
       emit(CardsLoadingState());
       try {
         bool isSuccesful = await graphQLRepositiry.updateCardValue(event);
         if (isSuccesful) {
           if (event.operation.status == 'sended') {
-            graphQLRepositiry.updateStatus(event.operation);
+            print(event.value);
+            graphQLRepositiry.updateCardValue(event).then((bool isUpdated) {
+              if (isUpdated) {
+                graphQLRepositiry.updateStatus(event.operation);
+              }
+            });
           } else if (event.operation.status == 'not confirmed') {
-            graphQLRepositiry.deleteOperation(event.operation.operationId);
+            print(event.value);
+            graphQLRepositiry.updateCardValue(event).then((bool isUpdated) {
+              if (isUpdated) {
+                graphQLRepositiry.deleteOperation(event.operation.operationId);
+              }
+            });
           }
         }
       } catch (e) {
         print(e);
       }
     });
+
+    ///
+
     on<FetchCardsEvent>((event, emit) async {
       emit(CardsLoadingState());
       try {
         Stream<QueryResult<dynamic>> stream =
             graphQLRepositiry.fetchCards(FetchCardsEvent(userId: event.userId));
         streamSubscription = stream.listen((event) async {
-          List<Card> cards = [];
-          for (var i = 0; i < event.data!['card'].length; i++) {
-            cards.add(CardModel.fromJson(event.data!['card'][i]));
-          }
-          List<CreditCardItem> _cards = [];
-          int i = 0;
-          for (var card in cards) {
-            _cards.add(
-              CreditCardItem(
-                cardInfo: CreditCardModel(
-                  index: i,
-                  cardHolderName: card.name,
-                  cardNumber: card.number,
-                  expDate: card.expDate,
-                  value: card.value,
-                  width: 280,
-                  height: 180,
-                  cardId: card.id!,
-                  gradient: AppColors.appBackgroundGradient,
-                ),
-              ),
-            );
-            i++;
-          }
-          add(UpdateCardDataEvent(userCards: _cards));
+          List<Card> cardsFromJson = _convertFromJson(event);
+          List<CreditCardItem> widgetsFromModel =
+              _convertToWidgets(cardsFromJson);
+          add(UpdateCardDataEvent(userCards: widgetsFromModel));
         });
       } catch (e) {
         print(e);
       }
     });
+  }
+
+  List<Card> _convertFromJson(QueryResult<dynamic> event) {
+    List<Card> cards = [];
+    for (var i = 0; i < event.data!['card'].length; i++) {
+      cards.add(CardModel.fromJson(event.data!['card'][i]));
+    }
+    return cards;
+  }
+
+  List<CreditCardItem> _convertToWidgets(List<Card> cards) {
+    List<CreditCardItem> _cards = [];
+    int i = 0;
+    for (var card in cards) {
+      _cards.add(
+        CreditCardItem(
+          cardInfo: CreditCardModel(
+            index: i,
+            cardHolderName: card.name,
+            cardNumber: card.number,
+            expDate: card.expDate,
+            value: card.value,
+            width: 280,
+            height: 180,
+            cardId: card.id!,
+            gradient: AppColors.appBackgroundGradient,
+          ),
+        ),
+      );
+      i++;
+    }
+    return _cards;
   }
 
   @override

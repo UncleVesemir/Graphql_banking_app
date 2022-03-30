@@ -216,6 +216,7 @@ class _HomeState extends State<Home> {
 
   Widget _buildBody(CardsState state) {
     return SafeArea(
+      bottom: false,
       child: Container(
         width: double.infinity,
         height: double.infinity,

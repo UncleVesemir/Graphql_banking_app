@@ -73,6 +73,7 @@ class UserProvider {
       throw Exception(result.exception);
     } else {
       if (result.data != null) {
+        print('CARD HAS BEEN UPDATED');
         return true;
       } else {
         return false;

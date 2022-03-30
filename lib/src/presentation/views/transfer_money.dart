@@ -14,6 +14,7 @@ import 'package:banking/src/presentation/widgets/increase_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:uuid/uuid.dart';
 
 class MoneyTransferScreen extends StatefulWidget {
   const MoneyTransferScreen({Key? key}) : super(key: key);
@@ -24,6 +25,7 @@ class MoneyTransferScreen extends StatefulWidget {
 
 class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
   bool isLoading = false;
+  var uuid = const Uuid();
 
   double value = 0;
   List<Widget> cards = const [];
@@ -71,6 +73,7 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
         BlocProvider.of<OperationsBloc>(context).add(
           AddOperationEvent(
             operation: Operation(
+              uuid: uuid.v1(),
               userFrom: userState.user.id,
               userTo: friendsState.friends[selectedFriend].info.id,
               cardFrom: selectedCard!.cardInfo.cardId,

@@ -18,6 +18,7 @@ class QueryMutation {
             user_id_to
             value
             status
+            uuid
           }
           historiesByUserIdTo {
             card_id_from
@@ -29,6 +30,7 @@ class QueryMutation {
             user_id_to
             value
             status
+            uuid
           }
         }
       }
@@ -50,9 +52,11 @@ class QueryMutation {
         \$text: String!, 
         \$card_to: Int!, 
         \$status: String!,
+        \$uuid: String!,
         \$card_from: Int!) {
           insert_history_one(object: {
             value: \$value, 
+            uuid: \$uuid,
             user_id_to: \$user_to, 
             user_id_from: \$user_from,
             status: \$status, 
@@ -74,6 +78,7 @@ class QueryMutation {
       'card_to': data.operation.cardTo,
       'card_from': data.operation.cardFrom,
       'status': data.operation.status,
+      'uuid': data.operation.uuid,
     };
   }
 
@@ -172,6 +177,7 @@ class QueryMutation {
             card_id_to
             card_id_from
             text
+            uuid
           }
           operationsByUserIdTo {
             id
@@ -184,6 +190,7 @@ class QueryMutation {
             card_id_to
             card_id_from
             text
+            uuid
           }
         }
       }
@@ -207,6 +214,7 @@ class QueryMutation {
         \$card_to: Int!, 
         \$status: String!, 
         \$value: String!,
+        \$uuid: String!,
         \$text: String!) {
           insert_operations(
             objects: 
@@ -218,6 +226,7 @@ class QueryMutation {
               status: \$status, 
               value: \$value,
               text: \$text,
+              uuid: \$uuid,
             }) {
               returning {
                 __typename
@@ -236,6 +245,7 @@ class QueryMutation {
       'status': data.operation.status,
       'value': data.operation.value,
       'text': data.operation.text,
+      'uuid': data.operation.uuid,
     };
   }
 
@@ -447,8 +457,24 @@ class QueryMutation {
 
   String addCard() {
     return """
-      mutation AddCard(\$card_name: String, \$card_value: String!, \$card_type: String!, \$card_cvv: Int!, \$card_user_id: Int!, \$card_exp_date: String!, \$card_number: String!) {
-  insert_card_one(object: {card_number: \$card_number, card_name: \$card_name, card_value: \$card_value, card_type: \$card_type, card_cvv: \$card_cvv, card_user_id: \$card_user_id, card_exp_date: \$card_exp_date}) {
+      mutation AddCard(
+        \$card_name: String, 
+        \$card_value: String!, 
+        \$card_type: String!, 
+        \$card_cvv: Int!, 
+        \$card_user_id: Int!,
+        \$card_exp_date: String!, 
+        \$card_number: String!) {
+          insert_card_one(object: 
+          {
+            card_number: \$card_number, 
+            card_name: \$card_name, 
+            card_value: \$card_value, 
+            card_type: \$card_type, 
+            card_cvv: \$card_cvv, 
+            card_user_id: \$card_user_id, 
+            card_exp_date: \$card_exp_date
+          }) {
     card_id
     card_name
     card_number
