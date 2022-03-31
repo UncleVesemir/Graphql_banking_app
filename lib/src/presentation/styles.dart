@@ -34,6 +34,15 @@ class AppColors {
     ],
   );
 
+  static const LinearGradient deepOrangeGradient = LinearGradient(
+    begin: Alignment.bottomLeft,
+    end: Alignment.topRight,
+    colors: [
+      Colors.white,
+      Colors.deepOrange,
+    ],
+  );
+
   static final LinearGradient appBackgroundGradientInactive = LinearGradient(
     begin: Alignment.bottomLeft,
     end: Alignment.topRight,

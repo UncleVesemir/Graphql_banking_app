@@ -10,6 +10,7 @@ import 'package:banking/src/presentation/widgets/app_bar.dart';
 import 'package:banking/src/presentation/widgets/bottom_app_bar.dart';
 import 'package:banking/src/presentation/widgets/card/credit_card_item.dart';
 import 'package:banking/src/presentation/widgets/card/credit_card_widget.dart';
+import 'package:banking/src/presentation/widgets/card/main_controller.dart';
 import 'package:banking/src/presentation/widgets/custom_clip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -193,17 +194,8 @@ class _HomeState extends State<Home> {
           child: BlocBuilder<CardsBloc, CardsState>(
             builder: (context, state) {
               if (state is CardsLoadedState) {
-                return Column(
-                  children: [
-                    Flexible(
-                      child: CreditCards3d(
-                        children: state.cards,
-                        // onSelected: (item) async => _updateState(item),
-                        onSelected: (item) => {},
-                      ),
-                    ),
-                    const SizedBox(height: 90),
-                  ],
+                return const Flexible(
+                  child: MainItemsController(),
                 );
               }
               if (state is CardsLoadingState) {
