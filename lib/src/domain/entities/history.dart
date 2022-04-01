@@ -14,16 +14,4 @@ class History {
   final int transactionId;
   final int transactionIdTo;
   final int transactionIdFrom;
-
-  @override
-  List<Object> get props {
-    return [
-      time,
-      value,
-      isProfit,
-      transactionId,
-      transactionIdTo,
-      transactionIdFrom,
-    ];
-  }
 }

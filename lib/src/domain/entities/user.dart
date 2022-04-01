@@ -14,15 +14,4 @@ class User {
   final String email;
   final String password;
   final String? image;
-
-  @override
-  List<Object> get props {
-    return [
-      id,
-      uuid,
-      name,
-      email,
-      password,
-    ];
-  }
 }

@@ -1,10 +1,10 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 
-import 'package:banking/src/data/models/friend_card.dart';
 import 'package:banking/src/data/network/graphql_repository.dart';
 import 'package:banking/src/data/notifications/notification_api.dart';
 import 'package:banking/src/domain/entities/friend.dart';
-import 'package:banking/src/domain/entities/friend_card.dart';
 import 'package:banking/src/presentation/blocs/sign_in_register/sign_in_register_bloc.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';

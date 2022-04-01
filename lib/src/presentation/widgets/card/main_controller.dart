@@ -92,7 +92,6 @@ class _CardAnimationState extends State<CardAnimation>
         // if (animation!.value >= 1.1 && animation!.value <= 2) {
         if (animationController!.value >= 0.22 &&
             animationController!.value <= 0.28) {
-          print('onUpdate');
           widget.onUpdate(widget.index);
         }
       }
@@ -270,7 +269,6 @@ class MainItemsControllerState extends State<MainItemsController>
     _checkIndex();
     if (selectedCard!.currentState!.position == Position.bottom) {
       selectedCard!.currentState!.animateBottomToMiddle();
-      print('next');
       widget.onSelected(selectedIndex ?? 0);
       return;
     }
@@ -282,7 +280,6 @@ class MainItemsControllerState extends State<MainItemsController>
           selectedIndex = selectedIndex! - 1;
           selectedCard = keys[selectedIndex!];
         });
-        print('next');
         widget.onSelected(selectedIndex ?? 0);
       }
     }
@@ -299,7 +296,6 @@ class MainItemsControllerState extends State<MainItemsController>
           selectedIndex = selectedIndex! + 1;
           selectedCard = keys[selectedIndex!];
         });
-        print('prev');
         widget.onSelected(selectedIndex ?? 0);
       }
     }

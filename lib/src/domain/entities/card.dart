@@ -17,15 +17,4 @@ class Card {
   final String number;
   final int userId;
   final String expDate;
-
-  @override
-  List<Object> get props {
-    return [
-      name,
-      type,
-      value,
-      userId,
-      expDate,
-    ];
-  }
 }

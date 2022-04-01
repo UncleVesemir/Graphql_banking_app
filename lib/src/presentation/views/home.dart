@@ -48,12 +48,6 @@ class _HomeState extends State<Home> {
     }
   }
 
-  int? _getCardState() {
-    if (controllerKey.currentState != null) {
-      return controllerKey.currentState!.selectedIndex;
-    }
-  }
-
   Widget _editButton() {
     return Container(
       height: 30,

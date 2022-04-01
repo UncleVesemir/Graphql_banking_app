@@ -7,7 +7,6 @@ import 'package:banking/src/presentation/blocs/sign_in_register/sign_in_register
 import 'package:banking/src/presentation/styles.dart';
 import 'package:banking/src/presentation/utils/clippers.dart';
 import 'package:banking/src/presentation/widgets/animated_button.dart';
-import 'package:banking/src/presentation/widgets/card/credit_card_item.dart';
 import 'package:banking/src/presentation/widgets/custom_clip.dart';
 import 'package:banking/src/presentation/widgets/custom_list_wheel.dart';
 import 'package:banking/src/presentation/widgets/decrease_button.dart';

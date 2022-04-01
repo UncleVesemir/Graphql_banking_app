@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:banking/src/data/models/friend_card.dart';
-import 'package:banking/src/domain/entities/friend_card.dart';
 import 'package:banking/src/domain/entities/user.dart';
 
 part 'user_mapper.dart';

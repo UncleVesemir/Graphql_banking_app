@@ -1,15 +1,12 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 
 import 'package:banking/src/data/models/card.dart';
 import 'package:banking/src/data/network/graphql_repository.dart';
 import 'package:banking/src/domain/entities/card.dart';
-import 'package:banking/src/domain/entities/operation.dart' as op;
-import 'package:banking/src/presentation/blocs/history/history_bloc.dart';
 import 'package:banking/src/presentation/blocs/operations/operations_bloc_bloc.dart';
 import 'package:banking/src/presentation/blocs/sign_in_register/sign_in_register_bloc.dart';
-import 'package:banking/src/presentation/styles.dart';
-import 'package:banking/src/presentation/widgets/card/credit_card_item.dart';
-import 'package:banking/src/presentation/widgets/card/credit_card_model.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -82,8 +79,6 @@ class CardsBloc extends Bloc<CardsEvent, CardsState> {
             graphQLRepositiry.fetchCards(FetchCardsEvent(userId: event.userId));
         streamSubscription = stream.listen((event) async {
           List<Card> cardsFromJson = _convertFromJson(event);
-          List<CreditCardItem> widgetsFromModel =
-              _convertToWidgets(cardsFromJson);
           add(UpdateCardDataEvent(userCards: cardsFromJson));
         });
       } catch (e) {
@@ -98,25 +93,6 @@ class CardsBloc extends Bloc<CardsEvent, CardsState> {
       cards.add(CardModel.fromJson(event.data!['card'][i]));
     }
     return cards;
-  }
-
-  List<CreditCardItem> _convertToWidgets(List<Card> cards) {
-    List<CreditCardItem> _cards = [];
-    int i = 0;
-    for (var card in cards) {
-      _cards.add(
-        CreditCardItem(
-          cardInfo: CreditCardModel(
-            info: card,
-            width: 280,
-            height: 180,
-            gradient: AppColors.appBackgroundGradient,
-          ),
-        ),
-      );
-      i++;
-    }
-    return _cards;
   }
 
   @override

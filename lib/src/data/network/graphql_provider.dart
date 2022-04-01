@@ -29,7 +29,6 @@ class UserProvider {
       // print(result.exception);
     } else {
       if (result.data!['user'].toString().length > 10) {
-        print(result.data!['user'].toString());
         var user = UserModel.fromJson(result.data!['user'][0]);
         return user;
       } else {
@@ -73,7 +72,6 @@ class UserProvider {
       throw Exception(result.exception);
     } else {
       if (result.data != null) {
-        print('CARD HAS BEEN UPDATED');
         return true;
       } else {
         return false;
@@ -413,7 +411,6 @@ class UserProvider {
       // print(result.exception.toString());
     } else {
       if (result.data!['update_user']['returning'][0].toString().length > 10) {
-        print(result.data!['update_user']['returning'][0].toString());
         var user =
             UserModel.fromJson(result.data!['update_user']['returning'][0]);
         return user;
