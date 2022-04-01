@@ -1,12 +1,9 @@
 import 'package:banking/src/domain/entities/card.dart' as card;
-import 'package:banking/src/presentation/blocs/cards/cards_bloc.dart';
 import 'package:banking/src/presentation/styles.dart';
 import 'package:banking/src/presentation/widgets/card/animation_controller.dart';
 import 'package:banking/src/presentation/widgets/card/credit_card_item.dart';
 import 'package:banking/src/presentation/widgets/card/credit_card_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 enum Position { bottom, middle, top }
 
@@ -58,11 +55,16 @@ class _CardAnimationState extends State<CardAnimation>
   double controllerCenter = 0.5;
   double controllerEnd = 1.0;
 
+  double shadowStart = 15.0;
+  double shadowCenter = 28.0;
+  double shadowEnd = 15.0;
+
   List<double>? x;
   List<double>? fx;
   List<double>? fy;
   List<double>? fz;
   List<double>? fp;
+  List<double>? fs;
 
   AnimationController? animationController;
   Animation? animation;
@@ -76,6 +78,7 @@ class _CardAnimationState extends State<CardAnimation>
     fy = [yStart, yEnd, yEnd];
     fz = [zStart, zCenter, zEnd];
     fp = [perspectiveStart, perspectiveEnd, perspectiveEnd];
+    fs = [shadowStart, shadowCenter, shadowEnd];
 
     animationController ??= AnimationController(
       vsync: this,
@@ -86,7 +89,9 @@ class _CardAnimationState extends State<CardAnimation>
 
     animationController?.addListener(() {
       if (animation != null) {
-        if (animation!.value >= 1.1 && animation!.value <= 2) {
+        // if (animation!.value >= 1.1 && animation!.value <= 2) {
+        if (animationController!.value >= 0.22 &&
+            animationController!.value <= 0.28) {
           print('onUpdate');
           widget.onUpdate(widget.index);
         }
@@ -124,28 +129,24 @@ class _CardAnimationState extends State<CardAnimation>
 
   @override
   void animateBottomToMiddle() {
-    print('bottom -> middle');
     setState(() => position = Position.middle);
     animationController?.animateTo(controllerCenter);
   }
 
   @override
   void animateMiddleToBottom() {
-    print('middle -> bottom');
     setState(() => position = Position.bottom);
     animationController?.reverse();
   }
 
   @override
   void animateMiddleToTop() {
-    print('middle -> top');
     setState(() => position = Position.top);
     animationController?.forward();
   }
 
   @override
   void animateTopToMiddle() {
-    print('top -> middle');
     setState(() => position = Position.middle);
     animationController?.animateTo(controllerCenter);
   }
@@ -179,7 +180,7 @@ class _CardAnimationState extends State<CardAnimation>
   double _calcShadow() {
     double? t = animation?.value;
     t ??= 1;
-    return -32 * t * t + 128 * t - 88;
+    return L(t, x!, fs!);
   }
 
   @override
@@ -202,12 +203,25 @@ class _CardAnimationState extends State<CardAnimation>
             child: SizedBox(
               height: 220,
               width: 300,
-              child: CreditCardItem(
-                cardInfo: CreditCardModel(
-                  height: 100,
-                  width: 100,
-                  gradient: AppColors.appBackgroundGradient,
-                  info: widget.info,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(24),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.4),
+                      blurRadius: _calcShadow(),
+                      spreadRadius: 0.0,
+                      offset: const Offset(0.0, 1.0), // bottom right
+                    )
+                  ],
+                ),
+                child: CreditCardItem(
+                  cardInfo: CreditCardModel(
+                    height: 100,
+                    width: 100,
+                    gradient: AppColors.appBackgroundGradient,
+                    info: widget.info,
+                  ),
                 ),
               ),
             ),
@@ -228,10 +242,10 @@ class MainItemsController extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<MainItemsController> createState() => _MainItemsControllerState();
+  State<MainItemsController> createState() => MainItemsControllerState();
 }
 
-class _MainItemsControllerState extends State<MainItemsController>
+class MainItemsControllerState extends State<MainItemsController>
     implements ItemsController {
   List<GlobalObjectKey<_CardAnimationState>> keys = [];
   List<CardAnimation> cards = [];
@@ -256,7 +270,8 @@ class _MainItemsControllerState extends State<MainItemsController>
     _checkIndex();
     if (selectedCard!.currentState!.position == Position.bottom) {
       selectedCard!.currentState!.animateBottomToMiddle();
-      widget.onSelected(selectedIndex!);
+      print('next');
+      widget.onSelected(selectedIndex ?? 0);
       return;
     }
     if (selectedCard!.currentState!.position == Position.middle) {
@@ -267,7 +282,8 @@ class _MainItemsControllerState extends State<MainItemsController>
           selectedIndex = selectedIndex! - 1;
           selectedCard = keys[selectedIndex!];
         });
-        widget.onSelected(selectedIndex!);
+        print('next');
+        widget.onSelected(selectedIndex ?? 0);
       }
     }
   }
@@ -283,7 +299,8 @@ class _MainItemsControllerState extends State<MainItemsController>
           selectedIndex = selectedIndex! + 1;
           selectedCard = keys[selectedIndex!];
         });
-        widget.onSelected(selectedIndex!);
+        print('prev');
+        widget.onSelected(selectedIndex ?? 0);
       }
     }
   }
@@ -303,11 +320,11 @@ class _MainItemsControllerState extends State<MainItemsController>
     _initCards();
   }
 
-  @override
-  void didUpdateWidget(MainItemsController oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _initCards();
-  }
+  // @override
+  // void didUpdateWidget(MainItemsController oldWidget) {
+  //   super.didUpdateWidget(oldWidget);
+  //   _initCards();
+  // }
 
   void _initCards() {
     keys = [];
@@ -358,20 +375,8 @@ class _MainItemsControllerState extends State<MainItemsController>
           child: GestureDetector(
             onVerticalDragUpdate: _updateDiraction,
             onVerticalDragEnd: _determineDirection,
-            child: BlocBuilder<CardsBloc, CardsState>(
-              builder: (context, state) {
-                if (state is CardsLoadedState) {
-                  return Stack(
-                    children: cards,
-                  );
-                } else if (state is CardsLoadedState) {
-                  return const SpinKitWave(
-                    color: Colors.deepOrange,
-                  );
-                } else {
-                  return Container();
-                }
-              },
+            child: Stack(
+              children: cards,
             ),
           ),
         ),

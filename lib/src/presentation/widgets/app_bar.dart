@@ -249,9 +249,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
               ? _friends(cardState)
               : widget.index == 2
                   ? _settings(cardState)
-                  : widget.index == 3
-                      ? _history(cardState)
-                      : [],
+                  : _history(cardState),
       centerTitle: false,
       title: Column(
         mainAxisAlignment: MainAxisAlignment.start,

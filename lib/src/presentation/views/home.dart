@@ -27,6 +27,9 @@ class _HomeState extends State<Home> {
   int _selectedIndex = 0;
   int? selectedCardIndex;
 
+  GlobalObjectKey<MainItemsControllerState> controllerKey =
+      const GlobalObjectKey<MainItemsControllerState>('controller');
+
   List<CreditCardItem> cards = [];
   String? searchText;
 
@@ -42,6 +45,12 @@ class _HomeState extends State<Home> {
     } else {
       BlocProvider.of<FriendsBloc>(context)
           .add(FetchFriendsEvent(userId: state.user.id));
+    }
+  }
+
+  int? _getCardState() {
+    if (controllerKey.currentState != null) {
+      return controllerKey.currentState!.selectedIndex;
     }
   }
 
@@ -107,7 +116,7 @@ class _HomeState extends State<Home> {
               child: BlocBuilder<CardsBloc, CardsState>(
                 builder: (context, state) {
                   if (state is CardsLoadedState) {
-                    if (state.cards.isNotEmpty) {
+                    if (selectedCardIndex != null) {
                       return Container(
                         width: double.infinity,
                         height: 50,
@@ -128,7 +137,7 @@ class _HomeState extends State<Home> {
                                         style: AppTextStyles.loginGrey,
                                       ),
                                       Text(
-                                        '\$${state.cards.first.value}',
+                                        '\$${state.cards[selectedCardIndex!].value}',
                                         style: AppTextStyles.cardValueBlack,
                                       ),
                                     ],
@@ -136,11 +145,11 @@ class _HomeState extends State<Home> {
                                   Row(
                                     children: [
                                       const Text(
-                                        'Expiration Date: ',
+                                        'Card number: ',
                                         style: AppTextStyles.loginGrey,
                                       ),
                                       Text(
-                                        state.cards.first.expDate,
+                                        '*${state.cards[selectedCardIndex!].number.substring(15)}',
                                         style: AppTextStyles.cardValueBlack,
                                       ),
                                     ],
@@ -175,9 +184,9 @@ class _HomeState extends State<Home> {
     );
   }
 
-  void _updateState(int item) {
+  void _updateState(int index) {
     setState(() {
-      selectedCardIndex = item;
+      selectedCardIndex = index;
     });
   }
 
@@ -194,8 +203,9 @@ class _HomeState extends State<Home> {
             builder: (context, state) {
               if (state is CardsLoadedState) {
                 return MainItemsController(
+                  key: controllerKey,
                   cards: state.cards,
-                  onSelected: (index) => {},
+                  onSelected: (index) => _updateState(index),
                 );
               }
               if (state is CardsLoadingState) {

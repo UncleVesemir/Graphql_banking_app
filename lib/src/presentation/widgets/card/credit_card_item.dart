@@ -14,14 +14,6 @@ class CreditCardItem extends StatelessWidget {
       height: cardInfo.height,
       width: cardInfo.width,
       decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 20.0,
-            spreadRadius: 1.0,
-            offset: const Offset(0.0, 1.0), // bottom right
-          )
-        ],
         color: cardInfo.color,
         gradient: cardInfo.gradient,
         borderRadius: BorderRadius.circular(24),
