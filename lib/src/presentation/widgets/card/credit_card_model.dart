@@ -1,24 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:banking/src/domain/entities/card.dart' as card;
 
 class CreditCardModel {
-  final int index;
-  final String cardHolderName;
-  final String cardNumber;
-  final String expDate;
-  final String value;
-  final int cardId;
+  final card.Card info;
   final LinearGradient? gradient;
   final Color? color;
   final double width;
   final double height;
 
   CreditCardModel({
-    required this.value,
-    required this.cardId,
-    required this.index,
-    required this.cardHolderName,
-    required this.cardNumber,
-    required this.expDate,
+    required this.info,
     required this.width,
     required this.height,
     this.gradient,

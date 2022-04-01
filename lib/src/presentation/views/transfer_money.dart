@@ -1,3 +1,4 @@
+import 'package:banking/src/domain/entities/card.dart' as card;
 import 'package:banking/src/domain/entities/operation.dart';
 import 'package:banking/src/presentation/blocs/cards/cards_bloc.dart';
 import 'package:banking/src/presentation/blocs/friends/friends_bloc.dart';
@@ -28,12 +29,12 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
   var uuid = const Uuid();
 
   double value = 0;
-  List<Widget> cards = const [];
+  List<Card> cards = const [];
 
-  CreditCardItem? selectedCard;
+  card.Card? selectedCard;
   int selectedFriend = 0;
 
-  List<CreditCardItem> items = [];
+  List<card.Card> items = [];
 
   final TextEditingController _controller = TextEditingController();
 
@@ -78,7 +79,7 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
               userTo: friendsState.friends[selectedFriend].info.id,
               senderName: userState.user.name,
               recipientName: friendsState.friends[selectedFriend].info.name,
-              cardFrom: selectedCard!.cardInfo.cardId,
+              cardFrom: selectedCard!.id!,
               cardTo: friendCards[0].cardId,
               status: 'sended',
               value: value.toString(),
@@ -117,19 +118,18 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
     );
   }
 
-  DropdownMenuItem<CreditCardItem> buildMenuItem(CreditCardItem? item) {
+  DropdownMenuItem<card.Card> buildMenuItem(card.Card? item) {
     return DropdownMenuItem(
       value: item,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Image.asset('assets/images/mastercard.png', width: 35, height: 35),
-          Text(item != null ? '\$${item.cardInfo.value}' : '',
+          Text(item != null ? '\$${item.value}' : '',
               style: AppTextStyles.cardValueBlack),
           Row(
             children: [
-              Text(
-                  '*${item != null ? item.cardInfo.cardNumber.substring(14) : ''}',
+              Text('*${item != null ? item.number.substring(14) : ''}',
                   style: AppTextStyles.regularLowValueGrey),
               const SizedBox(width: 10),
             ],
@@ -148,7 +148,7 @@ class _MoneyTransferScreenState extends State<MoneyTransferScreen> {
             if (state is CardsLoadedState) {
               selectedCard = state.cards.first;
               return DropdownButtonHideUnderline(
-                child: DropdownButton<CreditCardItem>(
+                child: DropdownButton<card.Card>(
                   elevation: 0,
                   isExpanded: true,
                   value: selectedCard,

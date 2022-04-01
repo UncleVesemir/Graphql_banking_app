@@ -84,7 +84,7 @@ class CardsBloc extends Bloc<CardsEvent, CardsState> {
           List<Card> cardsFromJson = _convertFromJson(event);
           List<CreditCardItem> widgetsFromModel =
               _convertToWidgets(cardsFromJson);
-          add(UpdateCardDataEvent(userCards: widgetsFromModel));
+          add(UpdateCardDataEvent(userCards: cardsFromJson));
         });
       } catch (e) {
         print(e);
@@ -107,14 +107,9 @@ class CardsBloc extends Bloc<CardsEvent, CardsState> {
       _cards.add(
         CreditCardItem(
           cardInfo: CreditCardModel(
-            index: i,
-            cardHolderName: card.name,
-            cardNumber: card.number,
-            expDate: card.expDate,
-            value: card.value,
+            info: card,
             width: 280,
             height: 180,
-            cardId: card.id!,
             gradient: AppColors.appBackgroundGradient,
           ),
         ),

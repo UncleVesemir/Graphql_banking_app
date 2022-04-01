@@ -1,6 +1,9 @@
+import 'package:banking/src/domain/entities/card.dart' as card;
 import 'package:banking/src/presentation/blocs/cards/cards_bloc.dart';
 import 'package:banking/src/presentation/styles.dart';
 import 'package:banking/src/presentation/widgets/card/animation_controller.dart';
+import 'package:banking/src/presentation/widgets/card/credit_card_item.dart';
+import 'package:banking/src/presentation/widgets/card/credit_card_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -9,11 +12,13 @@ enum Position { bottom, middle, top }
 
 class CardAnimation extends StatefulWidget {
   final double offset;
+  final card.Card info;
   final int index;
   final Function(int index) onUpdate;
   final Function(Key key) onTop;
   final Function(Key key) onBottom;
   const CardAnimation({
+    required this.info,
     required this.index,
     required this.offset,
     required this.onUpdate,
@@ -34,11 +39,11 @@ class _CardAnimationState extends State<CardAnimation>
   double perspectiveStart = -0.002;
   double perspectiveEnd = 0.000;
 
-  double yStart = 0.5;
+  double yStart = 0.3;
   double yEnd = 1.0;
 
-  double xStart = 30;
-  double xCenter = -100;
+  double xStart = 50;
+  double xCenter = -140;
   double xEnd = -280;
 
   double zStart = 1;
@@ -81,7 +86,7 @@ class _CardAnimationState extends State<CardAnimation>
 
     animationController?.addListener(() {
       if (animation != null) {
-        if (animation!.value >= 1.1) {
+        if (animation!.value >= 1.1 && animation!.value <= 2) {
           print('onUpdate');
           widget.onUpdate(widget.index);
         }
@@ -197,17 +202,12 @@ class _CardAnimationState extends State<CardAnimation>
             child: SizedBox(
               height: 220,
               width: 300,
-              child: Container(
-                decoration: BoxDecoration(
-                  // gradient: AppColors.deepOrangeGradient,
-                  color: Colors.redAccent,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.4),
-                      blurRadius: _calcShadow(),
-                    ),
-                  ],
-                  borderRadius: BorderRadius.circular(30),
+              child: CreditCardItem(
+                cardInfo: CreditCardModel(
+                  height: 100,
+                  width: 100,
+                  gradient: AppColors.appBackgroundGradient,
+                  info: widget.info,
                 ),
               ),
             ),
@@ -219,7 +219,13 @@ class _CardAnimationState extends State<CardAnimation>
 }
 
 class MainItemsController extends StatefulWidget {
-  const MainItemsController({Key? key}) : super(key: key);
+  final List<card.Card> cards;
+  final Function(int index) onSelected;
+  const MainItemsController({
+    required this.onSelected,
+    required this.cards,
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<MainItemsController> createState() => _MainItemsControllerState();
@@ -231,7 +237,7 @@ class _MainItemsControllerState extends State<MainItemsController>
   List<CardAnimation> cards = [];
 
   double direction = 0.0;
-  int sensitivity = 10;
+  int sensitivity = 5;
 
   GlobalObjectKey<_CardAnimationState>? selectedCard;
   int? selectedIndex;
@@ -250,6 +256,7 @@ class _MainItemsControllerState extends State<MainItemsController>
     _checkIndex();
     if (selectedCard!.currentState!.position == Position.bottom) {
       selectedCard!.currentState!.animateBottomToMiddle();
+      widget.onSelected(selectedIndex!);
       return;
     }
     if (selectedCard!.currentState!.position == Position.middle) {
@@ -260,10 +267,9 @@ class _MainItemsControllerState extends State<MainItemsController>
           selectedIndex = selectedIndex! - 1;
           selectedCard = keys[selectedIndex!];
         });
-        return;
+        widget.onSelected(selectedIndex!);
       }
     }
-    if (selectedCard!.currentState!.position == Position.top) {}
   }
 
   @override
@@ -277,7 +283,7 @@ class _MainItemsControllerState extends State<MainItemsController>
           selectedIndex = selectedIndex! + 1;
           selectedCard = keys[selectedIndex!];
         });
-        return;
+        widget.onSelected(selectedIndex!);
       }
     }
   }
@@ -294,14 +300,27 @@ class _MainItemsControllerState extends State<MainItemsController>
   @override
   void initState() {
     super.initState();
-    for (var i = 0; i < 5; i++) {
+    _initCards();
+  }
+
+  @override
+  void didUpdateWidget(MainItemsController oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _initCards();
+  }
+
+  void _initCards() {
+    keys = [];
+    cards = [];
+    for (var i = 0; i < widget.cards.length; i++) {
       keys.add(GlobalObjectKey(i));
     }
-    for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < widget.cards.length; i++) {
       cards.add(
         CardAnimation(
           index: i,
           key: keys[i],
+          info: widget.cards[i],
           offset: i * 10,
           onUpdate: (index) => _onUpdate(index),
           onBottom: (key) => previous(),
@@ -309,7 +328,6 @@ class _MainItemsControllerState extends State<MainItemsController>
         ),
       );
     }
-    // keys.last.currentState!.animateBottomToMiddle();
     selectedCard = keys.last;
     selectedIndex = keys.length - 1;
   }

@@ -12,7 +12,7 @@ class CardsEmptyState extends CardsState {}
 class CardsLoadingState extends CardsState {}
 
 class CardsLoadedState extends CardsState {
-  final List<CreditCardItem> cards;
+  final List<Card> cards;
   const CardsLoadedState({required this.cards});
 }
 

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:banking/src/data/models/operation.dart';
 import 'package:banking/src/data/network/graphql_repository.dart';
+import 'package:banking/src/domain/entities/card.dart';
 import 'package:banking/src/domain/entities/operation.dart' as op;
 import 'package:banking/src/presentation/blocs/cards/cards_bloc.dart';
 import 'package:banking/src/presentation/blocs/history/history_bloc.dart';
@@ -36,11 +37,10 @@ class OperationsBloc extends Bloc<OperationsBlocEvent, OperationsBlocState> {
             if (operation.status == 'sended') {
               if (_getCardTo(operation, true) != null) {
                 var card = _getCardTo(operation, true);
-                var value = (double.parse(card!.cardInfo.value) -
-                        double.parse(operation.value))
-                    .toString();
-                _updateCardValue(
-                    operation, card.cardInfo.cardId, value, 'sended');
+                var value =
+                    (double.parse(card!.value) - double.parse(operation.value))
+                        .toString();
+                _updateCardValue(operation, card.id!, value, 'sended');
                 _addToHistory(operation);
               }
             }
@@ -48,11 +48,10 @@ class OperationsBloc extends Bloc<OperationsBlocEvent, OperationsBlocState> {
             if (operation.status == 'not confirmed') {
               if (_getCardTo(operation, false) != null) {
                 var card = _getCardTo(operation, false);
-                var value = (double.parse(card!.cardInfo.value) +
-                        double.parse(operation.value))
-                    .toString();
-                _updateCardValue(
-                    operation, card.cardInfo.cardId, value, 'not confirmed');
+                var value =
+                    (double.parse(card!.value) + double.parse(operation.value))
+                        .toString();
+                _updateCardValue(operation, card.id!, value, 'not confirmed');
                 if (historyBloc.state is HistoryLoadedState) {
                   _updateHistory(
                       historyBloc.state as HistoryLoadedState, operation);
@@ -99,13 +98,12 @@ class OperationsBloc extends Bloc<OperationsBlocEvent, OperationsBlocState> {
     );
   }
 
-  CreditCardItem? _getCardTo(op.Operation operation, bool isSended) {
+  Card? _getCardTo(op.Operation operation, bool isSended) {
     var state = cardsBloc.state;
-    CreditCardItem card;
+    Card card;
     if (state is CardsLoadedState) {
       var cardIdTo = isSended ? operation.cardFrom : operation.cardTo;
-      card = state.cards
-          .firstWhere((element) => element.cardInfo.cardId == cardIdTo);
+      card = state.cards.firstWhere((element) => element.id == cardIdTo);
       return card;
     }
     return null;

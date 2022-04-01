@@ -30,7 +30,7 @@ class UpdateCardValueEvent extends CardsEvent {
 }
 
 class UpdateCardDataEvent extends CardsEvent {
-  final List<CreditCardItem> userCards;
+  final List<Card> userCards;
   const UpdateCardDataEvent({required this.userCards});
 }
 

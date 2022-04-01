@@ -9,7 +9,6 @@ import 'package:banking/src/presentation/views/settings/settings.dart';
 import 'package:banking/src/presentation/widgets/app_bar.dart';
 import 'package:banking/src/presentation/widgets/bottom_app_bar.dart';
 import 'package:banking/src/presentation/widgets/card/credit_card_item.dart';
-import 'package:banking/src/presentation/widgets/card/credit_card_widget.dart';
 import 'package:banking/src/presentation/widgets/card/main_controller.dart';
 import 'package:banking/src/presentation/widgets/custom_clip.dart';
 import 'package:flutter/material.dart';
@@ -129,7 +128,7 @@ class _HomeState extends State<Home> {
                                         style: AppTextStyles.loginGrey,
                                       ),
                                       Text(
-                                        '\$${state.cards.first.cardInfo.value}',
+                                        '\$${state.cards.first.value}',
                                         style: AppTextStyles.cardValueBlack,
                                       ),
                                     ],
@@ -141,7 +140,7 @@ class _HomeState extends State<Home> {
                                         style: AppTextStyles.loginGrey,
                                       ),
                                       Text(
-                                        state.cards.first.cardInfo.expDate,
+                                        state.cards.first.expDate,
                                         style: AppTextStyles.cardValueBlack,
                                       ),
                                     ],
@@ -176,7 +175,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  void _updateState(int? item) async {
+  void _updateState(int item) {
     setState(() {
       selectedCardIndex = item;
     });
@@ -194,8 +193,9 @@ class _HomeState extends State<Home> {
           child: BlocBuilder<CardsBloc, CardsState>(
             builder: (context, state) {
               if (state is CardsLoadedState) {
-                return const Flexible(
-                  child: MainItemsController(),
+                return MainItemsController(
+                  cards: state.cards,
+                  onSelected: (index) => {},
                 );
               }
               if (state is CardsLoadingState) {

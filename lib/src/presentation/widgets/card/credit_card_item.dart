@@ -1,7 +1,7 @@
 import 'package:banking/src/presentation/widgets/card/credit_card_model.dart';
 import 'package:flutter/material.dart';
 
-class CreditCardItem extends StatefulWidget {
+class CreditCardItem extends StatelessWidget {
   final CreditCardModel cardInfo;
   const CreditCardItem({
     required this.cardInfo,
@@ -9,15 +9,10 @@ class CreditCardItem extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<CreditCardItem> createState() => _CreditCardItemState();
-}
-
-class _CreditCardItemState extends State<CreditCardItem> {
-  @override
   Widget build(BuildContext context) {
     return Container(
-      height: widget.cardInfo.height,
-      width: widget.cardInfo.width,
+      height: cardInfo.height,
+      width: cardInfo.width,
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
@@ -27,8 +22,8 @@ class _CreditCardItemState extends State<CreditCardItem> {
             offset: const Offset(0.0, 1.0), // bottom right
           )
         ],
-        color: widget.cardInfo.color,
-        gradient: widget.cardInfo.gradient,
+        color: cardInfo.color,
+        gradient: cardInfo.gradient,
         borderRadius: BorderRadius.circular(24),
       ),
       child: Padding(
@@ -42,11 +37,11 @@ class _CreditCardItemState extends State<CreditCardItem> {
                   children: [
                     const Spacer(),
                     Text(
-                      widget.cardInfo.expDate,
+                      cardInfo.info.expDate,
                       style: TextStyle(color: Colors.black.withOpacity(0.5)),
                     ),
                     Text(
-                      widget.cardInfo.cardHolderName,
+                      cardInfo.info.name,
                       style: const TextStyle(
                           color: Colors.black, fontWeight: FontWeight.w600),
                     )
